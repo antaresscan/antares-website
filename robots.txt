@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://antares-website.vercel.app/sitemap.xml
+Sitemap: https://antaresscan.com/sitemap.xml
