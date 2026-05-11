@@ -1,19 +1,20 @@
 # Mobile regression audit — runs on every PR and on pushes to main.
 #
-# Boots a local static server against the working tree, drives a
-# headless Chromium at 375x812, and asserts on every public route:
-#   - zero horizontal overflow
-#   - burger button is wired up on pages that have a desktop nav
-#   - no uncaught JS errors from inline <script>s
+# Two jobs:
+#   audit        — boots a local static server against the working tree
+#                  and runs Playwright against it. Fast (< 2 min). Catches
+#                  HTML/CSS/JS regressions but cannot exercise Vercel's
+#                  rewrite engine, cleanUrls, or cache rules.
+#   audit-preview — waits for the Vercel preview deployment to go live,
+#                  then runs the same audit against it. Catches routing
+#                  / vercel.json bugs that the local server can't (this
+#                  is the job that would have flagged the broken /pages
+#                  rewrite in #153 before it merged). Requires the
+#                  VERCEL_BYPASS_TOKEN repo secret; if absent the job
+#                  is skipped (the local audit still gates merges).
 #
-# The same script (scripts/audit-mobile.mjs) is what we run locally
-# before pushing, so PASS in CI matches PASS on a dev machine.
-#
-# The bug that motivated this workflow: PR #146 silently shipped a
-# burger menu that skipped /auth and /account because their nav
-# markup differed slightly. Visible at iPhone width, invisible to
-# reviewers. With this job in place, the same PR would have been
-# blocked by a failing `auth: burger-hidden` check.
+# Same script (scripts/audit-mobile.mjs) for both — accepts --base=<url>
+# and reads VERCEL_BYPASS_TOKEN from the environment.
 
 name: Mobile audit
 
@@ -29,8 +30,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ── 1. Local audit (no Vercel involvement) ──────────────────────────
   audit:
-    name: 375px mobile audit
+    name: 375px mobile audit (local)
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -43,14 +45,65 @@ jobs:
         with:
           node-version: '20'
 
-      # We don't track package.json in the repo (it's a static site, no
-      # build step). The audit script needs Playwright — install it
-      # transiently here. Pinning to a major so a Playwright minor bump
-      # doesn't surprise us on a Tuesday morning.
       - name: Install Playwright
         run: |
           npm install --no-save --no-package-lock playwright@^1.49
           npx playwright install --with-deps chromium
 
-      - name: Run mobile audit
+      - name: Run mobile audit (local files)
         run: node scripts/audit-mobile.mjs
+
+  # ── 2. Vercel preview audit ─────────────────────────────────────────
+  # Only runs on pull requests (no preview on push-to-main since that
+  # deploys to prod, which has its own URL and isn't password-protected).
+  audit-preview:
+    name: 375px mobile audit (Vercel preview)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: audit   # don't waste a preview run if the local audit is red
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Check whether the bypass-token secret is configured. We can't
+      # reference secrets in `if:` directly, so we mirror it into an
+      # output. The token itself is never echoed.
+      - name: Check for VERCEL_BYPASS_TOKEN secret
+        id: secret_check
+        env:
+          HAS_TOKEN: ${{ secrets.VERCEL_BYPASS_TOKEN != '' }}
+        run: echo "available=$HAS_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for Vercel preview
+        if: steps.secret_check.outputs.available == 'true'
+        id: vercel_preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+
+      - name: Install Playwright
+        if: steps.secret_check.outputs.available == 'true'
+        run: |
+          npm install --no-save --no-package-lock playwright@^1.49
+          npx playwright install --with-deps chromium
+
+      - name: Run mobile audit (Vercel preview)
+        if: steps.secret_check.outputs.available == 'true'
+        env:
+          VERCEL_BYPASS_TOKEN: ${{ secrets.VERCEL_BYPASS_TOKEN }}
+        run: node scripts/audit-mobile.mjs --base=${{ steps.vercel_preview.outputs.url }}
+
+      - name: Note skipped preview audit
+        if: steps.secret_check.outputs.available != 'true'
+        run: |
+          echo "::warning::VERCEL_BYPASS_TOKEN secret not configured — skipping preview audit."
+          echo "::warning::See docs/ci-setup.md for how to set it up."
+          echo "::warning::Without this, routing / vercel.json changes cannot be validated by CI."

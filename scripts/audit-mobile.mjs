@@ -95,6 +95,22 @@ if (remoteBase) {
 
 /* ── audit ───────────────────────────────────────────────────────── */
 const browser = await chromium.launch();
+
+/* Vercel password-protects preview deployments by default. To audit one
+   we need the per-project automation-bypass secret, sent as an HTTP
+   header (or query string) on every request. Configure once in Vercel
+   dashboard → Project Settings → Deployment Protection → Vercel
+   Authentication → Protection Bypass for Automation. Then expose the
+   same secret to CI via a repo secret named VERCEL_BYPASS_TOKEN.
+
+   When set, we add it to every request. When unset, we just don't
+   send the header — fine for local audits and prod (antaresscan.com)
+   audits, which aren't protected. */
+const bypassToken = process.env.VERCEL_BYPASS_TOKEN;
+const extraHTTPHeaders = bypassToken
+  ? { 'x-vercel-protection-bypass': bypassToken, 'x-vercel-set-bypass-cookie': 'true' }
+  : undefined;
+
 const ctx = await browser.newContext({
   viewport: { width: 375, height: 812 },
   deviceScaleFactor: 2,
@@ -102,7 +118,14 @@ const ctx = await browser.newContext({
   hasTouch: true,
   userAgent:
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+  extraHTTPHeaders,
 });
+
+if (remoteBase) {
+  console.log(`Auditing remote: ${base}${bypassToken ? ' (with bypass token)' : ''}`);
+} else {
+  console.log(`Auditing local server: ${base}`);
+}
 
 /* Console / network errors that are NOT our fault. CORS to external
    APIs (auth.me), preview-feedback widgets, font-CSP from Vercel
