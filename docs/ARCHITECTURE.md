@@ -273,10 +273,23 @@ What's wired up:
   content</a>` as the first focusable element on every page. Hidden
   off-screen by default; tabbing once from page load reveals it and
   pressing Enter focuses `<main>`. Audit enforces the contract.
+- Focusable scroll regions (`js/a11y.js`) — sweeps the DOM after
+  load, finds any element actually scrolling horizontally (mobile
+  `main table`, `/api` `<pre>` blocks, etc.) and tags it with
+  `tabindex="0"` + `role="region"` + `aria-label`. axe's
+  `scrollable-region-focusable` rule enforces this.
+- **axe-core in the audit** (`@axe-core/playwright`) — every route at
+  both viewports gets scanned against WCAG 2.0/2.1 A + AA rules.
+  Critical + serious violations fail CI. Third-party iframes (the
+  demo's dexscreener chart) are excluded — not our responsibility.
 
 Known gaps:
-- Color contrast on `#454550` nav links over `#0a0a0c` background is
-  on the low end of WCAG AA at ~4.0:1
+- **Color contrast is disabled in axe.** The codebase ships
+  deliberately low-contrast accent colors (#3a3a40 timestamps,
+  #5a5a62 captions, #454550 nav links) as part of the moody dark
+  design. axe flags 100+ such nodes per page; fixing them all is a
+  visual redesign, not a CI fix. axe still catches missing alt, bad
+  ARIA, keyboard traps, non-focusable scroll regions, etc.
 
 ## 10. Things that are deliberately not in the codebase
 
