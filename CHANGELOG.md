@@ -1,0 +1,182 @@
+# Changelog
+
+_Auto-generated from `git log` by `scripts/regenerate-changelog.mjs`._
+_Last regenerated: 2026-05-12._
+
+## May 2026
+
+- 2026-05-12 — feat(a11y): axe-core in audit + focusable scroll regions `9dd8730` ([#194])
+- 2026-05-12 — chore(devx): add htmlhint + stylelint + pre-commit hook installer `f3e716c` ([#193])
+- 2026-05-12 — perf(fonts): self-host Bebas Neue + IBM Plex Mono — drop Google Fonts `7c58c0c` ([#192])
+- 2026-05-12 — chore(pwa): wire manifest.json + theme-color, fix stale icon size `4562c89` ([#191])
+- 2026-05-12 — feat(a11y): skip-link + reduced-motion gates on JS animations `77c35fc` ([#190])
+- 2026-05-12 — chore(seo): regenerate sitemap.xml from git mtimes, add /security `d8e9a78` ([#189])
+- 2026-05-12 — perf(images): resize icon.png and favicon.png — 34 KB saved per first load `21413b0` ([#188])
+- 2026-05-12 — feat(security+a11y): CSP, prefers-reduced-motion, :focus-visible `9586ac3` ([#187])
+- 2026-05-12 — fix(repo): untrack package.json + lock, wire npm ci in CI `4d44448` ([#186])
+- 2026-05-12 — refactor(css): extract universal body rule into css/base.css `0ffbdd6` ([#185])
+- 2026-05-12 — refactor(css): extract 4 universal rules into css/base.css `6a7faaf` ([#184])
+- 2026-05-12 — refactor(css): strip 15 duplicated inline burger blocks (-345 lines) `4a71228` ([#183])
+- 2026-05-12 — perf(hero-effects): skip canvas + cursor glow on mobile `163cc61` ([#182])
+- 2026-05-12 — docs: extend README + add ARCHITECTURE.md + fix stale workflow ref `642e271` ([#181])
+- 2026-05-12 — test(ci): expand audit to mobile + desktop, add 12 regression contracts `f1f7396` ([#180])
+- 2026-05-12 — style(proof): swap · for — in mode tags `5ee5911` ([#179])
+- 2026-05-12 — style(proof): match the page-hero h1 and drop red/yellow on modes `19b207f` ([#178])
+- 2026-05-12 — fix(mobile): replace drawer watermark with bottom brand signature `f4a4830` ([#177])
+- 2026-05-12 — fix(mobile): boost drawer watermark to 600px / opacity .32 — now actually visible `2cc4472` ([#176])
+- 2026-05-12 — fix(mobile): enlarge atom watermarks behind drawer + cta-final `1fa3e43` ([#175])
+- 2026-05-12 — feat(mobile): atom watermark behind drawer + cta-final, hide stripe over drawer `6bcc17a` ([#174])
+- 2026-05-12 — fix(mobile): center "Full content available on desktop" rewrites `983ce85` ([#173])
+- 2026-05-12 — fix(mobile): unify install CTA copy + center it in the footer `fd9c359` ([#172])
+- 2026-05-12 — feat(mobile): hide the "Log in" link from the burger drawer `51e639d` ([#171])
+- 2026-05-12 — fix(mobile): footer install link breaks to its own line + new copy `8770bf5` ([#170])
+- 2026-05-12 — feat(mobile): re-style footer on non-home pages `55f2ea0` ([#169])
+- 2026-05-12 — feat(mobile): drop the footer entirely on mobile `5ef6a67` ([#168])
+- 2026-05-12 — fix(desktop): tone down "No mercy for scammers" to footer grey `14f5fa2` ([#167])
+- 2026-05-12 — feat(home): wire A1 (counter tick-up) + B1 (typewriter) on the home `a8e7e8f` ([#166])
+- 2026-05-12 — feat(mobile): polish pass #3 — 5 fixes from second user review `ba50508` ([#164])
+- 2026-05-12 — feat(mobile): polish pass #2 — 7 targeted fixes from user review `a3bf852` ([#163])
+- 2026-05-12 — feat(mobile): hide demo iframe + redirect pricing checkout to desktop `d8ddf3a` ([#162])
+- 2026-05-12 — feat(mobile): rewrite "Install" CTAs to "Open on desktop" on mobile `5395c6d` ([#161])
+- 2026-05-12 — feat(mobile): short-mobile mode for 5 secondary pages (-23.5 screens) `e36fec2` ([#160])
+- 2026-05-12 — feat(mobile): compact typography for /privacy + /terms (-1.6 screens) `5302210` ([#159])
+- 2026-05-12 — feat(mobile): reuse faq-accordion.js on /support (-3.8 mobile screens) `f12c069` ([#158])
+- 2026-05-12 — feat(mobile): collapse FAQ to an accordion on /faq `f337ea7` ([#157])
+- 2026-05-12 — feat(mobile): strip noise from the mobile experience (quick wins) `0ef516f` ([#156])
+- 2026-05-12 — ci: also audit the Vercel preview, not just the local working tree `2b80291` ([#155])
+- 2026-05-12 — refactor(structure): move HTML pages into /pages folder `9bc2fab` ([#153])
+- 2026-05-12 — refactor(js): extract inline particles+glow+reveals into hero-effects.js `e29914f` ([#152])
+- 2026-05-12 — refactor(js): extract inline nav-account script to /js/nav-account.js `8e004df` ([#151])
+- 2026-05-12 — ci: add mobile regression audit on every PR `136af5b` ([#150])
+- 2026-05-12 — fix(mobile): add burger menu on /auth + /account (PR #146 missed them) `a94e307` ([#149])
+- 2026-05-11 — fix(mobile): unbreak /pricing checkout + mobile overflow fixes `96eab2f` ([#147])
+- 2026-05-11 — feat: mobile burger menu on 15 pages `fa9fa9b` ([#146])
+- 2026-05-11 — fix: color "See the proof" link with brand mint `7f50c3b` ([#145])
+- 2026-05-11 — style(proof): polish visual rhythm (glitch hero, section dividers, mode tiles, invariant grid) `97e312f` ([#144])
+- 2026-05-11 — docs(proof): drop the hard numbers, keep the full system description `9665b2d` ([#143])
+- 2026-05-11 — feat(seo): add /proof page — corpus + drift check + auditable case studies `73a228a` ([#142])
+- 2026-05-11 — feat(seo): hide .html from URLs via cleanUrls + cleanup 261 internal links `f8bad25` ([#141])
+- 2026-05-11 — fix(seo): point every canonical / og / sitemap URL at antaresscan.com `b315738` ([#140])
+- 2026-05-09 — chore(site): remove false open-source claims, dead github links, footer dupes `f997ef3` ([#139])
+- 2026-05-09 — fix(site): kill the click-to-click chrome drift `89c761a` ([#138])
+- 2026-05-09 — fix(support): rebuild page on the FAQ layout, swap remaining personal emails `6dec9e1` ([#136])
+- 2026-05-09 — feat(site): add /support page + use project email instead of personal `1d4418d` ([#135])
+- 2026-05-07 — fix(marketing): replace 'STOP GETTING SCAMMED' with honest claim `a591069` ([#133])
+- 2026-05-07 — fix(demo): shrink AI Summary + Critical Flags panels (220 → 140px) `ab03f18` ([#132])
+- 2026-05-07 — fix(checkout): open NOWPayments in a new tab, keep /pricing alive `a81c50d` ([#131])
+- 2026-05-07 — fix(website): /auth /account /pricing 404s + login Network error retry `2a3dbdc` ([#130])
+- 2026-05-07 — fix(watermark): use relative URL so it loads on GitHub Pages subpath too `fe85f32` ([#129])
+- 2026-05-07 — fix(demo+home): remove PRO lock pills, bump watermark opacity to 12% `9e32309` ([#128])
+- 2026-05-07 — feat(demo+home): gold ANTARES wordmark + Free-locked PRO pills everywhere `3e64a5a` ([#127])
+- 2026-05-07 — feat(demo): show footer buttons in Free-locked state with gold PRO pills `327ba09` ([#126])
+- 2026-05-07 — feat(demo): sync overlay design with extension's current SHADOW_CSS `97bc1a8` ([#125])
+- 2026-05-07 — feat(account): drop license-key paste UX, license = receipt only `812d136` ([#124])
+- 2026-05-07 — feat(checkout): replace Solana Pay UI with NOWPayments hosted checkout `3afc8e5` ([#123])
+- 2026-05-05 — feat(site): update marketing copy for new Deep Analysis tabs `6e6b45e` ([#121])
+- 2026-05-04 — feat(checkout): auto-link install_id to license — no manual key paste for paying users `bdbe0e8` ([#116])
+- 2026-05-03 — chore(cta): drop the ⚡ glyph from every CTA + simplify Free buttons to "Install" `4e4a946` ([#115])
+- 2026-05-03 — chore(footer): hide footer text on every page (match homepage's invisible style) `80116be` ([#113])
+- 2026-05-03 — fix(demo): bulletproof Full Analysis tab — single delegated listener + 750ms debounce `d9bd7d1` ([#112])
+- 2026-05-03 — fix(demo): Full Analysis tab — bulletproof JS window-reference reuse `df2c4f7` ([#111])
+- 2026-05-03 — fix(demo): Full Analysis reuses one named tab instead of opening one per token `d6b48c8` ([#110])
+- 2026-05-03 — fix(demo): make Full Analysis button work — native <a target=_blank> `028f00c` ([#109])
+- 2026-05-03 — fix(cache): no-store on all HTML so browsers always fetch fresh `46b936e` ([#108])
+- 2026-05-03 — fix(pricing): real Phantom integration — load @solana/web3.js, build tx, signAndSend `021bfe4` ([#106])
+- 2026-05-03 — feat(pricing): connect-wallet button + on-chain verification box in payment modal `05e5e2b` ([#105])
+- 2026-05-03 — chore(auth): add setup-auth.sh — one-command bootstrap to finish auth wiring `1abfd76` ([#104])
+- 2026-05-03 — feat(account): tier banner + activate-in-extension callout + AUTH-SETUP runbook `db59c11` ([#103])
+- 2026-05-03 — fix(nav): aggressive auth+install shrink — 11px→10px font, 9×14→6×12 pad, 110→92 min-w `77891a8` ([#102])
+- 2026-05-03 — fix(nav): shrink auth+install buttons — 11px 20px → 9px 14px, min-width 140 → 110 `10a6b30` ([#101])
+- 2026-05-03 — fix(nav): port Demo B (outline neutral) + group LOG IN with INSTALL + force equal width `d894397` ([#100])
+- 2026-05-03 — feat(nav): add visible Log in / Account link to nav of all 13 main pages `f082f9f` ([#98])
+- 2026-05-03 — feat(pricing): drop Not included divider + Demo C closing quote per tier `1ef4140` ([#97])
+- 2026-05-03 — feat(pricing): ship product-focused hero + final CTA + button alignment `2570e49` ([#95])
+- 2026-05-03 — chore(site): rename FAQ → Q&A site-wide + strip waitlist/roadmap/pricing-FAQ from pricing `6e9a145` ([#94])
+- 2026-05-03 — chore(pricing): revert Free quota copy from 25 → 50 scans/day `5066e7d` ([#92])
+- 2026-05-03 — feat(auth): site-side login/signup pages + session-aware modal/account `4631554` ([#90])
+- 2026-05-02 — fix(pricing): rebalance Free card so the 3 columns read as one block `8287116` ([#89])
+- 2026-05-02 — fix(pricing): show what Free is missing — 10 crossed-out lines on Free tier `0174b39` ([#88])
+- 2026-05-02 — feat(pricing,account): email field on pay + new /account.html lookup `62bee18` ([#87])
+- 2026-05-02 — feat(pricing): trim Free + headline AI/Critical-Flags/Full-Analysis on Pro `ee66b5a` ([#86])
+- 2026-05-02 — fix(home): every card uses the same 5 prod .si fields (Sell/Mint/Freeze/LP/Liq) `11f1587` ([#85])
+- 2026-05-02 — fix(home): drop token names + descriptive sum, show flag count like prod `b376ad4` ([#84])
+- 2026-05-02 — fix(home): home demo overlay matches the live extension 1:1 `712319f` ([#83])
+- 2026-05-02 — feat(pricing): SOL/USDC toggle + harder CTA + 25 scans/day `99f9b1f` ([#82])
+- 2026-05-02 — fix(pricing): drop watchlist line items + recover Solana Pay flow `775bf68` ([#81])
+- 2026-05-02 — feat(site): pricing page draft (Pro v1 — DO NOT MERGE YET) `bcb549b` ([#80])
+
+## April 2026
+
+- 2026-04-30 — fix(site): false claims audit — drop paste/v5/under-2s + Twitter/Telegram + balance chart (squashed from #79) `8be4548`
+- 2026-04-30 — feat(home+demo): chart redesign + harmonised sizes + light-up + demo overlay timing (squashed from #78) `95c1afe`
+- 2026-04-30 — chore(home): drop '1,500+ tracked weekly' (squashed from #77) `3ce5624`
+- 2026-04-30 — fix(home): split claim '500+ daily, 1500+ weekly' (squashed from #76) `4db34a9`
+- 2026-04-30 — feat(home): bump corpus claim 500 → 1500+ + Verify on GitHub link (squashed from #75) `ae688ac`
+- 2026-04-30 — feat(home): $2.8B loss strip + 100% proof tiles + reorder + dim footer (squashed from PR #74) `89008c5`
+- 2026-04-29 — chore(site): trim compare matrix + drop Why Pick Antares + restore looks emphasis `d186a7f` ([#64])
+- 2026-04-29 — feat(token): activate Holder Activity, Verdict Timeline, Outcome Histogram + center mcap cells `c04d888` ([#63])
+- 2026-04-29 — chore(compare): drop the "Open source · Audit the scoring logic yourself" bullet `123a1f1`
+- 2026-04-29 — chore(site): drop demo disclaimer block, tighten engine score tiles, recolor Safe Gate emphasis `c97dbef`
+- 2026-04-29 — fix(engine): layers reveal as a single block instead of laddering in `7cb8962`
+- 2026-04-29 — fix(landing): drop the trust-row chips under the hero CTA `eef45e3` ([#56])
+- 2026-04-29 — fix(engine): breathing space around the dash in score-range tiles `a502b1a` ([#55])
+- 2026-04-29 — fix(compare): swap DexScreener/BubbleMaps for DeFade/Rugslayer `02f45e6` ([#54])
+- 2026-04-29 — fix(engine,landing): clean engine score ranges + match CTA slogan size to hero `4cf7406` ([#53])
+- 2026-04-29 — fix(landing): strip the final CTA to slogan + button only, scale slogan up `d7560b8` ([#52])
+- 2026-04-29 — fix(features): refine Core Features card style — drop chunky tile look `2725dc9` ([#51])
+- 2026-04-29 — fix(landing): remove the scrolling marquee banner `e14f409` ([#50])
+- 2026-04-29 — fix(features): drop Universal Coverage block + make 5th card span full width `aaaeaf1` ([#49])
+- 2026-04-29 — fix(landing): polish proof section visuals + remove "What's different" `dc3b609` ([#48])
+- 2026-04-29 — fix(landing,engine): drop the 214-tokens stat — keep only the unimpeachable claims `60b9d79` ([#47])
+- 2026-04-29 — fix(landing,engine): drop misleading 99.1% stat + the confusion matrix `5843401` ([#46])
+- 2026-04-29 — fix(demo): lock prebaked values + sync FARTCOIN to 825 (live capture) `271f658` ([#45])
+- 2026-04-29 — fix(demo): render prebaked verdicts instantly for the 4 sample tokens `f3f4188` ([#44])
+- 2026-04-29 — fix(index): align home demo cards with the canonical 4 — PENGU / FARTCOIN / PIPPIN / HAWK `780c6d8` ([#43])
+- 2026-04-28 — feat(landing,engine): surface backtest accuracy on the marketing site `5a35605` ([#42])
+- 2026-04-28 — fix(compare): align nav order with the rest of the main pages `54b3630` ([#41])
+- 2026-04-28 — fix(engine): drop the Safe Gate trigger list, keep the explanation `4632b12` ([#40])
+- 2026-04-28 — fix(demo): swap SPX→PIPPIN + TROLL→HAWK, reorder SAFE→RUG progression `696b20d` ([#39])
+- 2026-04-28 — docs(demo): make demonstrative scoring explicit (banner + disclaimer) `791c130` ([#38])
+- 2026-04-28 — fix(sources): split into External APIs (6) + Internal Systems (3) `007b1d1` ([#36])
+- 2026-04-28 — fix(demo): filter info flags + tighten Fartcoin prebaked verdict `1ba4f28` ([#34])
+- 2026-04-28 — fix(demo): swap FWOG → TROLL sample chip + prebaked verdict `f22b839` ([#32])
+- 2026-04-28 — fix(demo): swap NEET → FWOG sample chip + prebaked verdict `579cfe5` ([#31])
+- 2026-04-28 — fix(demo): drop CA input + per-token prebaked verdicts (varied scores) `4859a64` ([#29])
+- 2026-04-28 — fix(demo): real-time /api/scan only — no fallback heuristic `6f82d5e` ([#28])
+- 2026-04-27 — fix(demo): drop drag hint + retry scan so verdicts are real `1169bfa` ([#27])
+- 2026-04-27 — fix(demo): correct SPX CA + resolve best pair for chart `f159837` ([#26])
+- 2026-04-27 — fix(demo): swap samples to FARTCOIN/SPX/NEET/PENGU + force no-cache `0754264` ([#25])
+- 2026-04-27 — fix(demo+home): use the v5 overlay (3 buttons, drag, panels) `33af2d2` ([#24])
+- 2026-04-27 — fix(demo): use the real extension overlay (Shadow DOM port) `1cf419c` ([#23])
+- 2026-04-27 — fix(demo): replace verdict tabs with browser-frame + scanning overlay `d751a2c` ([#22])
+- 2026-04-27 — fix(demo): embed DexScreener chart + DexScreener API fallback `522bed6` ([#21])
+- 2026-04-27 — fix(website): demo uses native fetch + inline render (no iframe) `eb1448a` ([#20])
+- 2026-04-27 — fix(website): demo auto-loads + 4 verdict tabs · compare drops negative panel `49f9e36` ([#19])
+- 2026-04-27 — feat(website): v5 hero pass + 7 new pages (demo, compare, faq, install, changelog, about, api) `ccc5474` ([#18])
+- 2026-04-27 — feat(website): v5 features + GDPR privacy + ToS + version bump `10d3a22` ([#17])
+- 2026-04-25 — perf(images): re-encode icon.png + og-image.png with palette PNG `f435421` ([#16])
+- 2026-04-25 — fix(cta): point Install CTAs to GitHub repo until Web Store listing `f360155` ([#15])
+- 2026-04-25 — feat(seo): add canonical, OG, and JSON-LD on all pages `d2742cd` ([#14])
+- 2026-04-17 — fix: pre-launch technical corrections `a6b1359`
+- 2026-04-16 — feat(a11y): add skip-link + main-content id to index.html `aa8395f`
+- 2026-04-16 — feat(a11y): add semantic HTML, ARIA labels, skip-link to token.html `5b878f5`
+- 2026-04-16 — feat(a11y): add semantic HTML and accessibility to index.html `7bd9e4e`
+- 2026-04-16 — feat(legal): add privacy policy page `b156f15`
+- 2026-04-16 — feat(pwa): add manifest.json `a5f7378`
+- 2026-04-16 — feat(seo): add JSON-LD structured data to index.html `b5d14f5`
+- 2026-04-16 — feat(security): add security headers to vercel.json `b2a49e5`
+- 2026-04-16 — feat: add custom 404 error page `bc4acb4`
+- 2026-04-16 — feat(seo): add OG image SVG (1200x630) with 4 token states `a3284d2`
+- 2026-04-16 — feat: add og-generator.html for OG image creation `0a566b4`
+- 2026-04-16 — feat(seo): add sitemap.xml `a4fc989`
+- 2026-04-16 — feat(seo): add robots.txt `b7cf1ed`
+- 2026-04-16 — feat(seo): add meta SEO + OG tags to token.html `62cc650`
+- 2026-04-16 — feat(seo): add meta SEO + OG tags to sources.html `4e9dc2f`
+- 2026-04-16 — feat(seo): add meta SEO + OG tags to engine.html `9603996`
+- 2026-04-16 — feat(seo): add meta SEO + OG tags to features.html `022c8bc`
+- 2026-04-16 — feat(seo): add meta description, OG tags, Twitter Card to index.html `1aa3b6b`
+- 2026-04-04 — fix: use relative links in sources.html `cd32fc7`
+- 2026-04-04 — fix: use relative links in engine.html `fcf7b9e`
+- 2026-04-04 — fix: use relative links in features.html `1fd2674`
+- 2026-04-04 — fix: use relative links for GitHub Pages compatibility `a2e2ef6`
+- 2026-04-04 — fix: prioritize real Solana threats, update version & layers `9c7fc05`
