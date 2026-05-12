@@ -487,18 +487,14 @@ body.menu-open { overflow: hidden; }
   .mobile-actions a[href*="install"],
   .mobile-actions .m-install { display: none !important; }
 
-  /* 13c. Footer — drop the "Antares v1.3.0 · No mercy for scammers"
-     versioning line. It's a desktop signature; mobile users don't
-     care which version they're reading. The .foot-links row with
-     Install / Support / Privacy / About stays.
-
-     The version text is a raw text node inside <footer> (not in a
-     selectable element), so we hide it by zeroing the footer font
-     and re-enabling it on .foot-links. The <span>No mercy</span> is
-     covered by the zero-font rule too. */
-  footer { font-size: 0 !important; }
-  footer .foot-links { font-size: 9px !important; }
-  footer .foot-links * { font-size: inherit !important; }
+  /* 13c. Footer — hide the whole footer on mobile.
+     User feedback: the bottom row "Open on desktop · Support ·
+     Privacy · About" duplicates options the burger drawer already
+     surfaces, and the versioning line above it is desktop noise.
+     A mobile visitor doesn't need either; the page just ends.
+     Legal links (Privacy / Terms) stay reachable via the burger
+     menu. */
+  footer { display: none !important; }
 
   /* 13d. Home — drop the giant "ANTARES" wordmark watermark behind
      the bottom cta-final. The pseudo-element renders at 280px on
