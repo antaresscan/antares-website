@@ -27,8 +27,28 @@
    file is safe to load on a page that ships only one of the three.
    ────────────────────────────────────────────────────────────────── */
 ;(function () {
+  // Mobile (<761 px) hides #particles-canvas and .cursor-glow via
+  // css/mobile-fixes.css, but the JS would still attach a mousemove
+  // listener and run a 60 fps RAF on an invisible canvas — 30
+  // particles × ~29 neighbour checks per frame = ~50 k distance
+  // calculations per second for nothing visible. Skip both blocks on
+  // mobile. The reveal observer (block 3) is cheap and still useful,
+  // so it always runs.
+  var isMobile = typeof window.matchMedia === 'function' &&
+                 window.matchMedia('(max-width: 760px)').matches;
+
   var canvas = document.getElementById('particles-canvas');
-  if (!canvas) return;
+  if (!canvas) {
+    // No canvas at all — skip blocks 1 + 2 but still try the reveal
+    // observer below.
+    runRevealObserver();
+    return;
+  }
+  if (isMobile) {
+    // Canvas exists but is display:none on mobile — skip blocks 1 + 2.
+    runRevealObserver();
+    return;
+  }
 
   var ctx = canvas.getContext('2d'),
       particles = [],
@@ -121,8 +141,11 @@
   }
 
   // ── 3. REVEAL OBSERVER ──
-  var reveals = document.querySelectorAll('.reveal');
-  if (reveals.length) {
+  runRevealObserver();
+
+  function runRevealObserver() {
+    var reveals = document.querySelectorAll('.reveal');
+    if (!reveals.length) return;
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
