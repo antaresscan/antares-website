@@ -93,7 +93,7 @@ footer .foot-links a:hover{color:var(--c)}
 <div class="warn-box"><b style="color:#a8a060">Best-effort, no SLA.</b> The API runs on Vercel free tier with Upstash free Redis. Rate limits are conservative (60 req / minute per IP). Response shape is stable but not formally versioned. For production-grade integrations or higher quotas, please <a href="./support">drop us a note via /support</a>.</div>
 
 <h2>Endpoint</h2>
-<pre><code><span class="method">GET</span><span class="endpoint">https://antares-extension.vercel.app/api/scan?ca={SOLANA_MINT_ADDRESS}</span></code></pre>
+<pre tabindex="0"><code><span class="method">GET</span><span class="endpoint">https://antares-extension.vercel.app/api/scan?ca={SOLANA_MINT_ADDRESS}</span></code></pre>
 
 <h2>Query parameters</h2>
 <table>
@@ -117,7 +117,7 @@ footer .foot-links a:hover{color:var(--c)}
 </table>
 
 <h2>Response shape (200)</h2>
-<pre><code>{
+<pre tabindex="0"><code>{
   "score": 100,
   "risk": "RUG",                        // SAFE | CAUTION | DANGER | RUG
   "confidence": 80,
@@ -173,10 +173,10 @@ footer .foot-links a:hover{color:var(--c)}
 
 <h2>Examples</h2>
 <p><b>cURL:</b></p>
-<pre><code>curl 'https://antares-extension.vercel.app/api/scan?ca=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'</code></pre>
+<pre tabindex="0"><code>curl 'https://antares-extension.vercel.app/api/scan?ca=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'</code></pre>
 
 <p><b>JavaScript (fetch):</b></p>
-<pre><code>const res = await fetch(
+<pre tabindex="0"><code>const res = await fetch(
   'https://antares-extension.vercel.app/api/scan?ca=' + encodeURIComponent(mintAddress),
   { headers: { 'X-Antares-Install': myStableInstallId } }
 );
@@ -185,7 +185,7 @@ const result = await res.json();
 console.log(result.risk, result.score, result.flags);</code></pre>
 
 <p><b>Python (requests):</b></p>
-<pre><code>import requests
+<pre tabindex="0"><code>import requests
 r = requests.get(
     'https://antares-extension.vercel.app/api/scan',
     params={'ca': mint_address},

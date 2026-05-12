@@ -48,6 +48,7 @@
    ────────────────────────────────────────────────────────────────── */
 
 import { chromium } from 'playwright';
+import { AxeBuilder } from '@axe-core/playwright';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { normalize, resolve, join } from 'node:path';
@@ -59,6 +60,7 @@ const args = new Map(argv.slice(2).map(a => {
 }));
 const wantJson = args.has('json');
 const remoteBase = args.get('base');
+const skipAxe = args.has('no-axe');
 const viewportArg = (args.get('viewport') || 'both').toLowerCase();
 const VIEWPORTS_TO_RUN = viewportArg === 'both'
   ? ['mobile', 'desktop']
@@ -400,12 +402,57 @@ for (const vpKey of VIEWPORTS_TO_RUN) {
       await page.goto(base + route, { waitUntil: 'load', timeout: 30_000 });
       await page.waitForTimeout(800);
 
+      /* Per-route async-render waits. Some pages hydrate UI from
+         fetch() responses, and we'd rather let that settle before
+         axe scans than catch the half-rendered intermediate state. */
+      if (route === '/demo') {
+        // Demo embeds the Antares overlay widget which renders
+        // ~14 buttons after a scan-API fetch. Wait for the widget's
+        // close button (#ant-close) or give up after 4s.
+        try {
+          await page.waitForSelector('#ant-close', { timeout: 4000 });
+        } catch { /* widget didn't render in time; let axe see what's there */ }
+      }
+
       const audit = vpKey === 'mobile'
         ? await auditMobile(page, route)
         : await auditDesktop(page, route);
 
       result.fails = audit.fails;
       result.probe = audit.probe;
+
+      /* axe-core a11y scan — fails on critical or serious violations.
+         Runs once per route per viewport.
+
+         Why we disable color-contrast:
+           The codebase ships a deliberately moody dark palette with
+           dozens of low-contrast accent labels (#3a3a40 timestamps,
+           #5a5a62 captions, etc.). axe flags 100+ such nodes per
+           page; fixing them all is a visual redesign, not a CI fix.
+           ARCHITECTURE.md §9 documents this as a known gap. axe's
+           OTHER rules (missing alt, bad ARIA, keyboard traps,
+           non-focusable scroll regions) still gate the audit. */
+      if (!skipAxe) {
+        const axe = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+          .disableRules(['color-contrast'])
+          // Third-party iframes (the demo's dexscreener chart) aren't
+          // our responsibility — they ship their own a11y debt.
+          .exclude('iframe')
+          .analyze();
+        const seriousViolations = axe.violations.filter(
+          v => v.impact === 'critical' || v.impact === 'serious'
+        );
+        if (seriousViolations.length) {
+          for (const v of seriousViolations) {
+            result.fails.push(`a11y:${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? '' : 's'})`);
+          }
+          result.axeViolations = seriousViolations.map(v => ({
+            id: v.id, impact: v.impact, help: v.help,
+            nodeTargets: v.nodes.map(n => n.target.join(' ')).slice(0, 5),
+          }));
+        }
+      }
     } catch (e) {
       result.fails.push(`navigation-error: ${e.message}`);
     }
@@ -421,6 +468,11 @@ for (const vpKey of VIEWPORTS_TO_RUN) {
     console.log(`${icon} ${vpKey.padEnd(7)} ${route.padEnd(12)} ${result.fails.join(', ') || 'ok'}`);
     for (const e of (result.errors || []).slice(0, 2)) {
       console.log(`     [${e.kind}] ${e.msg.slice(0, 160)}`);
+    }
+    for (const v of (result.axeViolations || [])) {
+      for (const t of v.nodeTargets) {
+        console.log(`     [axe:${v.id}] ${t}`);
+      }
     }
 
     allResults.push(result);
