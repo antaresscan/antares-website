@@ -223,7 +223,7 @@ do it per-route with a more permissive `X-Frame-Options`, not globally.
 Login state is read by `js/nav-account.js`, which calls the
 `antares-extension` backend (different repo) and swaps the nav CTA
 from "Log in" to "Account" when authenticated. The backend lives at
-<https://antares-extension.vercel.app>. See `AUTH-SETUP.md` for the
+<https://antares-extension.vercel.app>. See `docs/AUTH-SETUP.md` for the
 operational details (env vars, session secret, payment dispatcher).
 
 Front-end has **no** secrets. Everything sensitive lives on the

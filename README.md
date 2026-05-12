@@ -26,7 +26,7 @@ Sister repo (the extension + backend): [`antares-extension`](https://github.com/
 | `.github/workflows/audit.yml`     | Wires the audit to `pull_request` and `push: main`. Two jobs: local-static-server audit + Vercel-preview audit (latter needs `VERCEL_BYPASS_TOKEN` secret — see `docs/ci-setup.md`). |
 | `docs/ARCHITECTURE.md`            | Deeper map of CSS/JS conventions and the body-class opt-in pattern. Read this before touching anything cross-page. |
 | `docs/ci-setup.md`                | One-time setup for the Vercel preview audit secret. |
-| `AUTH-SETUP.md`                   | Operational runbook for the auth + payment pipeline (cross-repo with `antares-extension`). |
+| `docs/AUTH-SETUP.md`              | Operational runbook for the auth + payment pipeline (cross-repo with `antares-extension`). |
 | `_audit/`, `_screenshots/`        | Local-only artifacts (gitignored). |
 
 ## Public routes
