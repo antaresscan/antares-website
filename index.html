@@ -144,6 +144,12 @@
 .cta-final{text-align:center;padding:140px 48px;margin:60px 0 40px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center}
 .cta-final::before{content:'ANTARES';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:400 280px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.012);pointer-events:none;white-space:nowrap}
 .cta-final::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(0,229,176,.05) 0%,transparent 70%);pointer-events:none;animation:cta-pulse 3s ease infinite}
+/* Logo watermark — the atom icon, faint, sits behind "The next rug pull
+   won't warn you. ANTARES WILL." so the slogan reads against a soft
+   brand glyph instead of empty negative space. Opacity matches the
+   existing ANTARES text watermark (.012) plus a green-tint drop shadow
+   so it picks up the brand colour at a whisper. */
+.cta-final .cta-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:auto;opacity:.08;pointer-events:none;z-index:0;filter:drop-shadow(0 0 80px rgba(0,229,176,.35))}
 @keyframes cta-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 .cta-threat{font:500 14px/1.4 'IBM Plex Mono',monospace;color:#7a4a4a;letter-spacing:.18em;text-transform:uppercase;margin-bottom:28px;position:relative;z-index:1}
 .cta-final h2{font:400 clamp(68px,11vw,130px)/.88 'Bebas Neue',sans-serif;letter-spacing:.04em;margin-bottom:56px;position:relative;z-index:1;color:#eaeaea}
@@ -443,6 +449,7 @@ footer .foot-links a:hover{color:#5a5a62}
      above already explained everything. The slogan needs the room
      to land. -->
 <div class="cta-final reveal">
+  <img class="cta-watermark" src="/assets/icon.png" alt="" aria-hidden="true">
   <div class="cta-threat">The next rug pull won&#x27;t warn you.</div>
   <h2 class="glitch" data-text="ANTARES WILL."><span>ANTARES</span> WILL.</h2>
   <a class="cta main" href="./install">Install</a>
