@@ -70,7 +70,9 @@
 .tier-price{font:400 64px/.9 'Bebas Neue',sans-serif;letter-spacing:.02em;color:#eaeaea;margin-bottom:4px;display:flex;align-items:baseline;gap:8px}
 .tier-price .currency{font-size:32px;color:#888;font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:0}
 .tier-price .strike{font-size:22px;color:#3a3a40;text-decoration:line-through;font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:0;margin-right:6px}
-.tier-period{font-size:11px;color:#5a5a62;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;min-height:14px}
+.tier-period{font-size:11px;color:#5a5a62;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;min-height:14px}
+.tier-savings{font:600 10.5px/1.5 'IBM Plex Mono',monospace;color:#7a7a82;letter-spacing:.04em;margin-bottom:14px;text-align:center}
+.tier-savings b{color:var(--purple);font-weight:700}
 /* Tagline min-height set to fit a 3-line copy block at 11.5px / 1.6 line-
    height. All three taglines are written to wrap to ~3 lines so this
    value matches across cards and the rows below start at the same Y. */
@@ -310,6 +312,12 @@ footer span{color:var(--c)}
        the $249.99 sticker) — the "−20% · LAUNCH OFFER" badge above
        the card surfaces the discount as a marketing message rather
        than burying it in the price diff.
+       Two complementary savings statements stack visually:
+         - tier-period: "20% off launch price"  (urgency/FOMO frame:
+           normal sticker is $249.99, this is the launch deal)
+         - tier-savings: "save 33% vs paying monthly"  (analytical
+           frame: $24.99/mo × 12 = $299.88 → yearly $199.99 = 33% off)
+       Both true at the same time, both true for different reasons.
        Existing Lifetime customers from before the rename keep their
        grandfathered tier; new buyers get a yearly that auto-downgrades
        to Free at expiry unless renewed. -->
@@ -317,7 +325,8 @@ footer span{color:var(--c)}
     <div class="tier-name">Yearly</div>
     <div class="tier-price"><span class="strike">$249.99</span><span class="currency">$</span>199.99</div>
     <div class="tier-period">Pay in any crypto &middot; 1 year &middot; 20% off launch price</div>
-    <div class="tier-tagline">Pay once at $199.99 (launch pricing, normally $249.99). Every Pro feature for a full year. Breaks even after eight monthly renewals.</div>
+    <div class="tier-savings">Equivalent to ~8 months of Pro &middot; <b>save 33% vs paying monthly</b></div>
+    <div class="tier-tagline">Pay once at $199.99 (launch pricing, normally $249.99). Every Pro feature for a full year. Save $99.89 vs twelve monthly renewals at $24.99.</div>
     <ul class="tier-features">
       <li class="bonus"><b>Everything in Pro, for 1 year</b></li>
       <li><b>AI Summary</b> in overlay</li>
