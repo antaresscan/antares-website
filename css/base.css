@@ -165,7 +165,7 @@ nav::before {
 }
 nav .brand {
   font: 400 30px/1 'Bebas Neue', sans-serif;
-  letter-spacing: .18em;
+  letter-spacing: .04em;
   color: #16423b;
   text-decoration: none;
   display: flex;
