@@ -192,12 +192,17 @@ nav .nav-account {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font: 600 10px/1 'IBM Plex Mono', monospace;
-  letter-spacing: .14em;
+  font: 400 16px/1 'Bebas Neue', sans-serif;
+  letter-spacing: .07em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 5px 15px;
   border: 1px solid;
+  /* 8px overrides the global .nav-cta/.nav-account border-radius:10px set
+     in each page's inline theme block — the nav (0,1,1) selector outranks
+     the inline (0,1,0) one, so only these two nav buttons round to 8px to
+     match the nav links; every other site button stays at 10px. */
+  border-radius: 8px;
   transition: .25s;
   white-space: nowrap;
   min-width: 92px;
