@@ -720,22 +720,12 @@ body.menu-open { overflow: hidden; }
    .page-hero's padding:100px 0 80px + min-height:50vh is deliberate on
    desktop (every non-home page's title lands at the same screen
    position — see base.css). On a phone, 50vh is ~400px of empty
-   gradient before the eyebrow/title even start, on all 13 pages that
+   gradient before the eyebrow/title even start, on all 15 pages that
    use it (about, support, faq, changelog, proof, sources, security,
-   compare, features, engine, demo, install, pricing).
-
-   Privacy and terms have the opposite problem: they skip .page-hero
-   entirely (just a bare <h1> as the first child of <main>), so the
-   title sits flush under the nav with no breathing room at all.
-
-   Bring both to the same modest mobile header height instead of
-   "wildly oversized" vs. "almost none". */
+   compare, features, engine, demo, install, pricing, privacy, terms). */
 @media (max-width: 760px) {
   .page-hero {
     padding: 40px 0 32px;
     min-height: 0;
-  }
-  main.shell.narrow > h1:first-child {
-    padding-top: 56px;
   }
 }
