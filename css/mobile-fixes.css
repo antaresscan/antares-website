@@ -638,18 +638,33 @@ body.menu-open { overflow: hidden; }
      icon as a left-aligned background. padding-left makes room for
      the icon at the start of the line so they read side by side.
      Position: bottom-centre via absolute + translateX(-50%). */
+  .mobile-menu::before {
+    content: '';
+    position: absolute;
+    bottom: 40px;
+    left: calc(50% - 85px);
+    width: 28px;
+    height: 28px;
+    background-color: #8fb8ae;
+    -webkit-mask-image: url('/assets/icon.png');
+    mask-image: url('/assets/icon.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    pointer-events: none;
+    z-index: 0;
+  }
   .mobile-menu::after {
     content: 'ANTARES';
     position: absolute;
     bottom: 36px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding-left: 44px;
+    left: calc(50% - 45px);
     font: 400 26px/1 'Bebas Neue', sans-serif;
     letter-spacing: .18em;
-    color: #16423b;
-    background: url('/assets/icon.png') no-repeat left center;
-    background-size: 32px auto;
+    color: #8fb8ae;
     pointer-events: none;
     z-index: 0;
   }
