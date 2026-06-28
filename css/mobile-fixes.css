@@ -140,7 +140,15 @@
   text-shadow: 0 1px 1px rgba(255,255,255,.6), 0 -1px 1px rgba(8,60,52,.22);
   text-decoration: none;
   transition: color .25s, transform .2s;
-  padding: 6px 12px;
+  /* Fixed, identical width for every link so the hover/active pill is
+     the same size regardless of word length (Features, Engine, ...). */
+  display: block;
+  width: 200px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  text-align: center;
+  text-indent: .11em; /* half the letter-spacing, to offset the trailing gap so text reads centered */
+  white-space: nowrap;
   border-radius: 10px;
 }
 .mobile-links a:hover,
