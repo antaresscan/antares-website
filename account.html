@@ -83,11 +83,13 @@ main{padding-bottom:80px}
 
 /* ── Active / Expired tabs — only rendered when both buckets have at
    least one license (see renderLicenses). Keeps the common case (no
-   expired history yet) a plain list with no useless empty tab. */
-.lic-tabs{display:flex;gap:0;margin:0 0 14px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e7f7f0;width:fit-content}
-.lic-tabs button{padding:9px 20px;background:transparent;border:none;color:#6a958c;font:400 11px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:.2s}
-.lic-tabs button.active{color:var(--bg);background:var(--c)}
-.lic-tabs button:not(.active):hover{color:#2e5d55}
+   expired history yet) a plain list with no useless empty tab. Plain
+   text + dot separator, no button chrome. */
+.lic-tabs{display:flex;gap:10px;align-items:center;margin:0 0 14px}
+.lic-tabs button{background:none;border:none;padding:0;cursor:pointer;font:400 14px/1 'Bebas Neue',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8fb0a8}
+.lic-tabs button.active{color:var(--c)}
+.lic-tabs button:not(.active):hover{color:#5b8c82}
+.lic-tabs .sep{color:#a8c9c0;font-size:13px}
 .lic-panel{display:none}
 .lic-panel.active{display:block}
 
@@ -439,7 +441,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       // rename and keep their forever pass.
       nameEl.textContent = 'Lifetime';
       detailEl.innerHTML = '<b>Every Pro feature, forever.</b> Includes every release we ship from here on out. Paid once, valid for the life of the product.';
-      metaEl.innerHTML = '<b>Active</b><br>forever';
+      metaEl.innerHTML = '<b>Forever</b><br>no renewal needed';
     } else if (verdict.tier === 'yearly') {
       nameEl.textContent = 'Yearly';
       detailEl.innerHTML = '<b>Every Pro feature, for 1 year.</b> AI Summary, Critical Flags, Full Analysis page, scan history, priority cache and exports across all 7 supported platforms.';
@@ -588,8 +590,9 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
     listEl.innerHTML =
       '<div class="lic-tabs" role="tablist">' +
-        '<button type="button" class="active" data-panel="lic-panel-active" role="tab" aria-selected="true">Active (' + activeList.length + ')</button>' +
-        '<button type="button" data-panel="lic-panel-expired" role="tab" aria-selected="false">Expired (' + expiredList.length + ')</button>' +
+        '<button type="button" class="active" data-panel="lic-panel-active" role="tab" aria-selected="true">Active</button>' +
+        '<span class="sep">&middot;</span>' +
+        '<button type="button" data-panel="lic-panel-expired" role="tab" aria-selected="false">Expired</button>' +
       '</div>' +
       '<div class="lic-panel active" id="lic-panel-active"><div class="licenses">' +
         activeList.map(function(l) { return licenseCardHtml(l, now); }).join('') +
