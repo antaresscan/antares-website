@@ -4,239 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Account licenses — layout options</title>
+<title>Account licenses — tab button styles</title>
 <style>
 :root{--c:#0ca88c;--bg:#bce8d8;--card:rgba(255,255,255,.34);--border:rgba(14,80,70,.16);--dim:#4d7a72;--txt:#1d4a43;--red:#d64848;--purple:#7b5fd4;--yellow:#b89b00}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:linear-gradient(118deg,#cfefe1 0%,#a8e3ce 32%,#84d7c9 65%,#6fcdd0 100%) fixed;color:var(--txt);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:40px 20px 120px}
-.demo-shell{max-width:620px;margin:0 auto}
+.demo-shell{max-width:560px;margin:0 auto}
 .demo-head{text-align:center;margin-bottom:50px;color:#2e5d55}
-.demo-head h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:32px;letter-spacing:.04em;margin-bottom:8px}
+.demo-head h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.04em;margin-bottom:8px}
 .demo-head p{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:14px;color:#4f7d74;letter-spacing:.04em}
-.option{margin-bottom:64px;padding-bottom:10px}
+.option{margin-bottom:56px}
 .option-tag{display:inline-block;font:400 11px/1 'Bebas Neue',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--bg);background:#2e5d55;padding:5px 11px;border-radius:2px;margin-bottom:14px}
-.option-title{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:22px;color:#1d4a43;letter-spacing:.02em;margin-bottom:6px}
-.option-desc{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#57837b;line-height:1.6;margin-bottom:22px;max-width:520px}
+.option-title{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:21px;color:#1d4a43;letter-spacing:.02em;margin-bottom:6px}
+.option-desc{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#57837b;line-height:1.6;margin-bottom:20px;max-width:500px}
 
-/* ── shared license card styles, copied from account.html ── */
-.section-label{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:12px;color:#6f9c93;letter-spacing:.22em;text-transform:uppercase;margin:22px 0 12px}
-.section-label.first{margin-top:0}
+/* shared license card, copied from account.html */
 .licenses{display:flex;flex-direction:column;gap:14px}
 .lic{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:20px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;gap:6px 16px;align-items:start}
-.lic.lifetime{border-color:rgba(123,95,212,.35);box-shadow:0 0 0 1px rgba(123,95,212,.1)}
-.lic.yearly{border-color:rgba(123,95,212,.35);box-shadow:0 0 0 1px rgba(123,95,212,.1)}
 .lic.pro{border-color:rgba(11,150,128,.35);box-shadow:0 0 0 1px rgba(11,150,128,.1)}
 .lic-tier{font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.22em;text-transform:uppercase;padding:4px 8px;border-radius:2px;width:fit-content;grid-column:1}
 .lic-tier.pro{color:var(--c);border:1px solid rgba(11,150,128,.4);background:rgba(11,150,128,.06)}
-.lic-tier.lifetime{color:var(--purple);border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)}
-.lic-tier.yearly{color:var(--purple);border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)}
 .lic-key{font:700 17px/1.3 'IBM Plex Mono',monospace;color:#123b35;letter-spacing:.12em;word-break:break-all;grid-column:1}
 .lic-meta{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.04em;line-height:1.6;grid-column:1}
 .lic-meta b{color:#44726a;font-weight:400}
 .lic-state{grid-column:2;grid-row:1 / span 3;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .lic-state .badge{font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;padding:5px 9px;border-radius:2px;white-space:nowrap}
-.lic-state .badge.active{color:var(--c);border:1px solid rgba(11,150,128,.4);background:rgba(11,150,128,.06)}
 .lic-state .badge.expired{color:#6f9c93;border:1px solid rgba(14,80,70,.25)}
 
-/* ════════════════════════════════════════════════════════════════
-   OPTION 1 — native <details> fold, Expired collapsed
-   ════════════════════════════════════════════════════════════════ */
-.fold{border:1px solid var(--border);border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden}
-.fold summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#4f7d74}
-.fold summary::-webkit-details-marker{display:none}
-.fold summary .chev{transition:transform .2s;font-size:10px}
-.fold[open] summary .chev{transform:rotate(90deg)}
-.fold summary:hover{color:#2e5d55}
-.fold .licenses{padding:4px 14px 16px}
+/* ── Option A — underline tabs (text only, sliding underline) ── */
+.bt-a{display:flex;gap:28px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.bt-a button{background:none;border:none;padding:0 0 10px;font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6a958c;cursor:pointer;position:relative}
+.bt-a button.active{color:#1d4a43}
+.bt-a button.active::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--c)}
+.bt-a button:not(.active):hover{color:#2e5d55}
 
-/* ════════════════════════════════════════════════════════════════
-   OPTION 2 — tabs
-   ════════════════════════════════════════════════════════════════ */
-.tabs2{display:flex;gap:0;margin:0 0 18px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e7f7f0;width:fit-content}
-.tabs2 button{padding:9px 20px;background:transparent;border:none;color:#6a958c;font:400 11px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:.2s}
-.tabs2 button.active{color:var(--bg);background:var(--c)}
-.tabs2 button:not(.active):hover{color:#2e5d55}
+/* ── Option B — plain text links, dot-separated, no chrome at all ── */
+.bt-b{display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.bt-b button{background:none;border:none;padding:0;cursor:pointer;font:400 14px/1 'Bebas Neue',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8fb0a8}
+.bt-b button.active{color:var(--c)}
+.bt-b button:not(.active):hover{color:#5b8c82}
+.bt-b .sep{color:#a8c9c0;font-size:13px}
+
+/* ── Option C — outlined segmented control (border, not a filled pill) ── */
+.bt-c{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;width:fit-content;margin-bottom:18px}
+.bt-c button{background:transparent;border:none;padding:9px 20px;font:400 11px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6a958c;cursor:pointer;border-right:1px solid var(--border);transition:.2s}
+.bt-c button:last-child{border-right:none}
+.bt-c button.active{color:var(--c);background:rgba(11,150,128,.08)}
+.bt-c button:not(.active):hover{background:rgba(14,80,70,.04)}
+
+/* ── Option D — ghost count badge, active = bold text not a fill ── */
+.bt-d{display:flex;gap:26px;margin-bottom:18px}
+.bt-d button{background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:7px;font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7a9d96}
+.bt-d button.active{color:#1d4a43}
+.bt-d .count{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;background:rgba(14,80,70,.1);color:#4f7d74;padding:2px 7px;border-radius:10px;min-width:16px;text-align:center}
+.bt-d button.active .count{background:var(--c);color:#fff}
+
 .tab-panel{display:none}
 .tab-panel.active{display:block}
-
-/* ════════════════════════════════════════════════════════════════
-   OPTION 3 — static grouped sections, Expired dimmed (no fold)
-   ════════════════════════════════════════════════════════════════ */
-.lic.is-dim{opacity:.55;filter:saturate(.5)}
-.lic.is-dim .lic-key{color:#5b8079}
-
-/* ════════════════════════════════════════════════════════════════
-   OPTION 4 — custom accordion, both groups foldable, chevron + smooth height
-   ════════════════════════════════════════════════════════════════ */
-.acc{border:1px solid var(--border);border-radius:4px;background:rgba(255,255,255,.14);margin-bottom:12px;overflow:hidden}
-.acc-head{cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;font:400 12px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#4f7d74;user-select:none}
-.acc-head:hover{color:#2e5d55}
-.acc-head .chev{transition:transform .25s;font-size:10px;display:inline-block}
-.acc.open .acc-head .chev{transform:rotate(90deg)}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .28s ease}
-.acc-body-inner{padding:4px 14px 16px}
-.acc.open .acc-body{max-height:600px}
 </style>
 </head>
 <body>
 <div class="demo-shell">
   <div class="demo-head">
-    <h1>Your Licenses — 4 Layout Options</h1>
-    <p>Same data as your screenshot: Yearly (active), Pro 30-day (expired), Lifetime (active).</p>
+    <h1>Active / Expired — 4 Button Styles</h1>
+    <p>Same tabs concept you already picked, just different visual treatments — none of them look like the filled pill buttons.</p>
   </div>
 
-  <!-- ══════════════════════ OPTION 1 ══════════════════════ -->
+  <!-- OPTION A -->
   <div class="option">
-    <span class="option-tag">Option 1</span>
-    <div class="option-title">Active list + collapsed "Expired" fold</div>
-    <div class="option-desc">Active licenses are what you actually need to see, so they're shown directly. Expired sits in a single native fold, closed by default — one click reveals it. Simplest to build, fully accessible (keyboard + screen reader friendly) for free.</div>
-
-    <div class="section-label first">Active</div>
-    <div class="licenses">
-      <div class="lic yearly">
-        <div class="lic-tier yearly">Yearly · 1 year</div>
-        <div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div>
-        <div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div>
-        <div class="lic-state"><span class="badge active">Active</span></div>
-      </div>
-      <div class="lic lifetime">
-        <div class="lic-tier lifetime">Lifetime</div>
-        <div class="lic-key">ANT-6RXS-24QA-6055-ZC7J</div>
-        <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> never</div>
-        <div class="lic-state"><span class="badge active">Active</span></div>
-      </div>
+    <span class="option-tag">Option A</span>
+    <div class="option-title">Underline tabs</div>
+    <div class="option-desc">No background fill at all — just text with a thin sliding underline on whichever is selected. Closest to a classic tab bar.</div>
+    <div class="bt-a" id="grp-a">
+      <button type="button" class="active" data-panel="a-active">Active (2)</button>
+      <button type="button" data-panel="a-expired">Expired (1)</button>
     </div>
-
-    <details class="fold" style="margin-top:14px">
-      <summary><span>Expired (1)</span><span class="chev">&#9656;</span></summary>
-      <div class="licenses">
-        <div class="lic pro">
-          <div class="lic-tier pro">Pro · 30 days</div>
-          <div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div>
-          <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div>
-          <div class="lic-state"><span class="badge expired">Expired</span></div>
-        </div>
-      </div>
-    </details>
+    <div class="tab-panel active" id="a-active"><div class="licenses"><div class="lic" style="border-color:rgba(123,95,212,.35)"><div class="lic-tier" style="color:#7b5fd4;border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)">Yearly · 1 year</div><div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div><div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div></div></div></div>
+    <div class="tab-panel" id="a-expired"><div class="licenses"><div class="lic pro"><div class="lic-tier pro">Pro · 30 days</div><div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div><div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div><div class="lic-state"><span class="badge expired">Expired</span></div></div></div></div>
   </div>
 
-  <!-- ══════════════════════ OPTION 2 ══════════════════════ -->
+  <!-- OPTION B -->
   <div class="option">
-    <span class="option-tag">Option 2</span>
-    <div class="option-title">Tabs — "Active" / "Expired"</div>
-    <div class="option-desc">Matches the Log in / Sign up tab pattern already used on the auth page. Only one group on screen at a time, count shown right in the tab label. Best when the expired list could grow long — it never pushes Active down the page.</div>
-
-    <div class="tabs2" role="tablist">
-      <button type="button" class="active" onclick="document.querySelectorAll('#opt2-active,#opt2-expired').forEach(p=>p.classList.remove('active'));document.getElementById('opt2-active').classList.add('active');this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Active (2)</button>
-      <button type="button" onclick="document.querySelectorAll('#opt2-active,#opt2-expired').forEach(p=>p.classList.remove('active'));document.getElementById('opt2-expired').classList.add('active');this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Expired (1)</button>
+    <span class="option-tag">Option B</span>
+    <div class="option-title">Plain text links</div>
+    <div class="option-desc">Barely there — just two words, dot-separated, the selected one in brand teal. No box, no border, no fill anywhere.</div>
+    <div class="bt-b" id="grp-b">
+      <button type="button" class="active" data-panel="b-active">Active (2)</button>
+      <span class="sep">&middot;</span>
+      <button type="button" data-panel="b-expired">Expired (1)</button>
     </div>
-
-    <div class="tab-panel active" id="opt2-active">
-      <div class="licenses">
-        <div class="lic yearly">
-          <div class="lic-tier yearly">Yearly · 1 year</div>
-          <div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div>
-          <div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div>
-          <div class="lic-state"><span class="badge active">Active</span></div>
-        </div>
-        <div class="lic lifetime">
-          <div class="lic-tier lifetime">Lifetime</div>
-          <div class="lic-key">ANT-6RXS-24QA-6055-ZC7J</div>
-          <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> never</div>
-          <div class="lic-state"><span class="badge active">Active</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-panel" id="opt2-expired">
-      <div class="licenses">
-        <div class="lic pro">
-          <div class="lic-tier pro">Pro · 30 days</div>
-          <div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div>
-          <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div>
-          <div class="lic-state"><span class="badge expired">Expired</span></div>
-        </div>
-      </div>
-    </div>
+    <div class="tab-panel active" id="b-active"><div class="licenses"><div class="lic" style="border-color:rgba(123,95,212,.35)"><div class="lic-tier" style="color:#7b5fd4;border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)">Yearly · 1 year</div><div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div><div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div></div></div></div>
+    <div class="tab-panel" id="b-expired"><div class="licenses"><div class="lic pro"><div class="lic-tier pro">Pro · 30 days</div><div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div><div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div><div class="lic-state"><span class="badge expired">Expired</span></div></div></div></div>
   </div>
 
-  <!-- ══════════════════════ OPTION 3 ══════════════════════ -->
+  <!-- OPTION C -->
   <div class="option">
-    <span class="option-tag">Option 3</span>
-    <div class="option-title">Always-visible sections, Expired dimmed</div>
-    <div class="option-desc">No clicking at all — Active and Expired are just two clearly separated, labeled groups. Expired cards are desaturated + faded so your eye lands on Active first, but the history is still right there if you scroll. Best if you rarely have more than 1-2 expired licenses.</div>
-
-    <div class="section-label first">Active</div>
-    <div class="licenses">
-      <div class="lic yearly">
-        <div class="lic-tier yearly">Yearly · 1 year</div>
-        <div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div>
-        <div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div>
-        <div class="lic-state"><span class="badge active">Active</span></div>
-      </div>
-      <div class="lic lifetime">
-        <div class="lic-tier lifetime">Lifetime</div>
-        <div class="lic-key">ANT-6RXS-24QA-6055-ZC7J</div>
-        <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> never</div>
-        <div class="lic-state"><span class="badge active">Active</span></div>
-      </div>
+    <span class="option-tag">Option C</span>
+    <div class="option-title">Outlined segmented control</div>
+    <div class="option-desc">Same 2-choice segmented shape as before, but bordered/transparent instead of a solid filled pill — selected option just gets a faint tint, not a hard color block.</div>
+    <div class="bt-c" id="grp-c">
+      <button type="button" class="active" data-panel="c-active">Active (2)</button>
+      <button type="button" data-panel="c-expired">Expired (1)</button>
     </div>
-
-    <div class="section-label">Expired</div>
-    <div class="licenses">
-      <div class="lic pro is-dim">
-        <div class="lic-tier pro">Pro · 30 days</div>
-        <div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div>
-        <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div>
-        <div class="lic-state"><span class="badge expired">Expired</span></div>
-      </div>
-    </div>
+    <div class="tab-panel active" id="c-active"><div class="licenses"><div class="lic" style="border-color:rgba(123,95,212,.35)"><div class="lic-tier" style="color:#7b5fd4;border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)">Yearly · 1 year</div><div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div><div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div></div></div></div>
+    <div class="tab-panel" id="c-expired"><div class="licenses"><div class="lic pro"><div class="lic-tier pro">Pro · 30 days</div><div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div><div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div><div class="lic-state"><span class="badge expired">Expired</span></div></div></div></div>
   </div>
 
-  <!-- ══════════════════════ OPTION 4 ══════════════════════ -->
+  <!-- OPTION D -->
   <div class="option">
-    <span class="option-tag">Option 4</span>
-    <div class="option-title">Custom accordion — both groups foldable</div>
-    <div class="option-desc">The most "designed" option: both Active and Expired are click-to-toggle rows with a rotating chevron and a smooth height animation, not the plain native fold. Active opens by default; you can collapse it too if you just want a clean, empty-looking page.</div>
-
-    <div class="acc open" id="acc-active">
-      <div class="acc-head" onclick="document.getElementById('acc-active').classList.toggle('open')">
-        <span>Active &middot; 2</span><span class="chev">&#9656;</span>
-      </div>
-      <div class="acc-body"><div class="acc-body-inner">
-        <div class="licenses">
-          <div class="lic yearly">
-            <div class="lic-tier yearly">Yearly · 1 year</div>
-            <div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div>
-            <div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div>
-            <div class="lic-state"><span class="badge active">Active</span></div>
-          </div>
-          <div class="lic lifetime">
-            <div class="lic-tier lifetime">Lifetime</div>
-            <div class="lic-key">ANT-6RXS-24QA-6055-ZC7J</div>
-            <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> never</div>
-            <div class="lic-state"><span class="badge active">Active</span></div>
-          </div>
-        </div>
-      </div></div>
+    <span class="option-tag">Option D</span>
+    <div class="option-title">Ghost count badge</div>
+    <div class="option-desc">Label stays plain text (bold = selected), and the count moves into its own small rounded badge that only lights up brand-teal for the active one. No button shape around the words themselves.</div>
+    <div class="bt-d" id="grp-d">
+      <button type="button" class="active" data-panel="d-active">Active <span class="count">2</span></button>
+      <button type="button" data-panel="d-expired">Expired <span class="count">1</span></button>
     </div>
-
-    <div class="acc" id="acc-expired">
-      <div class="acc-head" onclick="document.getElementById('acc-expired').classList.toggle('open')">
-        <span>Expired &middot; 1</span><span class="chev">&#9656;</span>
-      </div>
-      <div class="acc-body"><div class="acc-body-inner">
-        <div class="licenses">
-          <div class="lic pro">
-            <div class="lic-tier pro">Pro · 30 days</div>
-            <div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div>
-            <div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div>
-            <div class="lic-state"><span class="badge expired">Expired</span></div>
-          </div>
-        </div>
-      </div></div>
-    </div>
+    <div class="tab-panel active" id="d-active"><div class="licenses"><div class="lic" style="border-color:rgba(123,95,212,.35)"><div class="lic-tier" style="color:#7b5fd4;border:1px solid rgba(123,95,212,.4);background:rgba(123,95,212,.06)">Yearly · 1 year</div><div class="lic-key">ANT-MNT8-03N6-7SWC-C0Z0</div><div class="lic-meta"><b>Issued:</b> 5 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 5 mai 2027</div></div></div></div>
+    <div class="tab-panel" id="d-expired"><div class="licenses"><div class="lic pro"><div class="lic-tier pro">Pro · 30 days</div><div class="lic-key">ANT-F62K-01EZ-ZPTY-SC4J</div><div class="lic-meta"><b>Issued:</b> 3 mai 2026 &middot; <b>Paid:</b> $0.00 &middot; <b>Expires:</b> 2 juin 2026</div><div class="lic-state"><span class="badge expired">Expired</span></div></div></div></div>
   </div>
 
 </div>
+<script>
+['a','b','c','d'].forEach(function(g){
+  document.getElementById('grp-'+g).querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.getElementById('grp-'+g).querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');
+      document.querySelectorAll('#'+g+'-active,#'+g+'-expired').forEach(function(p){p.classList.remove('active')});
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+  });
+});
+</script>
 </body>
 </html>
