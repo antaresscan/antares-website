@@ -164,16 +164,6 @@ footer span{color:var(--c)}
 .pay-subtitle{font:400 11px/1 'Bebas Neue',sans-serif;color:var(--c);letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-bottom:24px}
 .pay-amount{font:400 44px/1 'Bebas Neue',sans-serif;letter-spacing:.04em;color:var(--c);text-align:center;margin-bottom:4px}
 .pay-amount-caption{font:400 10px/1 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-bottom:22px}
-/* Email input — shown so the user enters it before checkout. The
-   license key is delivered tied to this email (and the buyer can
-   re-fetch it later at /account.html), so we ask up-front rather than
-   risk a confirmed payment with no recoverable identity. */
-.pay-email-row{display:flex;flex-direction:column;gap:6px;margin:0 0 18px}
-.pay-email-row label{font:400 10px/1 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.18em;text-transform:uppercase}
-.pay-email-row input{padding:10px 12px;background:#e7f7f0;color:#123b35;border:1px solid var(--border);border-radius:2px;font:400 13px/1 'IBM Plex Mono',monospace}
-.pay-email-row input:focus{border-color:var(--c);outline:none}
-.pay-email-row input.invalid{border-color:#d64848}
-.pay-email-hint{font:400 10px/1.4 'Bebas Neue',sans-serif;color:#6f9c93;letter-spacing:.04em}
 .pay-coins{display:flex;justify-content:center;align-items:center;gap:6px;margin:0 0 18px;font:400 10px/1.5 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.12em;text-transform:uppercase;flex-wrap:wrap}
 .pay-coins .pay-coin{padding:3px 8px;background:#d4f0e4;border:1px solid rgba(14,80,70,.18);border-radius:3px;color:#2e6055}
 .pay-coins .pay-coins-more{color:#6f9c93}
@@ -398,15 +388,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <button class="pay-close" id="pay-close" aria-label="Close">&times;</button>
     <h3 class="pay-title" id="pay-title">Antares Pro · 30 days</h3>
     <div class="pay-subtitle" id="pay-subtitle">Pay with any crypto &middot; 200+ supported</div>
-    <div class="pay-email-row" id="pay-email-row">
-      <label for="pay-email">Your email (account + receipt)</label>
-      <input type="email" id="pay-email" name="email" autocomplete="email" placeholder="you@degen.sol" spellcheck="false">
-      <div class="pay-email-hint" id="pay-email-hint">Pro auto-activates on every device where you sign in to your Antares account. We email a receipt here too.</div>
-      <div class="pay-email-authnote" id="pay-email-authnote" style="display:none;font:400 10px/1.5 'IBM Plex Mono',monospace;color:var(--c);letter-spacing:.04em;margin-top:4px"></div>
-      <div class="pay-email-loginlink" id="pay-email-loginlink" style="font:400 10px/1.5 'IBM Plex Mono',monospace;color:#6f9c93;letter-spacing:.04em;margin-top:4px">
-        Already have an account? <a href="./auth?return=%2Fpricing.html" style="color:var(--c);text-decoration:none">Log in</a> to skip this step.
-      </div>
-    </div>
     <div class="pay-amount" id="pay-amount">—</div>
     <div class="pay-amount-caption" id="pay-amount-caption">USD &middot; pay in any crypto</div>
     <div class="pay-coins" aria-label="Supported cryptocurrencies">
@@ -554,44 +535,13 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var amountEl = document.getElementById('pay-amount');
   var statusEl = document.getElementById('pay-status');
   var closeBtn = document.getElementById('pay-close');
-  var emailInput = document.getElementById('pay-email');
-  var emailHintEl = document.getElementById('pay-email-hint');
-  var emailAuthnoteEl = document.getElementById('pay-email-authnote');
-  var emailLoginLinkEl = document.getElementById('pay-email-loginlink');
-  var emailRow = document.getElementById('pay-email-row');
   var ctaBtn = document.getElementById('pay-cta-btn');
   var ctaTextEl = ctaBtn.querySelector('.pay-cta-text');
   var licenseRow = document.getElementById('pay-license');
   var licenseKeyEl = document.getElementById('pay-license-key');
   var licenseCopyBtn = document.getElementById('pay-license-copy');
 
-  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   var currentTier = null;
-
-  // Persist whatever the buyer typed locally so refreshes don't lose it.
-  try {
-    var saved = localStorage.getItem('antares_buyer_email') || '';
-    if (saved) emailInput.value = saved;
-  } catch(_) {}
-
-  function readEmail() {
-    var v = (emailInput.value || '').trim().toLowerCase();
-    return EMAIL_RE.test(v) ? v : '';
-  }
-
-  function refreshCtaState() {
-    // CTA enabled when: logged in (email comes from session) OR a valid
-    // email is in the input. Email field is hidden for logged-in users so
-    // we never block them on it.
-    var ready = !!loggedInEmail || !!readEmail();
-    ctaBtn.disabled = !ready;
-  }
-
-  emailInput.addEventListener('input', function() {
-    try { localStorage.setItem('antares_buyer_email', emailInput.value); } catch(_) {}
-    emailInput.classList.remove('invalid');
-    refreshCtaState();
-  });
 
   function setStatus(state, html) {
     if (!html) {
@@ -612,15 +562,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     ctaTextEl.textContent = 'Continue to checkout';
   }
 
-  function applyLoggedInUI() {
-    if (!loggedInEmail) return;
-    emailInput.value = loggedInEmail;
-    emailRow.style.display = 'none';
-    emailAuthnoteEl.style.display = 'block';
-    emailAuthnoteEl.textContent = '✓ Logged in as ' + loggedInEmail + '. License will be linked to this account.';
-    emailLoginLinkEl.style.display = 'none';
-    refreshCtaState();
-  }
+  function applyLoggedInUI() {}
 
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
@@ -677,13 +619,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     // cookie. Anonymous users need a valid email or we have no recovery
     // path for the license. The CTA-disable logic above already enforces
     // this; double-check defensively.
-    var email = readEmail();
-    if (!loggedInEmail && !email) {
-      emailInput.classList.add('invalid');
-      emailInput.focus();
-      setStatus('expired', 'Enter a valid email above first');
-      return;
-    }
+    var email = loggedInEmail || '';
 
     // Open the placeholder tab synchronously. Without this, window.open
     // called from inside the .then() below gets popup-blocked because
@@ -820,10 +756,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       renderTier(currentTier);
       setStatus(null);
       licenseRow.style.display = 'none';
-      // Logged-in users skip the email input (handled by applyLoggedInUI
-      // which already hid the row + showed the "✓ Logged in as …" note).
-      // refreshCtaState picks up the session email so the CTA is enabled.
-      refreshCtaState();
+      ctaBtn.disabled = false;
     });
   }
 
