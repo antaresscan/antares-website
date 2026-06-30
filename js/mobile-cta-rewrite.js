@@ -10,14 +10,14 @@
 
    This script rewrites the CTA copy on mobile only so the call to
    action matches what the user can actually do: open the site on
-   a desktop browser. The link still points at /install so the user
+   a PC browser. The link still points at /install so the user
    can preview the install steps if they want, but the prominent
    action they see is honest.
 
    Desktop is untouched — the script bails out above 760px viewport.
    /install itself is also skipped: the user is already on the page
    they were going to be redirected to, so rewriting the nav CTA
-   there to "Open on desktop ↗" would be confusing.
+   there to "Open on PC ↗" would be confusing.
 
    Loaded via:
      <script src="/js/mobile-cta-rewrite.js" defer></script>
@@ -48,11 +48,11 @@
     var text = (a.textContent || '').trim();
     if (!/install/i.test(text)) return;
 
-    // One copy everywhere: "Full content available on desktop ↗".
+    // One copy everywhere: "Full content available on PC ↗".
     // The earlier two-copy branch (body vs. footer) was inconsistent
     // — the user gets a different sentence depending on where they
     // tap on the page. One line, applied uniformly, reads better.
-    a.textContent = 'Full content available on desktop ↗';
+    a.textContent = 'Full content available on PC ↗';
     a.setAttribute('data-mobile-rewritten', 'install');
   });
 
@@ -60,10 +60,10 @@
   // modal that calls window.open() → NOWPayments. Popups are
   // unreliable on mobile (iOS Safari often blocks; Android opens
   // the URL but the in-tab UX is rough). Rewrite + disable the
-  // click so we redirect the user to desktop instead of letting
+  // click so we redirect the user to PC instead of letting
   // them hit a broken flow.
   document.querySelectorAll('button.tier-cta.primary, button.tier-cta.purple').forEach(function (btn) {
-    btn.textContent = 'Subscribe on desktop ↗';
+    btn.textContent = 'Subscribe on PC ↗';
     btn.setAttribute('data-mobile-rewritten', 'tier-cta');
     // Capture-phase listener so we beat the inline handler attached
     // by pricing.html's own checkout script.
@@ -76,7 +76,7 @@
   // Footer cleanup — only on non-home pages, where css/mobile-fixes.css
   // promotes the install link to its own line. The original markup
   // shipped a " · " text node between every <a> in .foot-links to act
-  // as the visual separator on desktop. With the install link now
+  // as the visual separator on PC. With the install link now
   // display:block, that text node orphans at the start of the second
   // line ("· Support · Privacy · About"). Strip just the one " · "
   // that sits between Install and Support; leave the other separators
