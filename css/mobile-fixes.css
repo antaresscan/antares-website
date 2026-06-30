@@ -578,6 +578,7 @@ body.menu-open { overflow: hidden; }
      too (less motion = calmer page). */
   .cta-final::before,
   .cta-final::after { display: none !important; }
+  .cta-final a.cta { display: none !important; }
 }
 
 /* ──────────────────────────────────────────────────────────────────
