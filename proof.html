@@ -8,13 +8,13 @@
 <meta name="theme-color" content="#0ca88c">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Proof &mdash; Antares</title>
-<meta name="description" content="How we prove the Antares scoring engine works. A frozen corpus of real Solana tokens, a nightly drift check against the same /api/scan endpoint your extension hits, and a scoped audit path for security researchers.">
+<meta name="description" content="How we prove the Antares scoring engine works. A corpus of real Solana scans, a weekly drift check against the same /api/scan endpoint your extension hits, and a scoped audit path for security researchers.">
 <meta name="author" content="Antares">
 <link rel="canonical" href="https://antaresscan.com/proof">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://antaresscan.com/proof">
 <meta property="og:title" content="Proof &mdash; Antares">
-<meta property="og:description" content="Real Solana tokens. Re-tested nightly. Public method, scoped audit on request. How we keep an honest scoring engine when the source is closed.">
+<meta property="og:description" content="Real Solana tokens. Re-checked weekly. Public method, scoped audit on request. How we keep an honest scoring engine when the source is closed.">
 <meta property="og:image" content="https://antaresscan.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@antaresscan">
 <meta name="twitter:title" content="Proof &mdash; Antares">
-<meta name="twitter:description" content="Real Solana tokens. Re-tested nightly. Public method, scoped audit on request.">
+<meta name="twitter:description" content="Real Solana tokens. Re-checked weekly. Public method, scoped audit on request.">
 <meta name="twitter:image" content="https://antaresscan.com/assets/og-image.png">
 <link rel="stylesheet" href="/css/base.css">
 <style>
@@ -166,17 +166,17 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 <div class="section-label"><span>The corpus</span></div>
 <div class="card">
   <p>
-    The backtest corpus is a frozen library of real Solana token scans, captured by hitting the exact same <code>/api/scan</code> endpoint your extension hits. Each entry records the verdict the engine returned, the score it produced, every flag it raised, and the supporting on-chain state at capture time &mdash; holder count, liquidity, LP-burn status. <b>Nothing is synthesised. Every row is a real mint that traded on Solana.</b>
+    The backtest corpus is a library of real Solana token scans, captured by hitting the exact same <code>/api/scan</code> endpoint your extension hits. Each entry records the verdict the engine returned, the score it produced, every flag it raised, and the supporting on-chain state at capture time &mdash; holder count, liquidity, LP-burn status. <b>Nothing is synthesised. Every row is a real Solana mint, captured on the day it was scanned</b>, so a row shows how the engine behaved then, not necessarily today.
   </p>
   <p>
-    The corpus is intentionally skewed toward known rug pulls. False negatives on rugs are the catastrophic failure mode &mdash; a SAFE verdict on a token that turns out to drain its LP is what destroys user trust &mdash; so the test set is built to hammer the engine on the worst cases. Clean blue-chip memecoins are represented to catch the inverse failure mode (false positives on legitimate liquidity), and the borderline middle bands have enough coverage that a tuning change can't silently re-flag half the corpus.
+    The corpus leans toward dead and rugged tokens: of the 504 captured entries, 233 are labelled RUG or DANGER, 229 CAUTION and 42 SAFE. Labels come from market data (market cap, liquidity, age, price change), not from an investigation, so a label is a hint, not a verdict. The corpus exists for regression: a change to the engine that flips a stored verdict outside its tolerated band is caught before release. It is not a measure of accuracy, and we do not publish one.
   </p>
 </div>
 
-<div class="section-label"><span>The nightly drift check</span></div>
+<div class="section-label"><span>The weekly drift check</span></div>
 <div class="card">
   <p>
-    Every night an automated job re-scans every token in the corpus against the live <code>/api/scan</code> endpoint and compares the new verdict and score against the captured snapshot. The check has three independent failure modes, ranked by severity:
+    Every Monday an automated job re-scans a rotating sample of 100 corpus tokens against the live <code>/api/scan</code> endpoint (the whole corpus in about five weeks) and compares the new verdict and score against the captured snapshot. It reports three things:
   </p>
 </div>
 
@@ -184,32 +184,32 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   <div class="mode crit">
     <span class="dot" aria-hidden="true"></span>
     <div class="mode-body">
-      <span class="tag">Critical &mdash; hard failure</span>
-      <h4>False negative regression</h4>
-      <p>A labelled rug starts coming back SAFE. <b>Hard failure</b> &mdash; opens a tracking issue immediately, blocks merges to the scoring layer until resolved.</p>
+      <span class="tag">Finding &mdash; tracked</span>
+      <h4>A verdict moved</h4>
+      <p>A re-scanned token comes back with a different verdict than its snapshot. Listed in the report; when more than 5% of the sample moved, a tracking issue is opened and refreshed on later runs.</p>
     </div>
   </div>
   <div class="mode crit">
     <span class="dot" aria-hidden="true"></span>
     <div class="mode-body">
-      <span class="tag">Critical &mdash; hard failure</span>
-      <h4>False positive regression</h4>
-      <p>A labelled blue-chip starts coming back DANGER or RUG. Same severity, same gate. Erodes credibility just as fast as a missed rug.</p>
+      <span class="tag">Critical &mdash; the check itself</span>
+      <h4>The check could not measure</h4>
+      <p>More than 20% of the scans failed, or nothing could be compared. The job fails visibly instead of passing green having measured nothing.</p>
     </div>
   </div>
   <div class="mode warn">
     <span class="dot" aria-hidden="true"></span>
     <div class="mode-body">
       <span class="tag">Warning &mdash; soft signal</span>
-      <h4>Verdict-band drift</h4>
-      <p>Borderline tokens shift one band (CAUTION &rarr; DANGER or back). Surfaces in the daily report so a human can decide whether the label needs an update or the engine needs a tune.</p>
+      <h4>Score drift</h4>
+      <p>Same verdict, but the score moved by more than 150 points. Listed in the report so a human can decide whether the label needs an update or the engine needs a tune.</p>
     </div>
   </div>
 </div>
 
 <div class="card">
   <p>
-    The job hits production &mdash; the same endpoint your extension uses. <b>No mocks, no synthetic data, no shortcuts.</b> Requests are rate-limited so the check doesn't compete with real user traffic. The corpus itself is read-only; the job verifies, it never mutates.
+    The job hits production &mdash; the same endpoint your extension uses. <b>No mocks, no synthetic data, no shortcuts.</b> Requests are spaced out so the check does not compete with real user traffic. The corpus itself is read-only; the job verifies, it never mutates.
   </p>
 </div>
 
@@ -229,7 +229,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   <div class="invariant">
     <div class="num">02 / Logic</div>
     <h4>The verdicts have a logic.</h4>
-    <p>Re-scan any token currently in the corpus and the score should land in the same band as the snapshot unless the on-chain state genuinely moved. When the band shifts for no chain reason, that's a story we owe you.</p>
+    <p>Re-scan any token currently in the corpus and the score should land in the same band as the snapshot unless the on-chain state, or our engine, genuinely changed (engine changes are listed in the changelog). When the band shifts for no chain reason, that's a story we owe you.</p>
   </div>
   <div class="invariant">
     <div class="num">03 / Flags</div>
@@ -238,8 +238,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   </div>
   <div class="invariant">
     <div class="num">04 / Gating</div>
-    <h4>The drift check has teeth.</h4>
-    <p>A regression in either direction trips a hard CI failure on the daily run &mdash; not a soft warning that someone has to remember to read.</p>
+    <h4>The check can fail.</h4>
+    <p>A run that finds drift opens a tracking issue, and a run that could not measure fails visibly &mdash; not a green tick that means nothing.</p>
   </div>
 </div>
 
