@@ -240,18 +240,12 @@ footer .foot-links a:hover{color:#6f9c93}
 .loss-strip .section-label{position:relative;z-index:1}
 .loss-strip-inner{position:relative;z-index:1}
 
-/* Background candlestick chart: climb → crash, reveals left-to-right
-   every 8s. Each side (green climb, red crash) fades in with the
-   reveal so the chart reads as drawn live, not flickering. */
-.loss-chart-bg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.32;z-index:0;clip-path:inset(0 100% 0 0);animation:loss-chart-reveal 8s ease-in-out infinite;will-change:clip-path}
+/* Background candlestick chart: climb → crash, static. It used to
+   sweep in via an infinite clip-path animation, which repainted ~110
+   drop-shadowed shapes every frame (35 fps on desktop). */
+.loss-chart-bg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.32;z-index:0}
 .loss-chart-bg .candles-up rect,.loss-chart-bg .candles-up line{filter:drop-shadow(0 0 4px rgba(11,150,128,.4))}
 .loss-chart-bg .candles-down rect,.loss-chart-bg .candles-down line{filter:drop-shadow(0 0 6px rgba(210,51,79,.55))}
-@keyframes loss-chart-reveal{
-  0%   {clip-path:inset(0 100% 0 0);opacity:.32}
-  55%  {clip-path:inset(0 0 0 0);   opacity:.32}
-  85%  {clip-path:inset(0 0 0 0);   opacity:.32}
-  100% {clip-path:inset(0 100% 0 0);opacity:.32}
-}
 .loss-strip-inner{position:relative;max-width:780px;margin:0 auto;padding:0 32px;text-align:center}
 .loss-strip-num{font:400 clamp(64px,10vw,118px)/.9 'Bebas Neue',sans-serif;letter-spacing:.02em;color:rgba(14,66,58,.36);margin-bottom:14px;text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12);display:flex;align-items:baseline;justify-content:center;gap:0}
 .loss-strip-sub{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:16px;color:#4f7d74;line-height:1.8;letter-spacing:.16em;text-transform:uppercase;margin-bottom:30px}
