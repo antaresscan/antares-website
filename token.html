@@ -304,6 +304,18 @@ footer span{color:var(--c)}
   pointer-events:none;z-index:0;opacity:.4}
       .skip-link{position:absolute;top:-100%;left:0;background:var(--c);color:#0f0f11;padding:8px 16px;z-index:10000;font-size:12px;text-decoration:none;transition:top .2s}
     .skip-link:focus{top:0}
+/* Pro gate: what a Free visitor sees instead of the Full Analysis (the API sends a Free caller the verdict only, see antares-extension api/_lib/pro-gate.ts) */
+.pro-gate{max-width:560px;margin:60px auto 0;padding:34px 30px;border:1px solid #1e1e22;background:#141417;text-align:center}
+.pro-gate .pg-eye{font-size:11px;color:#777;letter-spacing:.2em;text-transform:uppercase}
+.pro-gate .pg-verdict{font:400 56px/1 'Bebas Neue',sans-serif;letter-spacing:.06em;color:var(--c);margin:10px 0 2px}
+.pro-gate .pg-token{font-size:12px;color:#888;letter-spacing:.06em}
+.pro-gate h2{font:400 26px/1.1 'Bebas Neue',sans-serif;letter-spacing:.08em;color:#e0e0e0;margin:26px 0 10px}
+.pro-gate p{font-size:12px;line-height:1.7;color:#8a8a90}
+.pro-gate .pg-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.pro-gate .pg-btn{font:400 16px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:12px 22px;border:1px solid #2a2a2e;color:#aaa;transition:.2s}
+.pro-gate .pg-btn:hover{border-color:var(--c);color:var(--c)}
+.pro-gate .pg-btn.primary{color:#04140f;background:var(--c);border-color:var(--c)}
+.pro-gate .pg-btn.primary:hover{color:#04140f}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Antares — Token Analysis","description":"Full analysis: score, flags, chart patterns, AI summary, and detailed risk breakdown for this Solana token.","url":"https://antaresscan.com/token","isPartOf":{"@type":"WebSite","name":"Antares","url":"https://antaresscan.com/"},"about":{"@type":"SoftwareApplication","name":"Antares","applicationCategory":"BrowserApplication","operatingSystem":"Chrome","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}}</script>
 <link rel="stylesheet" href="/css/mobile-fixes.css">
@@ -454,14 +466,39 @@ async function init(ca){
   document.getElementById("token-ca-text").textContent=ca
   document.title="Antares — "+ca.slice(0,8)+"…"
   try{
-    const res=await fetch(API+"?ca="+ca)
+    // Full Analysis is Pro: the API reads the plan from the session cookie, which has to travel with this cross-site request.
+    const res=await fetch(API+"?ca="+ca,{credentials:"include"})
     if(!res.ok)throw new Error(res.status)
     const d=await res.json()
+    // A Free caller is sent the verdict only (proLocked): there is no analysis to draw, so say so instead of an empty page.
+    if(d&&d.proLocked===true){renderProGate(d,ca);return}
     render(d,ca)
   }catch(e){
     document.getElementById("token-name").textContent="API Error"
     document.getElementById("token-desc").textContent="Could not load token data. Try again later."
   }
+}
+
+function renderProGate(d,ca){
+  const c=COLORS[d.risk]||"#6b7280"
+  document.documentElement.style.setProperty("--c",c)
+  const label=LABELS[d.risk]||d.risk||""
+  const name=d.tokenName||d.pair?.baseToken?.name||""
+  const symbol=d.tokenSymbol||d.pair?.baseToken?.symbol||""
+  document.title="Antares — "+(name||ca.slice(0,8)+"…")
+  const token=[name,symbol?"$"+symbol:""].filter(Boolean).join(" · ")
+  document.getElementById("main-content").innerHTML=
+    '<section class="pro-gate" id="pro-gate">'+
+      '<div class="pg-eye">Token Analysis</div>'+
+      (label?'<div class="pg-verdict">'+esc(label)+'</div>':"")+
+      (token?'<div class="pg-token">'+esc(token)+'</div>':"")+
+      '<h2>Full Analysis is part of Antares Pro</h2>'+
+      '<p>The sources, the flags behind the verdict, the AI summary, the holders and the Insider Watch are reserved for Pro accounts. The verdict above is what the free overlay shows.</p>'+
+      '<div class="pg-actions">'+
+        '<a class="pg-btn primary" href="/pricing">Unlock with Pro</a>'+
+        '<a class="pg-btn" href="/auth">Already Pro? Sign in</a>'+
+      '</div>'+
+    '</section>'
 }
 
 function render(d,ca){
