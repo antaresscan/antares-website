@@ -73,6 +73,12 @@ body{background:#0f0f11;color:#d0d0d0;font-family:'IBM Plex Mono',monospace;over
   border:1px solid #1a1a1d;padding:3px 8px;margin-top:6px;display:inline-block}
 
 .score-card{background:#141417;border:1px solid #1e1e22;overflow:hidden;position:relative}
+/* Limited data (API `sourceGap`): a data source did not answer, so the scan has NO verdict. Same look as the extension's overlay: the word and the top bar in the four
+   verdict colours mixed (each holds a plateau, the fade is computed in oklab where understood). */
+.verdict.limited{color:transparent!important;background:linear-gradient(90deg,#00e5b0 0%,#00e5b0 14%,#f5d000 38%,#f5d000 42%,#ff5f5f 62%,#ff5f5f 66%,#ff2244 88%,#ff2244 100%)!important;background:linear-gradient(in oklab 90deg,#00e5b0 0%,#00e5b0 14%,#f5d000 38%,#f5d000 42%,#ff5f5f 62%,#ff5f5f 66%,#ff2244 88%,#ff2244 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;border-color:#2a2a30!important}
+#score-top.limited{background:linear-gradient(90deg,#00e5b0 0%,#00e5b0 14%,#f5d000 38%,#f5d000 42%,#ff5f5f 62%,#ff5f5f 66%,#ff2244 88%,#ff2244 100%)!important;background:linear-gradient(in oklab 90deg,#00e5b0 0%,#00e5b0 14%,#f5d000 38%,#f5d000 42%,#ff5f5f 62%,#ff5f5f 66%,#ff2244 88%,#ff2244 100%)!important}
+.limited-note{margin-top:14px;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#777;line-height:1.8}
+.limited-note[hidden]{display:none}
 .score-top{height:3px;background:var(--c)}
 .score-inner{padding:28px;text-align:center}
 .score-num{font:400 76px/1 'Bebas Neue',sans-serif;color:var(--c)}
@@ -355,6 +361,7 @@ h1{color:#eaeaea}
         <div class="scan-chips" id="scan-chips"></div>
       </div>
     </div>
+    <div class="limited-note" id="limited-note" role="status" hidden></div>
   </div>
 </div>
 
@@ -450,24 +457,68 @@ const ca=params.get("ca")
 if(!ca){document.querySelector(".shell").innerHTML="<p style='color:#ff5f5f;padding:80px 0;text-align:center'>No token address provided.</p>"}
 else{init(ca)}
 
-async function init(ca){
+async function init(ca,retry){
   document.getElementById("token-ca-text").textContent=ca
-  document.title="Antares — "+ca.slice(0,8)+"…"
+  if(!retry)document.title="Antares — "+ca.slice(0,8)+"…"
   try{
     const res=await fetch(API+"?ca="+ca)
     if(!res.ok)throw new Error(res.status)
     const d=await res.json()
     render(d,ca)
   }catch(e){
+    // A try of the Limited data countdown that cannot reach the API: the page stays as it is and tries again in a minute.
+    if(retry){armLimited(null,ca,Date.now()+60000);return}
     document.getElementById("token-name").textContent="API Error"
     document.getElementById("token-desc").textContent="Could not load token data. Try again later."
   }
 }
 
+// ── LIMITED DATA ──────────────────────────────────────────────────────────────────────────────────────
+// The API marks `sourceGap` a scan made while Helius, RugCheck or GoPlus (or the chart of an old token, or the whole scan out of time) did not answer: such a
+// scan has NO verdict, whatever the engine reached without that source (replayed on 1 121 tokens with one source silent, a SAFE read CAUTION, a DANGER read
+// SAFE, a RUG read DANGER). Like the extension's overlay, this page then shows "LIMITED DATA", no score, no verdict-derived section, and counts down to a
+// new try which it makes by itself; when every source answers, the real verdict takes its place. Nothing from the API goes in the note: its words are ours.
+const LIMITED_GIVE_UP_MS=15*60*1000
+let limitedTimer=null,limitedTick=null,limitedStarted=0,limitedTries=0
+function clearLimited(){
+  if(limitedTimer){clearTimeout(limitedTimer);limitedTimer=null}
+  if(limitedTick){clearInterval(limitedTick);limitedTick=null}
+}
+function resetLimited(){clearLimited();limitedStarted=0;limitedTries=0}
+function limitedWords(left){
+  if(left===null)return"Source unavailable"
+  if(left<=0)return"Source unavailable, rescanning…"
+  return"Source unavailable, rescanning in "+Math.ceil(left/1000)+"s"
+}
+/** Show the countdown and plan the next try for `at` (an epoch in ms). `d` is the answer on screen, or null after a try that could not reach the API. */
+function armLimited(d,ca,at){
+  clearLimited()
+  const note=document.getElementById("limited-note")
+  if(!limitedStarted)limitedStarted=Date.now()
+  const gaveUp=Date.now()-limitedStarted>=LIMITED_GIVE_UP_MS
+  const paint=()=>{note.textContent=limitedWords(gaveUp?null:at-Date.now())}
+  note.hidden=false
+  paint()
+  if(gaveUp)return // the line stays, bare; a reload starts over
+  limitedTick=setInterval(()=>{paint();if(at-Date.now()<=0){clearInterval(limitedTick);limitedTick=null}},1000)
+  limitedTimer=setTimeout(()=>{limitedTimer=null;limitedTries++;init(ca,true)},Math.max(0,at-Date.now()))
+}
+/** When to ask again: the first two tries follow the API's own 30 s copy of the answer (asking sooner only gets the same answer back), then a minute apart. */
+function limitedNextAt(d){
+  if(limitedTries>=2)return Date.now()+60000
+  const made=typeof d.fetchedAt==="number"&&d.fetchedAt<=Date.now()+60000?d.fetchedAt:Date.now()
+  const fresh=typeof d.freshForSec==="number"&&d.freshForSec>=0?Math.min(d.freshForSec,60):30
+  return Math.max(made+fresh*1000+1000,Date.now()+1000)
+}
+
 function render(d,ca){
-  const c=COLORS[d.risk]||"#6b7280"
-  const label=LABELS[d.risk]||d.risk
+  const limited=d.sourceGap===true
+  const c=limited?"#8b9099":(COLORS[d.risk]||"#6b7280")
+  const label=limited?"LIMITED DATA":(LABELS[d.risk]||d.risk)
   document.documentElement.style.setProperty("--c",c)
+  document.getElementById("verdict").classList.toggle("limited",limited)
+  document.getElementById("score-top").classList.toggle("limited",limited)
+  if(!limited){resetLimited();document.getElementById("limited-note").hidden=true}
 
   const logoUrl=d.tokenLogo||d.pair?.info?.imageUrl||null
   if(logoUrl){
@@ -483,7 +534,7 @@ function render(d,ca){
   nameEl.textContent=name+(symbol?" ("+symbol+")":"")
   nameEl.setAttribute("data-text",name)
   document.getElementById("token-eyebrow").textContent=symbol?symbol+" ANALYSIS":"TOKEN ANALYSIS"
-  document.getElementById("token-desc").textContent="Score: "+d.score+" / 1000 — Verdict: "+label
+  document.getElementById("token-desc").textContent=limited?"We would rather wait than mislead you":"Score: "+d.score+" / 1000 — Verdict: "+label
 
   const changesRow=document.getElementById("changes-row")
   const p1=fmtPct(d.priceChange1h),p24=fmtPct(d.priceChange24h)
@@ -508,7 +559,7 @@ function render(d,ca){
       `<span class="dex-tag">DEX: ${esc(d.pair.dexId.toUpperCase())} · <a href="${safeUrl(d.pair.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--c);text-decoration:none">View on DexScreener ↗</a></span>`
   }
 
-  document.getElementById("score-num").textContent=d.score||"—"
+  document.getElementById("score-num").textContent=limited?"—":(d.score||"—")
   document.getElementById("score-top").style.background=c
   const v=document.getElementById("verdict")
   v.textContent=label;v.style.color=c
@@ -558,7 +609,8 @@ function render(d,ca){
   }).join("")
 
   const gateEl=document.getElementById("gate-status")
-  const gateActive=d.safeBlocked||d.risk==="RUG"||d.risk==="DANGER"
+  const gateActive=!limited&&(d.safeBlocked||d.risk==="RUG"||d.risk==="DANGER")
+  for(const el of [layerGrid,gateEl,document.querySelector(".flags-section")])if(el)el.style.display=limited?"none":""
   if(gateActive){
     gateEl.innerHTML='<div class="gate-dot" style="background:#f5d000;animation:blink 1.4s ease infinite"></div>GATE ACTIVE'
     gateEl.style.color="#f5d000"
@@ -590,7 +642,7 @@ function render(d,ca){
   // Solscan toujours inclus dans le fallback
   const srcNames=d.sources_used&&d.sources_used.length
     ? (d.sources_used.includes("Solscan")?d.sources_used:[...d.sources_used,"Solscan"])
-    : ["DexScreener","RugCheck","GoPlus","Helius RPC","Solscan"]
+    : (limited?[]:["DexScreener","RugCheck","GoPlus","Helius RPC","Solscan"])
   const srcGrid=document.getElementById("sources-grid")
   srcGrid.style.gridTemplateColumns="repeat("+Math.min(srcNames.length,5)+",1fr)"
   srcGrid.innerHTML=srcNames.map(s=>{
@@ -714,7 +766,8 @@ function render(d,ca){
   const ohBlock=document.getElementById("oh-block")
   const ohSec=document.getElementById("oh-section")
   const verdictUpper=String(d.risk||"").toUpperCase()
-  const showOutcome=verdictUpper==="RUG"||verdictUpper==="RUG PULL"||verdictUpper==="DANGER"
+  const showOutcome=!limited&&(verdictUpper==="RUG"||verdictUpper==="RUG PULL"||verdictUpper==="DANGER")
+  if(ohBlock)ohBlock.style.display=""
   const os=d.outcomeStats
   if(!showOutcome){
     if(ohBlock)ohBlock.style.display="none"
@@ -761,6 +814,7 @@ function render(d,ca){
   }else{
     ohSec.innerHTML='<div class="oh-empty">Outcome distribution unavailable for this verdict band.</div>'
   }
+  if(limited)armLimited(d,ca,limitedNextAt(d))
 }
 
 /** HTML-escape a string for safe innerHTML interpolation. The token
