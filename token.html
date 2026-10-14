@@ -487,8 +487,8 @@ function clearLimited(){
 function resetLimited(){clearLimited();limitedStarted=0;limitedTries=0}
 function limitedWords(left){
   if(left===null)return"Source unavailable"
-  if(left<=0)return"Source unavailable, rescanning…"
-  return"Source unavailable, rescanning in "+Math.ceil(left/1000)+"s"
+  if(left<=0)return"Rescanning…"
+  return"Rescanning in "+Math.ceil(left/1000)+"s"
 }
 /** Show the countdown and plan the next try for `at` (an epoch in ms). `d` is the answer on screen, or null after a try that could not reach the API. */
 function armLimited(d,ca,at){
