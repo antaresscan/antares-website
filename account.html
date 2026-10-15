@@ -124,12 +124,32 @@ main{padding-bottom:80px}
 .checkout-banner-instr{font:400 11px/1.5 'Bebas Neue',sans-serif;color:#4f7d74;margin-top:10px}
 .checkout-banner-instr a{color:var(--c)}
 
+/* ── Folded sections: Licenses · Pro on your devices · Your data ───────────
+   One quiet row per section, closed until clicked. The title and a short
+   summary on the row, a chevron that turns when open. */
+.acc-list{display:flex;flex-direction:column;gap:12px;margin:26px 0 0}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:4px;transition:border-color .2s,box-shadow .2s}
+.acc:hover,.acc[open]{border-color:rgba(11,150,128,.35)}
+.acc[open]{box-shadow:0 12px 32px rgba(8,80,70,.06)}
+.acc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:18px 22px;user-select:none;-webkit-user-select:none}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary:focus-visible{outline:2px solid #0b7d68;outline-offset:2px}
+.acc-title{font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#44726a;transition:color .2s}
+.acc[open]>summary .acc-title{color:var(--c)}
+.acc-meta{flex:1;text-align:right;font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#6f9c93}
+.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #6f9c93;border-bottom:2px solid #6f9c93;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 0}
+.acc[open]>summary .acc-chev{transform:rotate(-135deg);margin-top:3px}
+.acc-body{padding:20px 22px 22px;border-top:1px solid var(--border)}
+.acc-body .activate-callout{margin:0;padding:0;border:none;background:none}
+.acc-body .lic-tabs{margin-top:0}
+.acc-body .empty{padding:6px 0;background:none;border:none}
+
 /* ── Your data / delete account (audit A-14b) ────────────────────────────
    The privacy policy promises "Delete account" on this page. The card is
    quiet until asked: one outlined button, then a password field, then a
    solid red button. Nothing is sent before the password is typed. */
-.data-zone{margin:48px 0 0}
 .data-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:22px 26px}
+.data-card.flat{background:none;border:none;padding:0}
 .data-card h3{font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#6f9c93;margin-bottom:12px}
 .data-card p{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#44726a;line-height:1.7;margin-bottom:12px}
 .data-card p b{color:#2e5d55;font-weight:400}
@@ -233,35 +253,68 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     </div>
   </div>
 
-  <!-- Activate-in-extension callout — only rendered when there's at
-       least one unredeemed license. Wired up by renderActivateCallout(). -->
-  <div id="activate-wrap"></div>
-
-  <div class="section-label" id="results-label" style="display:none"><span>Your licenses</span></div>
-  <section id="licenses"></section>
+  <!-- A load error shows here, outside the folded sections, so it is never
+       hidden by a closed one. -->
   <div class="error-banner" id="error" style="display:none"></div>
 
-  <!-- Your data — "Delete account" (audit A-14b). Wired up at the bottom of
-       the script: the button opens a password field, the password goes to
-       POST /api/auth/delete-account, nothing is deleted without it. -->
-  <section class="data-zone" id="data-zone" aria-labelledby="data-zone-label">
-    <div class="section-label" id="data-zone-label"><span>Your data</span></div>
-    <div class="data-card">
-      <h3>Delete account</h3>
-      <p>Erases your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices, and signs you out everywhere. <b>This cannot be undone.</b></p>
-      <p>The record of your purchases is kept, because the law requires us to keep accounting records. If you sign up again with the same e-mail address, your licences come back. Details in the <a href="./privacy">privacy policy</a>.</p>
-      <button type="button" class="danger-btn" id="delete-open-btn" aria-expanded="false" aria-controls="delete-confirm">Delete my account</button>
-      <div class="data-confirm" id="delete-confirm" style="display:none">
-        <label for="delete-password">Type your password to confirm</label>
-        <input type="password" id="delete-password" autocomplete="current-password" placeholder="********">
-        <div class="data-actions">
-          <button type="button" class="danger-btn solid" id="delete-confirm-btn">Delete permanently</button>
-          <button type="button" class="logout-btn" id="delete-cancel-btn">Cancel</button>
-        </div>
-        <div class="error-banner" id="delete-error" role="alert" style="display:none"></div>
+  <!-- The rest of the page is folded: one line per section, closed until
+       clicked. Native <details>: keyboard and screen-reader friendly with no
+       script. A link ending in #licenses, #devices or #data opens that section. -->
+  <div class="acc-list">
+
+    <details class="acc" id="acc-licenses">
+      <summary>
+        <span class="acc-title">Licenses</span>
+        <span class="acc-meta" id="acc-licenses-meta"></span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <section id="licenses"></section>
       </div>
-    </div>
-  </section>
+    </details>
+
+    <!-- Activate-in-extension callout — only shown when there is at least
+         one license. Wired up by renderActivateCallout(). -->
+    <details class="acc" id="acc-devices" style="display:none">
+      <summary>
+        <span class="acc-title">Pro on your devices</span>
+        <span class="acc-meta" id="acc-devices-meta"></span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <div id="activate-wrap"></div>
+      </div>
+    </details>
+
+    <!-- Your data — "Delete account" (audit A-14b). Wired up at the bottom of
+         the script: the button opens a password field, the password goes to
+         POST /api/auth/delete-account, nothing is deleted without it. -->
+    <details class="acc" id="acc-data">
+      <summary>
+        <span class="acc-title">Your data</span>
+        <span class="acc-meta">Delete account</span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <div class="data-card flat">
+          <h3>Delete account</h3>
+          <p>Erases your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices, and signs you out everywhere. <b>This cannot be undone.</b></p>
+          <p>The record of your purchases is kept, because the law requires us to keep accounting records. If you sign up again with the same e-mail address, your licences come back. Details in the <a href="./privacy">privacy policy</a>.</p>
+          <button type="button" class="danger-btn" id="delete-open-btn" aria-expanded="false" aria-controls="delete-confirm">Delete my account</button>
+          <div class="data-confirm" id="delete-confirm" style="display:none">
+            <label for="delete-password">Type your password to confirm</label>
+            <input type="password" id="delete-password" autocomplete="current-password" placeholder="********">
+            <div class="data-actions">
+              <button type="button" class="danger-btn solid" id="delete-confirm-btn">Delete permanently</button>
+              <button type="button" class="logout-btn" id="delete-cancel-btn">Cancel</button>
+            </div>
+            <div class="error-banner" id="delete-error" role="alert" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+  </div>
 </div>
 
 <div id="deleted-view" style="display:none">
@@ -284,9 +337,21 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var viewEl = document.getElementById('account-view');
   var emailEl = document.getElementById('account-email');
   var logoutBtn = document.getElementById('logout-btn');
-  var resultsLabel = document.getElementById('results-label');
+  var licensesMetaEl = document.getElementById('acc-licenses-meta');
+  var devicesAccEl = document.getElementById('acc-devices');
+  var devicesMetaEl = document.getElementById('acc-devices-meta');
   var listEl = document.getElementById('licenses');
   var errorEl = document.getElementById('error');
+
+  // The folded sections stay closed unless a link asks for one: /account#licenses,
+  // /account#devices or /account#data (the privacy policy links to #data).
+  function openSectionFromHash() {
+    var ids = { '#licenses': 'acc-licenses', '#devices': 'acc-devices', '#data': 'acc-data' };
+    var el = document.getElementById(ids[window.location.hash] || '');
+    if (!el || el.style.display === 'none') return;
+    el.open = true;
+    el.scrollIntoView({ block: 'start' });
+  }
 
   // ── Post-checkout polling ────────────────────────────────────────────────
   // When NOWPayments redirects the buyer back here, the URL carries
@@ -550,6 +615,9 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   // to copy or paste anything.
   function renderActivateCallout(list) {
     var wrap = document.getElementById('activate-wrap');
+    // The "Pro on your devices" section only exists once there is a licence.
+    devicesAccEl.style.display = list.length ? '' : 'none';
+    devicesMetaEl.textContent = '';
     if (!list.length) { wrap.innerHTML = ''; return; }
 
     // Default copy assumes no extension detected — surfaces an install
@@ -571,6 +639,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     // pushSessionTokenToExtension) so the extension is good to go.
     probeExtensionInstallId().then(function(installId) {
       if (!installId) return; // no extension detected on THIS device — keep CTA
+      devicesMetaEl.textContent = 'Synced with this browser';
       var calloutEl = document.getElementById('activate-callout');
       if (!calloutEl) return;
       calloutEl.innerHTML =
@@ -626,13 +695,15 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     renderActivateCallout(list);
 
     if (!list.length) {
+      licensesMetaEl.textContent = 'None yet';
       listEl.innerHTML = '<div class="empty"><p>You don\'t have any subscriptions yet. Pick a tier and pay in any of 200+ supported cryptocurrencies &mdash; Pro activates automatically on every device where you sign in to your account.</p><a href="./pricing">View pricing</a></div>';
       return;
     }
-    resultsLabel.style.display = 'block';
     var now = Date.now();
     var activeList = list.filter(function(l) { return isLicenseActive(l, now); });
     var expiredList = list.filter(function(l) { return !isLicenseActive(l, now); });
+    // What the closed "Licenses" row says at a glance.
+    licensesMetaEl.textContent = activeList.length + ' active' + (expiredList.length ? ' · ' + expiredList.length + ' expired' : '');
 
     // Plain list when everything is in one bucket — tabs would just add
     // a useless empty "Expired (0)" pill next to the real content.
@@ -747,6 +818,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       emailEl.textContent = body.email;
       loadingEl.style.display = 'none';
       viewEl.style.display = 'block';
+      openSectionFromHash();
 
       // Sync the session token to the extension (best-effort, runs in
       // parallel with license fetch — license rendering doesn't depend
@@ -767,6 +839,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
             return;
           }
           renderLicenses(r.body.licenses || []);
+          openSectionFromHash(); // "#devices" only exists once the licences are in
         });
     })
     .catch(function() {
