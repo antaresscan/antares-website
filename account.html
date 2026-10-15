@@ -28,25 +28,6 @@ main{padding-bottom:80px}
 
 .section-label{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.22em;text-transform:uppercase;margin:24px 0 14px;text-align:center}
 
-/* ── Tier banner — big, at-a-glance "you are PRO/LIFETIME/FREE" indicator
-   that lands directly under the page heading. The whole point of the
-   account page is to answer the user's first question on arrival —
-   "what tier am I?" — so we lead with that, not buried in the licence
-   list below. Tier color, expiry/forever badge, and a one-line
-   "what does this mean?" tooltip beneath. */
-.tier-banner{display:flex;align-items:center;gap:18px;padding:24px 28px;border-radius:4px;margin:28px 0 12px;border:1px solid;background:var(--card);position:relative;overflow:hidden}
-.tier-banner::before{content:'';position:absolute;inset:0;opacity:.04;pointer-events:none;background:radial-gradient(circle at 0% 50%,currentColor,transparent 60%)}
-.tier-banner.free{border-color:rgba(14,80,70,.25);color:#4f7d74}
-.tier-banner.pro{border-color:rgba(11,150,128,.5);color:var(--c);box-shadow:0 0 0 1px rgba(11,150,128,.1),0 12px 32px rgba(11,150,128,.06)}
-.tier-banner.lifetime{border-color:rgba(123,95,212,.5);color:var(--purple);box-shadow:0 0 0 1px rgba(123,95,212,.1),0 12px 32px rgba(123,95,212,.06)}
-.tier-banner.yearly{border-color:rgba(123,95,212,.5);color:var(--purple);box-shadow:0 0 0 1px rgba(123,95,212,.1),0 12px 32px rgba(123,95,212,.06)}
-.tier-banner-label{font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#6f9c93;margin-bottom:6px}
-.tier-banner-name{font:400 44px/.95 'Bebas Neue',sans-serif;letter-spacing:.06em;color:currentColor;margin-bottom:6px}
-.tier-banner-detail{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#44726a;letter-spacing:.04em;line-height:1.6}
-.tier-banner-detail b{color:#2e5d55;font-weight:400}
-.tier-banner-meta{margin-left:auto;text-align:right;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.04em;line-height:1.7;flex-shrink:0}
-.tier-banner-meta b{color:#44726a;font-weight:400;font-size:14px}
-
 /* ── Activate-in-extension callout — the missing UX bridge between
    "I have a license key" and "my extension knows I'm Pro". Without
    this, users sit on the page wondering why their browser overlay
@@ -236,20 +217,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <div class="account-meta">
       <span>Logged in as <b id="account-email">&mdash;</b></span>
       <button class="logout-btn" id="logout-btn" type="button">Log out</button>
-    </div>
-  </div>
-
-  <!-- Tier banner — populated by renderTier() below. The status / expiry
-       badge on the right answers "is this still active and until when".
-       Free is the default state until at least one license is found. -->
-  <div class="tier-banner free" id="tier-banner">
-    <div>
-      <div class="tier-banner-label">Current tier</div>
-      <div class="tier-banner-name" id="tier-name">Free</div>
-      <div class="tier-banner-detail" id="tier-detail">Unlimited scans &middot; no card on file</div>
-    </div>
-    <div class="tier-banner-meta" id="tier-meta">
-      <b>Live now</b><br>across the extension
     </div>
   </div>
 
@@ -520,63 +487,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     }
   }
 
-  // ── Tier resolution ──────────────────────────────────────────────────
-  // The extension reads tier from a different key (install_id), but the
-  // *license-of-record* — what the user actually paid for — lives on
-  // their email. Priority: Lifetime (grandfathered) > Yearly > Pro > Free.
-  // Pro / Yearly are "active" only if they have at least one unexpired
-  // license. Once we know the verdict we light up the banner.
-  function resolveTier(list) {
-    var now = Date.now();
-    var hasLifetime = false;
-    var activeYearlyExpiry = 0;
-    var activeProExpiry = 0;
-    list.forEach(function(l) {
-      if (l.tier === 'lifetime') hasLifetime = true;
-      else if (l.tier === 'yearly') {
-        var expY = Number(l.expiresAt) || 0;
-        if (expY > now && expY > activeYearlyExpiry) activeYearlyExpiry = expY;
-      } else if (l.tier === 'monthly' || l.tier === 'pro') {
-        var exp = Number(l.expiresAt) || 0;
-        if (exp > now && exp > activeProExpiry) activeProExpiry = exp;
-      }
-    });
-    if (hasLifetime) return { tier: 'lifetime', activeProExpiry: 0, activeYearlyExpiry: 0 };
-    if (activeYearlyExpiry > 0) return { tier: 'yearly', activeProExpiry: 0, activeYearlyExpiry: activeYearlyExpiry };
-    if (activeProExpiry > 0) return { tier: 'pro', activeProExpiry: activeProExpiry, activeYearlyExpiry: 0 };
-    return { tier: 'free', activeProExpiry: 0, activeYearlyExpiry: 0 };
-  }
-
-  function renderTier(verdict) {
-    var bannerEl = document.getElementById('tier-banner');
-    var nameEl = document.getElementById('tier-name');
-    var detailEl = document.getElementById('tier-detail');
-    var metaEl = document.getElementById('tier-meta');
-
-    bannerEl.classList.remove('free', 'pro', 'yearly', 'lifetime');
-    bannerEl.classList.add(verdict.tier);
-
-    if (verdict.tier === 'lifetime') {
-      // Grandfathered legacy customers — they paid before the 2026-05
-      // rename and keep their forever pass.
-      nameEl.textContent = 'Lifetime';
-      detailEl.innerHTML = '<b>Every Pro feature, forever.</b> Includes every release we ship from here on out. Paid once, valid for the life of the product.';
-      metaEl.innerHTML = '<b>Forever</b><br>no renewal needed';
-    } else if (verdict.tier === 'yearly') {
-      nameEl.textContent = 'Yearly';
-      detailEl.innerHTML = '<b>Every Pro feature, for 1 year.</b> AI Summary, Critical Flags, Full Analysis page, scan history, priority cache and exports across all 7 supported platforms.';
-      metaEl.innerHTML = '<b>Renews</b><br>' + fmtDate(verdict.activeYearlyExpiry);
-    } else if (verdict.tier === 'pro') {
-      nameEl.textContent = 'Pro';
-      detailEl.innerHTML = '<b>Unlimited scans &middot; full overlay.</b> AI Summary, Critical Flags, Full Analysis page, scan history, priority cache and exports across all 7 supported platforms.';
-      metaEl.innerHTML = '<b>Renews</b><br>' + fmtDate(verdict.activeProExpiry);
-    } else {
-      nameEl.textContent = 'Free';
-      detailEl.innerHTML = '<b>Unlimited scans &middot; no card on file.</b> The verdict, the score, the overlay across 7 platforms. Upgrade to unlock AI Summary, Critical Flags and Full Analysis.';
-      metaEl.innerHTML = '<b>Live now</b><br>across the extension';
-    }
-  }
-
   // ── Probe the extension via the content-script bridge ──────────────────
   // The extension drops <meta name="antares-extension-installed"> at
   // document_start AND replies to postMessage queries with the install_id
@@ -688,10 +598,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   }
 
   function renderLicenses(list) {
-    // Resolve + paint the tier banner first — that's the answer the
-    // user came here for, even before they look at the licence rows.
-    var verdict = resolveTier(list);
-    renderTier(verdict);
     renderActivateCallout(list);
 
     if (!list.length) {
