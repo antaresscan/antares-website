@@ -118,8 +118,7 @@ main{padding-bottom:80px}
 /* Everything in the folded sections is GREY, nothing green: the titles are set like the page title ("Your account.", same face and glass
    emboss), the text under them is a plain grey. Only the little pills (plan, Active) keep their colour: they carry a meaning. */
 .acc-title{font:400 clamp(30px,5vw,42px)/.95 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
-.acc-meta{flex:1;text-align:right;font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7b8785}
-.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #7b8785;border-bottom:2px solid #7b8785;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 0}
+.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #7b8785;border-bottom:2px solid #7b8785;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 auto}
 .acc[open]>summary .acc-chev{transform:rotate(-135deg);margin-top:3px}
 .acc-body{padding:20px 22px 22px;border-top:1px solid var(--border)}
 .acc-body .activate-callout{margin:0;padding:0;border:none;background:none}
@@ -244,7 +243,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <details class="acc" id="acc-licenses">
       <summary>
         <span class="acc-title">Your <span>licenses</span>.</span>
-        <span class="acc-meta" id="acc-licenses-meta"></span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
       <div class="acc-body">
@@ -257,7 +255,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <details class="acc" id="acc-devices" style="display:none">
       <summary>
         <span class="acc-title">Pro on your <span>devices</span>.</span>
-        <span class="acc-meta" id="acc-devices-meta"></span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
       <div class="acc-body">
@@ -271,7 +268,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <details class="acc" id="acc-data">
       <summary>
         <span class="acc-title">Your <span>data</span>.</span>
-        <span class="acc-meta">Delete account</span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
       <div class="acc-body">
@@ -316,9 +312,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var viewEl = document.getElementById('account-view');
   var emailEl = document.getElementById('account-email');
   var logoutBtn = document.getElementById('logout-btn');
-  var licensesMetaEl = document.getElementById('acc-licenses-meta');
   var devicesAccEl = document.getElementById('acc-devices');
-  var devicesMetaEl = document.getElementById('acc-devices-meta');
   var listEl = document.getElementById('licenses');
   var errorEl = document.getElementById('error');
 
@@ -539,7 +533,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     var wrap = document.getElementById('activate-wrap');
     // The "Pro on your devices" section only exists once there is a licence.
     devicesAccEl.style.display = list.length ? '' : 'none';
-    devicesMetaEl.textContent = '';
     if (!list.length) { wrap.innerHTML = ''; return; }
 
     // Default copy assumes no extension detected — surfaces an install
@@ -561,7 +554,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     // pushSessionTokenToExtension) so the extension is good to go.
     probeExtensionInstallId().then(function(installId) {
       if (!installId) return; // no extension detected on THIS device — keep CTA
-      devicesMetaEl.textContent = 'Synced with this browser';
       var calloutEl = document.getElementById('activate-callout');
       if (!calloutEl) return;
       calloutEl.innerHTML =
@@ -613,15 +605,12 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     renderActivateCallout(list);
 
     if (!list.length) {
-      licensesMetaEl.textContent = 'None yet';
       listEl.innerHTML = '<div class="empty"><p>You don\'t have any subscriptions yet. Pick a tier and pay in any of 200+ supported cryptocurrencies &mdash; Pro activates automatically on every device where you sign in to your account.</p><a href="./pricing">View pricing</a></div>';
       return;
     }
     var now = Date.now();
     var activeList = list.filter(function(l) { return isLicenseActive(l, now); });
     var expiredList = list.filter(function(l) { return !isLicenseActive(l, now); });
-    // What the closed "Licenses" row says at a glance.
-    licensesMetaEl.textContent = activeList.length + ' active' + (expiredList.length ? ' · ' + expiredList.length + ' expired' : '');
 
     // Plain list when everything is in one bucket — tabs would just add
     // a useless empty "Expired (0)" pill next to the real content.
