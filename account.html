@@ -115,13 +115,25 @@ main{padding-bottom:80px}
 .acc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:18px 22px;user-select:none;-webkit-user-select:none}
 .acc>summary::-webkit-details-marker{display:none}
 .acc>summary:focus-visible{outline:2px solid #0b7d68;outline-offset:2px}
-.acc-title{font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#44726a;transition:color .2s}
-.acc[open]>summary .acc-title{color:var(--c)}
-.acc-meta{flex:1;text-align:right;font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#6f9c93}
-.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #6f9c93;border-bottom:2px solid #6f9c93;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 0}
+/* Everything in the folded sections is GREY, nothing green: the titles are set like the page title ("Your account.", same face and glass
+   emboss), the text under them is a plain grey. Only the little pills (plan, Active) keep their colour: they carry a meaning. */
+.acc-title{font:400 clamp(30px,5vw,42px)/.95 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
+.acc-meta{flex:1;text-align:right;font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7b8785}
+.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #7b8785;border-bottom:2px solid #7b8785;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 0}
 .acc[open]>summary .acc-chev{transform:rotate(-135deg);margin-top:3px}
 .acc-body{padding:20px 22px 22px;border-top:1px solid var(--border)}
 .acc-body .activate-callout{margin:0;padding:0;border:none;background:none}
+.acc .acc-body h3{font:400 clamp(24px,4vw,32px)/1 'Bebas Neue',sans-serif;letter-spacing:.04em;text-transform:none;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12);margin-bottom:14px}
+.acc .acc-body p,.acc .acc-body li,.acc .acc-body .activate-callout{color:#66726f}
+/* The steps of "Pro on your devices" (the intro line and 1, 2, 3) are set in the same grey glass as the titles, a little heavier and bigger so they stay readable. */
+.acc .acc-body .activate-callout,.acc .acc-body .activate-callout li,.acc .acc-body p{font:400 clamp(17px,2.6vw,20px)/1.55 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.52);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.2)}
+.acc .acc-body b{color:rgba(14,66,58,.72)}
+.acc .acc-body .activate-callout b{color:rgba(14,66,58,.72)}
+.acc .acc-body p a{color:#4b5755;text-decoration:underline}
+.acc .acc-body .lic-meta{color:#7b8785}
+.acc .acc-body .lic-meta b{color:#4b5755}
+.acc .acc-body .lic-key{color:#3a4543}
+.acc .acc-body .data-confirm label{color:#66726f}
 .acc-body .lic-tabs{margin-top:0}
 .acc-body .empty{padding:6px 0;background:none;border:none}
 
@@ -231,7 +243,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
     <details class="acc" id="acc-licenses">
       <summary>
-        <span class="acc-title">Licenses</span>
+        <span class="acc-title">Your <span>licenses</span>.</span>
         <span class="acc-meta" id="acc-licenses-meta"></span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
@@ -244,7 +256,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
          one license. Wired up by renderActivateCallout(). -->
     <details class="acc" id="acc-devices" style="display:none">
       <summary>
-        <span class="acc-title">Pro on your devices</span>
+        <span class="acc-title">Pro on your <span>devices</span>.</span>
         <span class="acc-meta" id="acc-devices-meta"></span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
@@ -258,7 +270,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
          POST /api/auth/delete-account, nothing is deleted without it. -->
     <details class="acc" id="acc-data">
       <summary>
-        <span class="acc-title">Your data</span>
+        <span class="acc-title">Your <span>data</span>.</span>
         <span class="acc-meta">Delete account</span>
         <span class="acc-chev" aria-hidden="true"></span>
       </summary>
