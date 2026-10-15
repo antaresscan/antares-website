@@ -21,10 +21,9 @@ h1 span{color:var(--c)}
 
 main{padding-bottom:80px}
 .head-row{display:flex;justify-content:space-between;align-items:flex-end;margin:50px 0 36px;flex-wrap:wrap;gap:18px}
-.account-meta{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:16px;color:#6a958c;letter-spacing:.04em;line-height:1.7;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}
-.account-meta b{color:#44726a;font-weight:400}
 .logout-btn{background:none;border:1px solid var(--border);color:#4f7d74;padding:8px 16px;font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s}
 .logout-btn:hover{color:#ff7777;border-color:rgba(214,72,72,.4)}
+.logout-row{text-align:center;margin:40px 0 0}
 
 .section-label{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.22em;text-transform:uppercase;margin:24px 0 14px;text-align:center}
 
@@ -225,10 +224,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 <div id="account-view" style="display:none">
   <div class="head-row">
     <h1>Your <span>account</span>.</h1>
-    <div class="account-meta">
-      <span>Logged in as <b id="account-email">&mdash;</b></span>
-      <button class="logout-btn" id="logout-btn" type="button">Log out</button>
-    </div>
   </div>
 
   <!-- A load error shows here, outside the folded sections, so it is never
@@ -240,16 +235,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
        script. A link ending in #licenses, #devices or #data opens that section. -->
   <div class="acc-list">
 
-    <details class="acc" id="acc-licenses">
-      <summary>
-        <span class="acc-title">Your <span>licenses</span>.</span>
-        <span class="acc-chev" aria-hidden="true"></span>
-      </summary>
-      <div class="acc-body">
-        <section id="licenses"></section>
-      </div>
-    </details>
-
     <!-- Activate-in-extension callout — only shown when there is at least
          one license. Wired up by renderActivateCallout(). -->
     <details class="acc" id="acc-devices" style="display:none">
@@ -259,6 +244,16 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       </summary>
       <div class="acc-body">
         <div id="activate-wrap"></div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-licenses">
+      <summary>
+        <span class="acc-title">Your <span>licenses</span>.</span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <section id="licenses"></section>
       </div>
     </details>
 
@@ -290,6 +285,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     </details>
 
   </div>
+
+  <div class="logout-row"><button class="logout-btn" id="logout-btn" type="button">Log out</button></div>
 </div>
 
 <div id="deleted-view" style="display:none">
@@ -310,7 +307,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var API = 'https://antares-extension.vercel.app';
   var loadingEl = document.getElementById('loading');
   var viewEl = document.getElementById('account-view');
-  var emailEl = document.getElementById('account-email');
   var logoutBtn = document.getElementById('logout-btn');
   var devicesAccEl = document.getElementById('acc-devices');
   var listEl = document.getElementById('licenses');
@@ -722,7 +718,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
         loadingEl.textContent = 'Could not load account.';
         return;
       }
-      emailEl.textContent = body.email;
       loadingEl.style.display = 'none';
       viewEl.style.display = 'block';
       openSectionFromHash();
