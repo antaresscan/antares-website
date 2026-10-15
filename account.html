@@ -124,6 +124,29 @@ main{padding-bottom:80px}
 .checkout-banner-instr{font:400 11px/1.5 'Bebas Neue',sans-serif;color:#4f7d74;margin-top:10px}
 .checkout-banner-instr a{color:var(--c)}
 
+/* ── Your data / delete account (audit A-14b) ────────────────────────────
+   The privacy policy promises "Delete account" on this page. The card is
+   quiet until asked: one outlined button, then a password field, then a
+   solid red button. Nothing is sent before the password is typed. */
+.data-zone{margin:48px 0 0}
+.data-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:22px 26px}
+.data-card h3{font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#6f9c93;margin-bottom:12px}
+.data-card p{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#44726a;line-height:1.7;margin-bottom:12px}
+.data-card p b{color:#2e5d55;font-weight:400}
+.data-card a{color:var(--c)}
+.danger-btn{background:none;border:1px solid rgba(214,72,72,.45);color:#c23b3b;padding:10px 18px;font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s}
+.danger-btn:hover{background:rgba(214,72,72,.08);border-color:rgba(214,72,72,.7)}
+.danger-btn.solid{background:var(--red);border-color:var(--red);color:#fff}
+.danger-btn.solid:hover{background:#c23b3b;border-color:#c23b3b}
+.danger-btn:disabled,.logout-btn:disabled{opacity:.55;cursor:default}
+.data-confirm{margin-top:16px;padding-top:16px;border-top:1px dashed rgba(214,72,72,.35)}
+.data-confirm label{display:block;font:400 12px/1 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.18em;text-transform:uppercase;margin:0 0 6px}
+.data-confirm input{width:100%;max-width:340px;padding:11px 13px;background:#e7f7f0;color:#123b35;border:1px solid var(--border);border-radius:2px;font:400 15px/1.2 'IBM Plex Mono',monospace;letter-spacing:.04em}
+.data-confirm input:focus{border-color:var(--red);outline:none}
+.data-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.data-card.deleted{text-align:center;padding:34px 26px}
+.data-card.deleted a.home-link{display:inline-block;margin-top:6px;padding:11px 22px;background:var(--c);color:var(--bg);font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:2px}
+
 footer{text-align:center;padding:36px 32px;color:#8fb8ae;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:10px;border-top:1px solid var(--border);letter-spacing:.15em;text-transform:uppercase;max-width:1160px;margin:60px auto 0}
 footer .foot-links{margin-top:14px;font-size:9px;letter-spacing:.18em}
 footer .foot-links a{color:#82aaa1;text-decoration:none;margin:0 4px}
@@ -217,6 +240,38 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   <div class="section-label" id="results-label" style="display:none"><span>Your licenses</span></div>
   <section id="licenses"></section>
   <div class="error-banner" id="error" style="display:none"></div>
+
+  <!-- Your data — "Delete account" (audit A-14b). Wired up at the bottom of
+       the script: the button opens a password field, the password goes to
+       POST /api/auth/delete-account, nothing is deleted without it. -->
+  <section class="data-zone" id="data-zone" aria-labelledby="data-zone-label">
+    <div class="section-label" id="data-zone-label"><span>Your data</span></div>
+    <div class="data-card">
+      <h3>Delete account</h3>
+      <p>Erases your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices, and signs you out everywhere. <b>This cannot be undone.</b></p>
+      <p>The record of your purchases is kept, because the law requires us to keep accounting records. If you sign up again with the same e-mail address, your licences come back. Details in the <a href="./privacy">privacy policy</a>.</p>
+      <button type="button" class="danger-btn" id="delete-open-btn" aria-expanded="false" aria-controls="delete-confirm">Delete my account</button>
+      <div class="data-confirm" id="delete-confirm" style="display:none">
+        <label for="delete-password">Type your password to confirm</label>
+        <input type="password" id="delete-password" autocomplete="current-password" placeholder="********">
+        <div class="data-actions">
+          <button type="button" class="danger-btn solid" id="delete-confirm-btn">Delete permanently</button>
+          <button type="button" class="logout-btn" id="delete-cancel-btn">Cancel</button>
+        </div>
+        <div class="error-banner" id="delete-error" role="alert" style="display:none"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="deleted-view" style="display:none">
+  <div class="head-row"><h1>Account <span>deleted</span>.</h1></div>
+  <div class="data-card deleted" role="status">
+    <h3>All done</h3>
+    <p>Your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices have been erased, and every session is closed.</p>
+    <p>The record of your purchases is kept, as the law requires (see the <a href="./privacy">privacy policy</a>). If you sign up again with the same e-mail address, your licences come back.</p>
+    <a class="home-link" href="./index.html">Back to home</a>
+  </div>
 </div>
 </main>
 
@@ -772,6 +827,105 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     Promise.all([waitForBridgeAck(), logoutFetch]).then(function() {
       try { localStorage.removeItem('antares_buyer_email'); } catch(_) {}
       window.location.href = './auth.html';
+    });
+  });
+
+  // 4. Delete account (audit A-14b, GDPR article 17)
+  //
+  // POST /api/auth/delete-account with the password: the server checks the
+  // session AND the password, erases the account and what hangs on it (the
+  // purchase record stays) and ends every session. The install id of the
+  // extension, when there is one, goes along so the server also finds an
+  // install that was never linked to a licence. On success the bridge-stored
+  // session token is cleared in the extension (same wait as logout, for the
+  // same reason) and the page says it is done. On any failure NOTHING was
+  // deleted and the page says so.
+  var deleteOpenBtn = document.getElementById('delete-open-btn');
+  var deleteConfirmEl = document.getElementById('delete-confirm');
+  var deletePasswordEl = document.getElementById('delete-password');
+  var deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+  var deleteCancelBtn = document.getElementById('delete-cancel-btn');
+  var deleteErrorEl = document.getElementById('delete-error');
+  var deletedViewEl = document.getElementById('deleted-view');
+
+  function setDeleteError(msg) {
+    if (msg) {
+      deleteErrorEl.textContent = msg;
+      deleteErrorEl.style.display = 'block';
+    } else {
+      deleteErrorEl.style.display = 'none';
+      deleteErrorEl.textContent = '';
+    }
+  }
+  function setDeleteBusy(busy) {
+    deleteConfirmBtn.disabled = busy;
+    deleteCancelBtn.disabled = busy;
+    deletePasswordEl.disabled = busy;
+    deleteConfirmBtn.textContent = busy ? 'Deleting…' : 'Delete permanently';
+  }
+  function closeDeleteConfirm() {
+    deleteConfirmEl.style.display = 'none';
+    deleteOpenBtn.style.display = '';
+    deleteOpenBtn.setAttribute('aria-expanded', 'false');
+    deletePasswordEl.value = '';
+    setDeleteError('');
+  }
+
+  deleteOpenBtn.addEventListener('click', function() {
+    deleteOpenBtn.style.display = 'none';
+    deleteOpenBtn.setAttribute('aria-expanded', 'true');
+    deleteConfirmEl.style.display = 'block';
+    deletePasswordEl.focus();
+  });
+  deleteCancelBtn.addEventListener('click', closeDeleteConfirm);
+  deletePasswordEl.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); deleteConfirmBtn.click(); }
+    if (ev.key === 'Escape') closeDeleteConfirm();
+  });
+
+  deleteConfirmBtn.addEventListener('click', function() {
+    var password = deletePasswordEl.value;
+    if (!password) { setDeleteError('Type your password to confirm.'); deletePasswordEl.focus(); return; }
+    setDeleteError('');
+    setDeleteBusy(true);
+
+    probeExtensionInstallId().then(function(installId) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (installId) headers['X-Antares-Install'] = installId;
+      return fetch(API + '/api/auth/delete-account', {
+        method: 'POST',
+        credentials: 'include',
+        headers: headers,
+        body: JSON.stringify({ password: password })
+      }).then(function(r) {
+        return r.json().catch(function() { return {}; }).then(function(b) { return { status: r.status, body: b || {} }; });
+      });
+    }).then(function(r) {
+      if (r.status === 200 && r.body.ok) {
+        return waitForBridgeAck().then(function() {
+          try { localStorage.removeItem('antares_buyer_email'); } catch(_) {}
+          viewEl.style.display = 'none';
+          deletedViewEl.style.display = 'block';
+          window.scrollTo(0, 0);
+        });
+      }
+      setDeleteBusy(false);
+      deletePasswordEl.value = '';
+      if (r.status === 401 && r.body.reason === 'invalid_credentials') {
+        setDeleteError('That password is not right. Nothing was deleted.');
+        deletePasswordEl.focus();
+      } else if (r.status === 401) {
+        setDeleteError('Your session has ended. Log in again, then try again. Nothing was deleted.');
+      } else if (r.status === 429) {
+        setDeleteError((r.body.error || 'Too many failed attempts. Try again in a few minutes.') + ' Nothing was deleted.');
+      } else if (r.status === 503) {
+        setDeleteError('Could not finish deleting the account. Nothing was deleted: please try again in a few minutes.');
+      } else {
+        setDeleteError('Something went wrong. Nothing was deleted. Please try again.');
+      }
+    }).catch(function() {
+      setDeleteBusy(false);
+      setDeleteError('Network error. Nothing was deleted. Please try again.');
     });
   });
 })();
