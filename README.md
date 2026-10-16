@@ -44,11 +44,13 @@ Each is served via Vercel `cleanUrls` from the matching `*.html`:
 
 ```
 /                /demo         /features       /engine
-/compare         /pricing      /install        /sources
+/compare         /pricing      /sources
 /proof           /faq          /changelog      /about
 /api             /security     /support        /auth
 /account         /privacy      /terms
 ```
+
+`/install` has no page: `vercel.json` redirects it to the Chrome Web Store listing (every "Install" button of the site points at it).
 
 `/token?ca=…` redirects out to the extension's backend (302).
 
