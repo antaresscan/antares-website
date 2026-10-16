@@ -105,28 +105,31 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 <div class="facts-grid">
   <div class="fact-card"><h3>No remote code</h3><p>The extension never <code>eval</code>s, never loads JavaScript from a server at runtime. Everything is in the static bundle that Chrome reviewed at install time. Manifest V3 enforces this at the browser level.</p></div>
   <div class="fact-card"><h3>Signed by Google</h3><p>The published bundle is signed by the Chrome Web Store. Chrome verifies the signature on every auto-update; tampered code is rejected before it runs.</p></div>
-  <div class="fact-card"><h3>Minimum permissions</h3><p>Five permissions, eight host permissions. No password access, no form-fill, no browsing history, no cookies, no <code>webRequest</code>, no identity, no downloads. Full list in <a href="./privacy">section 8 of the privacy policy</a>.</p></div>
-  <div class="fact-card"><h3>No analytics, no tracking</h3><p>No third-party analytics scripts, no fingerprinting, no scan-to-identity tying. The extension sends only the public Solana contract address you&rsquo;re looking at &mdash; nothing else leaves your browser.</p></div>
+  <div class="fact-card"><h3>Minimum permissions</h3><p>Five permissions, eight host permissions. No password access, no form-fill, no cookies, no <code>webRequest</code>, no identity, no downloads. Chrome shows the <code>tabs</code> permission as &ldquo;Read your browsing history&rdquo;: <a href="./privacy">section 8 of the privacy policy</a> says exactly what it is used for.</p></div>
+  <div class="fact-card"><h3>No analytics, no tracking</h3><p>No third-party analytics scripts, no fingerprinting. The extension sends the public Solana contract address you&rsquo;re looking at, plus a random install identifier and, if you are signed in, your sign-in token &mdash; see &ldquo;What data leaves your browser&rdquo; below.</p></div>
 </div>
 
 <h2>What permissions Antares asks for, and why</h2>
-<p>Manifest V3, minimum-privilege:</p>
+<p>Manifest V3, minimum-privilege. For each one, what it is really used for:</p>
 <ul>
-  <li><b><code>storage</code></b> &mdash; remember your settings (theme, alert thresholds, dismissed notifications) locally. Stored in <code>chrome.storage.local</code>; never synced, never sent off-device.</li>
-  <li><b><code>activeTab</code> + <code>tabs</code></b> &mdash; read the URL and visible DOM <i>only</i> on the supported Solana platforms (DexScreener, pump.fun, Axiom, Photon, Birdeye, GeckoTerminal, GMGN, Telemetry). The extension is <b>dormant on every other site</b> &mdash; including Twitter, Telegram, your bank, your email, your password manager.</li>
-  <li><b><code>notifications</code></b> &mdash; alert you when a token&rsquo;s verdict escalates (e.g. CAUTION → DANGER while you&rsquo;re still on the page).</li>
-  <li><b><code>alarms</code></b> &mdash; periodic background re-scans for tokens you&rsquo;re actively watching.</li>
+  <li><b><code>storage</code></b> &mdash; keeps on your device (<code>chrome.storage.local</code>, never synced): the on/off switch, the stealth-mode and automatic re-scan settings, the anonymous install identifier, the last verdict seen for each token, your 10 most recent scans, a short-lived cache of recent scan results and, if you signed in, your session token.</li>
+  <li><b><code>tabs</code></b> &mdash; Chrome shows it as &ldquo;Read your browsing history&rdquo;, because it lets an extension see the address of the tabs you have open. Antares uses it to reuse an analysis tab that is already open and to pass the on/off switch to your open tabs. Addresses are compared on your device; none is stored or sent.</li>
+  <li><b><code>notifications</code></b> &mdash; a Chrome notification when a token you scan gets a worse verdict than the last one this device saw for it (for example CAUTION &rarr; DANGER).</li>
+  <li><b><code>alarms</code></b> &mdash; one timer every minute, meant to keep the background process awake during a scan. It scans nothing and sends nothing.</li>
+  <li><b><code>activeTab</code></b> &mdash; declared, but the current version does not use it.</li>
 </ul>
-<p>Permissions <b>not</b> requested: passwords, form-fill, browsing history, downloads, cookies, webRequest, identity. The full <code>permissions</code> and <code>host_permissions</code> arrays are visible in <a href="./privacy">section 8 of our privacy policy</a>.</p>
+<p>The extension reads pages only on the eight supported Solana platforms (DexScreener, pump.fun, Axiom, Photon, Birdeye, GeckoTerminal, GMGN, Telemetry), through its host permissions; it is <b>dormant on every other site</b> &mdash; including Twitter, Telegram, your bank, your email, your password manager.</p>
+<p>Permissions <b>not</b> requested: passwords, form-fill, the history API, downloads, cookies, webRequest, identity. The full <code>permissions</code> and <code>host_permissions</code> arrays are visible in <a href="./privacy">section 8 of our privacy policy</a>.</p>
 
 <h2>What data leaves your browser</h2>
-<p>Only what the scan needs:</p>
+<p>Only what the scan and your account need:</p>
 <ul>
   <li>The <b>Solana contract address</b> you&rsquo;re scanning &mdash; sent to <code>/api/scan</code> on our Vercel deployment.</li>
-  <li>An optional <b>install ID</b> (random UUID generated on install, stored locally) to scope rate-limiting per installation rather than per IP. Cannot be linked back to you.</li>
-  <li>The <b>browser&rsquo;s IP address</b>, visible to Vercel for the duration of the request. Never logged with the contract address; never persisted past the 60-second sliding rate-limit window.</li>
+  <li>A <b>random install ID</b> (a UUID generated on install, stored locally). It scopes rate-limiting per installation and keeps the scan history of that installation (about the 1,000 most recent scans, see the privacy policy). It is not your name; if you create an account, it is linked to your e-mail address.</li>
+  <li>If you are signed in, your <b>sign-in token</b>, so the overlay shows your plan.</li>
+  <li>The <b>technical metadata</b> any web service sees (IP address, browser user-agent), used for rate limiting and hosting. How long it is kept is in section 7 of the <a href="./privacy">privacy policy</a>.</li>
 </ul>
-<p>What never leaves: page contents, URLs, form data, cookies, local storage outside Antares&rsquo; own bucket, your wallet address, your transaction history. Full breakdown on the <a href="./privacy">privacy page</a>.</p>
+<p>What never leaves: page contents, the addresses of your tabs, form data, cookies, local storage outside Antares&rsquo; own bucket, your wallet address, your transaction history. Full breakdown on the <a href="./privacy">privacy page</a>.</p>
 
 <h2>Update mechanism</h2>
 <p>Updates ship through the Chrome Web Store auto-update channel. Chrome checks for updates every few hours, downloads them in the background, and applies them on the next browser restart. Each update bundle is signed by the same Web Store key &mdash; a tampered update is rejected at the browser level.</p>
