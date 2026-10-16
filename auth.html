@@ -33,6 +33,14 @@ main{padding:120px 0 60px;flex:1;display:flex;flex-direction:column;justify-cont
 .tabs button:not(.active):hover{color:#2e5d55}
 
 .card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:28px}
+/* After a sign-up (audit A-01): the account is not confirmed yet, so nobody is signed in; the card says to open the link of the e-mail. */
+.check-card{display:none;text-align:center}
+.check-card h2{font:400 clamp(34px,8vw,48px)/.95 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12);margin-bottom:14px}
+.check-card h2 span{color:var(--c)}
+.check-card p{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:18px;letter-spacing:.04em;color:#57837b;line-height:1.7;margin-bottom:12px}
+.check-card p b{color:#2e5d55;font-weight:400}
+.check-card .addr b{display:block;font-size:22px;overflow-wrap:anywhere}
+.check-card .small{font-size:15px;color:#6f9c93}
 .card label{display:block;font:400 12px/1 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.18em;text-transform:uppercase;margin:14px 0 6px}
 .card label:first-child{margin-top:0}
 .card input{width:100%;padding:11px 13px;background:#e7f7f0;color:#123b35;border:1px solid var(--border);border-radius:2px;font:400 15px/1.2 'IBM Plex Mono',monospace;letter-spacing:.04em}
@@ -114,6 +122,14 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <span id="foot-text">Don't have an account?</span>
     <a href="#" id="foot-link">Sign up</a>
   </div>
+</section>
+
+<section class="card check-card" id="check-email" aria-live="polite">
+  <h2>Check your <span>inbox</span>.</h2>
+  <p>We sent a confirmation link to</p>
+  <p class="addr"><b id="check-email-address"></b></p>
+  <p>Open it and type the password you just chose: it proves the address is yours. Until then your account stays Free.</p>
+  <p class="small">No e-mail? Look in your spam folder. You can also log in, and we will send the link again.</p>
 </section>
 
 </main>
@@ -257,6 +273,14 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       done();
       if (r.status === 200 && r.body && r.body.ok) {
         try { localStorage.setItem('antares_buyer_email', email); } catch(_) {}
+        // A sign-up does not sign anybody in any more (audit A-01): it e-mails a link. Say so, and stay here.
+        if (r.body.status === 'check_email') {
+          document.getElementById('check-email-address').textContent = email;
+          document.querySelector('.tabs').style.display = 'none';
+          document.querySelector('section.card:not(.check-card)').style.display = 'none';
+          document.getElementById('check-email').style.display = 'block';
+          return;
+        }
         // Honour ?return= so we can deep-link back into the pricing
         // modal, /account, etc. after auth completes.
         //
@@ -291,6 +315,10 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       // 401 / 400 reasons surface specific copy; everything else falls
       // through to a status-aware generic message.
       var reason = r.body && r.body.reason;
+      if (reason === 'email_unavailable') {
+        setError('We cannot send e-mails right now. Please try again in a few minutes.');
+        return;
+      }
       if (reason === 'already_exists') {
         setError('That email is already registered. Try logging in instead.');
         return;

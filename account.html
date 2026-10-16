@@ -104,6 +104,12 @@ main{padding-bottom:80px}
 .checkout-banner-instr{font:400 11px/1.5 'Bebas Neue',sans-serif;color:#4f7d74;margin-top:10px}
 .checkout-banner-instr a{color:var(--c)}
 
+/* ── E-mail proof (audit A-01): the notice at the top of an account that has not confirmed its e-mail ──────── */
+.verify-notice{margin:0 0 26px;padding:20px 24px;background:var(--card);border:1px solid rgba(184,155,0,.5);border-radius:4px}
+.verify-notice h3{font:400 clamp(24px,4vw,30px)/1 'Bebas Neue',sans-serif;letter-spacing:.04em;color:var(--c);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12);margin-bottom:12px}
+.verify-notice p{font:400 clamp(17px,2.6vw,20px)/1.55 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.52);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.2);margin-bottom:12px}
+.verify-notice .vn-status{margin:12px 0 0}
+
 /* ── Folded sections: Licenses · Pro on your devices · Your data ───────────
    One quiet row per section, closed until clicked. The title and a short
    summary on the row, a chevron that turns when open. */
@@ -226,6 +232,14 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     <h1>Your <span>account</span>.</h1>
   </div>
 
+  <!-- E-mail proof (audit A-01): shown only while the account has not confirmed its e-mail. -->
+  <div class="verify-notice" id="verify-notice" style="display:none" role="status">
+    <h3>Confirm your e-mail.</h3>
+    <p id="verify-notice-text"></p>
+    <button type="button" class="logout-btn" id="verify-resend-btn">Send me the link again</button>
+    <p class="vn-status" id="verify-resend-status" style="display:none"></p>
+  </div>
+
   <!-- A load error shows here, outside the folded sections, so it is never
        hidden by a closed one. -->
   <div class="error-banner" id="error" style="display:none"></div>
@@ -311,6 +325,41 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var devicesAccEl = document.getElementById('acc-devices');
   var listEl = document.getElementById('licenses');
   var errorEl = document.getElementById('error');
+
+  // E-mail proof (audit A-01). /api/auth/me says emailProof: "verified", "grace" (not confirmed, still honoured until graceEndsAt: the accounts that
+  // existed before the rule) or "unverified" (Free, no licence, until the e-mail is confirmed). Anything but "verified" gets the notice.
+  var verifyNoticeEl = document.getElementById('verify-notice');
+  var verifyTextEl = document.getElementById('verify-notice-text');
+  var verifyBtn = document.getElementById('verify-resend-btn');
+  var verifyStatusEl = document.getElementById('verify-resend-status');
+  function showVerifyNotice(me) {
+    if (me.emailProof === 'unverified') {
+      verifyTextEl.textContent = 'Until you confirm this address, your account is Free and your licenses stay hidden. We e-mailed you a link: open it and type your password.';
+    } else if (me.emailProof === 'grace') {
+      verifyTextEl.textContent = 'Please confirm this address before ' + fmtDate(me.graceEndsAt) + ' to keep your plan. We e-mailed you a link: open it and type your password.';
+    } else {
+      verifyNoticeEl.style.display = 'none';
+      return;
+    }
+    verifyNoticeEl.style.display = 'block';
+  }
+  function setVerifyStatus(msg) { verifyStatusEl.textContent = msg; verifyStatusEl.style.display = msg ? 'block' : 'none'; }
+  verifyBtn.addEventListener('click', function() {
+    verifyBtn.disabled = true;
+    setVerifyStatus('');
+    fetch(API + '/api/auth/resend-verification', { method: 'POST', credentials: 'include' })
+      .then(function(r) { return r.json().catch(function() { return {}; }).then(function(b) { return { status: r.status, body: b || {} }; }); })
+      .then(function(r) {
+        verifyBtn.disabled = false;
+        if (r.status === 200 && r.body.status === 'already_verified') { window.location.reload(); return; }
+        if (r.status === 200) { setVerifyStatus('Link sent. Check your inbox (and your spam folder).'); return; }
+        if (r.status === 429) { setVerifyStatus('Please wait a minute before asking again.'); return; }
+        if (r.status === 401) { setVerifyStatus('Your session has ended. Log in again, then try again.'); return; }
+        if (r.status === 503) { setVerifyStatus('We cannot send e-mails right now. Please try again in a few minutes.'); return; }
+        setVerifyStatus('Something went wrong. Please try again.');
+      })
+      .catch(function() { verifyBtn.disabled = false; setVerifyStatus('Network error. Please try again.'); });
+  });
 
   // The folded sections stay closed unless a link asks for one: /account#licenses,
   // /account#devices or /account#data (the privacy policy links to #data).
@@ -597,9 +646,13 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     ].join('');
   }
 
-  function renderLicenses(list) {
+  function renderLicenses(list, proof) {
     renderActivateCallout(list);
 
+    if (!list.length && proof === 'unverified') {
+      listEl.innerHTML = '<div class="empty"><p>Your licenses appear here once you confirm your e-mail address.</p></div>';
+      return;
+    }
     if (!list.length) {
       listEl.innerHTML = '<div class="empty"><p>You don\'t have any subscriptions yet. Pick a tier and pay in any of 200+ supported cryptocurrencies &mdash; Pro activates automatically on every device where you sign in to your account.</p><a href="./pricing">View pricing</a></div>';
       return;
@@ -720,6 +773,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       }
       loadingEl.style.display = 'none';
       viewEl.style.display = 'block';
+      showVerifyNotice(body);
       openSectionFromHash();
 
       // Sync the session token to the extension (best-effort, runs in
@@ -740,7 +794,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
             setError('Could not load your licenses. Please retry.');
             return;
           }
-          renderLicenses(r.body.licenses || []);
+          renderLicenses(r.body.licenses || [], r.body.emailProof);
           openSectionFromHash(); // "#devices" only exists once the licences are in
         });
     })
