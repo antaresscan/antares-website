@@ -41,10 +41,6 @@
       "destination": "/changelog.html"
     },
     {
-      "source": "/install",
-      "destination": "/install.html"
-    },
-    {
       "source": "/about",
       "destination": "/about.html"
     },
@@ -74,6 +70,16 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/install",
+      "destination": "https://chromewebstore.google.com/detail/antares-anti-scam-scanner-for-solana/noemghbbbgcpnocdcflcaccnhnfehpfa",
+      "permanent": false
+    },
+    {
+      "source": "/install.html",
+      "destination": "https://chromewebstore.google.com/detail/antares-anti-scam-scanner-for-solana/noemghbbbgcpnocdcflcaccnhnfehpfa",
+      "permanent": false
+    },
     {
       "source": "/token",
       "destination": "https://antares-extension.vercel.app/token.html",
