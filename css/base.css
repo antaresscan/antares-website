@@ -221,15 +221,16 @@ nav .nav-account {
   white-space: nowrap;
   min-width: 92px;
 }
-nav .nav-cta { color: var(--bg); background: var(--c); border-color: var(--c); }
+nav .nav-cta { color: rgba(255,255,255,.72); background: var(--c); border-color: var(--c); text-shadow: 0 -1px 1px rgba(8,60,52,.4),0 1px 1px rgba(255,255,255,.35),0 8px 18px rgba(8,80,70,.3); }
 nav .nav-cta:hover {
   background: transparent;
   color: var(--c);
   box-shadow: 0 0 20px rgba(11,150,128, .25);
+  text-shadow: 0 1px 1px rgba(255,255,255,.6);
 }
-nav .nav-account { color: #4f7d74; background: transparent; border-color: rgba(14,80,70,.25); }
+nav .nav-account { color: rgba(14,66,58,.36); text-shadow: 0 1px 1px rgba(255,255,255,.65), 0 -1px 1px rgba(8,60,52,.28), 0 12px 26px rgba(8,80,70,.12); background: transparent; border-color: rgba(14,80,70,.25); }
 nav .nav-account:hover {
-  color: var(--c);
+  color: rgba(10,140,118,.8);
   border-color: var(--c);
   background: rgba(11,150,128, .04);
 }
