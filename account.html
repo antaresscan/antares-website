@@ -24,6 +24,10 @@ main{padding-bottom:80px}
 .logout-btn{background:none;border:1px solid var(--border);color:#4f7d74;padding:8px 16px;font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s}
 .logout-btn:hover{color:#ff7777;border-color:rgba(214,72,72,.4)}
 .logout-row{text-align:center;margin:40px 0 0}
+/* The Log out button at the bottom keeps its original size and its frame: only its look changes, the grey and the glass emboss of the titles of the sections. */
+.logout-row .logout-btn{color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
+.logout-row .logout-btn:hover{color:rgba(14,66,58,.6);border-color:rgba(11,150,128,.35)}
+.logout-row .logout-btn:focus-visible{outline:2px solid #0b7d68;outline-offset:2px}
 
 .section-label{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.22em;text-transform:uppercase;margin:24px 0 14px;text-align:center}
 
@@ -131,8 +135,12 @@ main{padding-bottom:80px}
 .acc .acc-body p,.acc .acc-body li,.acc .acc-body .activate-callout{color:#66726f}
 /* The steps of "Pro on your devices" (the intro line and 1, 2, 3) are set in the same grey glass as the titles, a little heavier and bigger so they stay readable. */
 .acc .acc-body .activate-callout,.acc .acc-body .activate-callout li,.acc .acc-body p{font:400 clamp(17px,2.6vw,20px)/1.55 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.52);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.2)}
+/* The body text (steps of "Pro on your devices", "Delete account") is plain Bebas Neue grey: no emboss, it makes small text blurry. */
+.acc .acc-body .activate-callout,.acc .acc-body .activate-callout p,.acc .acc-body .activate-callout li,.acc .acc-body .data-card p{text-shadow:none}
 .acc .acc-body b{color:rgba(14,66,58,.72)}
 .acc .acc-body .activate-callout b{color:rgba(14,66,58,.72)}
+/* "This cannot be undone." is the same grey as the rest of its paragraph, not a darker one. */
+.acc .acc-body .data-card p b{color:inherit}
 .acc .acc-body p a{color:#4b5755;text-decoration:underline}
 .acc .acc-body .lic-meta{color:#7b8785}
 .acc .acc-body .lic-meta b{color:#4b5755}
