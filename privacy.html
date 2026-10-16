@@ -170,12 +170,14 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 </ul>
 
 <h2>8. Chrome permissions</h2>
-<p>The Extension requests the following permissions, declared in <code>package.json</code>:</p>
+<p>The Extension requests the following permissions, declared in <code>package.json</code>. For each one, this is what it is really used for:</p>
 <ul>
-<li><code>storage</code> &mdash; persists your settings (theme, alert thresholds) locally in your browser. Never synced to a server.</li>
-<li><code>notifications</code> &mdash; lets the Extension fire a Chrome notification when a previously-scanned token&rsquo;s verdict escalates to DANGER or RUG.</li>
-<li><code>activeTab</code> + <code>tabs</code> &mdash; lets the Extension read the URL and the visible page DOM on supported sites only.</li>
-<li><code>alarms</code> &mdash; periodic background re-scan of tokens you&rsquo;ve flagged for monitoring.</li>
+<li><code>storage</code> &mdash; keeps on your device: the on/off switch, the stealth-mode and automatic re-scan settings, the anonymous install identifier (it is also sent with your scans, see section 3), the last verdict seen for each token (so the Extension can tell you when it gets worse), your 10 most recent scans, a short-lived cache of up to 60 recent scan results and, if you signed in, your session token. None of it is synced to another device.</li>
+<li><code>notifications</code> &mdash; shows a Chrome notification when a token you scan gets a worse verdict than the last one this device saw for it (for example CAUTION to DANGER). The Options page also has a button that sends a test notification.</li>
+<li><code>tabs</code> &mdash; Chrome presents this permission as &ldquo;Read your browsing history&rdquo;, because it lets an extension see the address of the tabs you have open. The Extension uses it for two things only: when you click &ldquo;Full Analysis&rdquo; it looks at the addresses of your open tabs to see whether the analysis page is already open, and if so reuses that tab; and when you switch the Extension on or off it passes that change to your open tabs. Addresses are only compared on your device; none is stored or sent.</li>
+<li><code>alarms</code> &mdash; one timer that fires every minute, meant to keep the Extension&rsquo;s background process awake during a scan. It scans nothing and sends nothing.</li>
+<li><code>activeTab</code> &mdash; declared in the manifest, but the current version of the Extension does not use it.</li>
+<li><code>host_permissions</code> &mdash; only the 8 trading platforms listed in section 4: this is what lets the Extension read those pages, and no others.</li>
 </ul>
 
 <h2>9. Your rights</h2>
