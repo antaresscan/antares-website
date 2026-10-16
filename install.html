@@ -42,18 +42,6 @@
 .step-body .cta:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(11,150,128,.25)}
 .note-box{background:rgba(11,150,128,.04);border-left:2px solid var(--c);padding:14px 18px;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#4f7d74;line-height:1.85;margin-top:14px}
 .warn-box{background:rgba(184,155,0,.04);border-left:2px solid #b89b00;padding:14px 18px;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#8a7f35;line-height:1.85;margin-top:14px}
-.compat{display:flex;gap:24px;flex-wrap:wrap;margin:32px 0 0;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#6a958c}
-.compat span{display:flex;align-items:center;gap:8px}
-.compat span::before{content:'✓';color:var(--c);font-weight:700}
-.compat-matrix{margin:32px 0 0;border:1px solid var(--border);background:rgba(255,255,255,.34);overflow:hidden;border-radius:10px}
-.compat-matrix table{width:100%;border-collapse:collapse;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px}
-.compat-matrix th{text-align:left;padding:12px 16px;color:#35655d;letter-spacing:.12em;text-transform:uppercase;font-size:11px;background:rgba(255,255,255,.45);border-bottom:1px solid var(--border)}
-.compat-matrix td{padding:11px 16px;color:#4f7d74;border-bottom:1px solid rgba(255,255,255,.35);letter-spacing:.04em}
-.compat-matrix tr:last-child td{border-bottom:none}
-.compat-matrix td.ok{color:var(--c)}
-.compat-matrix td.warn{color:#8a7f35}
-.compat-matrix td:first-child{color:#2a5850;font-weight:400}
-.compat-note{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:14px;color:#75a199;line-height:1.85;padding:14px 16px 16px;background:#e7f7f0;margin:0;border-top:1px solid var(--border)}
 footer{text-align:center;padding:36px 32px;color:#8fb8ae;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:10px;border-top:1px solid var(--border);letter-spacing:.15em;text-transform:uppercase;margin-top:60px;max-width:1160px;margin:60px auto 0}
 footer span{color:var(--c)}
 footer .foot-links{margin-top:14px;font-size:9px;letter-spacing:.18em}
@@ -68,7 +56,7 @@ footer .foot-links a:hover{color:var(--c)}
 <script src="/js/a11y.js" defer></script>
 <script src="/js/burger.js" defer></script>
 <script src="/js/mobile-cta-rewrite.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Install Antares Chrome Extension","description":"3-step install guide for the Antares Solana token scanner","step":[{"@type":"HowToStep","name":"Open Chrome Web Store","text":"Visit the Antares listing on the Chrome Web Store"},{"@type":"HowToStep","name":"Add to Chrome","text":"Click 'Add to Chrome' and confirm permissions"},{"@type":"HowToStep","name":"Browse","text":"Antares activates automatically on supported Solana trading platforms"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Install Antares Chrome Extension","description":"3-step install guide for the Antares Solana token scanner","step":[{"@type":"HowToStep","name":"Download","text":"Add Antares from the Chrome Web Store"},{"@type":"HowToStep","name":"Browse","text":"Open a Solana token on a supported trading platform"},{"@type":"HowToStep","name":"Safe","text":"Antares shows its verdict on the page"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://antaresscan.com/"},{"@type":"ListItem","position":2,"name":"Install Antares — Step by Step","item":"https://antaresscan.com/install"}]}</script>
 <style id="mint-demo-overrides">
 /* ===== DEMO GLASS MINT - apercu local uniquement ===== */
@@ -110,55 +98,25 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 <div class="step">
   <div class="step-n">01</div>
   <div class="step-body">
-    <h3>Open the Chrome Web Store</h3>
-    <p>Antares is published on the Chrome Web Store. Click the button below to open the official listing in a new tab.</p>
+    <h3>Download</h3>
+    <p>Add Antares from the Chrome Web Store.</p>
     <a class="cta" href="https://chromewebstore.google.com/detail/antares-anti-scam-scanner-for-solana/noemghbbbgcpnocdcflcaccnhnfehpfa" target="_blank" rel="noopener" data-cws-url>Add to Chrome &rarr;</a>
-    <div class="note-box"><b>Verified publisher.</b> Antares is reviewed and distributed by Google. The extension auto-updates whenever a new version is approved &mdash; no manual reinstall needed.</div>
   </div>
 </div>
 
 <div class="step">
   <div class="step-n">02</div>
   <div class="step-body">
-    <h3>Click "Add to Chrome"</h3>
-    <p>The Web Store will show a permission dialog. Antares requests minimum permissions:</p>
-    <p>&bull; <code>storage</code> &mdash; remember your settings locally (theme, alert thresholds)<br>&bull; <code>notifications</code> &mdash; alert you when a token&rsquo;s verdict escalates<br>&bull; <code>activeTab</code> + <code>tabs</code> &mdash; read the URL and visible DOM on supported sites only<br>&bull; <code>alarms</code> &mdash; periodic background re-scans</p>
-    <div class="note-box">No password access, no form-fill access, no browsing history. The extension is dormant on every site that isn&rsquo;t a supported Solana platform. Full breakdown in <a href="./privacy">/privacy</a>.</div>
-  </div>
-</div>
-
-<div class="step">
-  <div class="step-n">03</div>
-  <div class="step-body">
-    <h3>Browse normally</h3>
-    <p>Antares activates automatically when you land on a supported Solana platform:</p>
-    <p>&bull; DexScreener (Solana pairs)<br>&bull; pump.fun<br>&bull; Axiom<br>&bull; Photon<br>&bull; Birdeye<br>&bull; GeckoTerminal<br>&bull; GMGN.ai<br>&bull; Telemetry</p>
-    <p>Every Solana contract address you encounter triggers an automatic scan. The verdict appears as an overlay panel within 5&ndash;10 seconds. The Chrome toolbar icon shows a colour-coded badge (✓ / ! / ✕) at a glance.</p>
-    <div class="compat-matrix">
-      <table>
-        <thead><tr><th>Browser</th><th>Min version</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Chrome</td><td>120+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Brave</td><td>1.60+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Edge</td><td>120+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Arc</td><td>1.30+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Opera</td><td>105+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Vivaldi</td><td>6.5+</td><td class="ok">Fully supported</td></tr>
-          <tr><td>Firefox</td><td>—</td><td class="warn">Q4 2026 (separate MV3 build)</td></tr>
-          <tr><td>Safari</td><td>—</td><td class="warn">No plans (Web Extensions API differs)</td></tr>
-        </tbody>
-      </table>
-      <p class="compat-note">All Chromium browsers share the same MV3 build. The toolbar icon, badge colours, and overlay all behave identically. If you run a fork of Chromium not listed above and it supports Manifest V3, Antares should work without changes.</p>
-    </div>
+    <h3>Browse</h3>
+    <p>Open a Solana token on DexScreener, pump.fun, Axiom, Photon, Birdeye, GeckoTerminal, GMGN.ai or Telemetry.</p>
   </div>
 </div>
 
 <div class="step" style="border-bottom:none">
-  <div class="step-n">04</div>
+  <div class="step-n">03</div>
   <div class="step-body">
-    <h3>Try the demo first</h3>
-    <p>Not sure what the verdict looks like? Test Antares without installing &mdash; click one of the four sample tokens in the live demo and see the full scan inline.</p>
-    <a class="cta" href="./demo" style="background:transparent;color:var(--c);border:1px solid var(--c)">↗ Open the demo</a>
+    <h3>Safe</h3>
+    <p>Antares scans it on its own and shows its verdict on the page: SAFE, CAUTION, DANGER or RUG.</p>
   </div>
 </div>
 
