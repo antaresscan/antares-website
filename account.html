@@ -21,31 +21,11 @@ h1 span{color:var(--c)}
 
 main{padding-bottom:80px}
 .head-row{display:flex;justify-content:space-between;align-items:flex-end;margin:50px 0 36px;flex-wrap:wrap;gap:18px}
-.account-meta{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:16px;color:#6a958c;letter-spacing:.04em;line-height:1.7;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}
-.account-meta b{color:#44726a;font-weight:400}
 .logout-btn{background:none;border:1px solid var(--border);color:#4f7d74;padding:8px 16px;font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s}
 .logout-btn:hover{color:#ff7777;border-color:rgba(214,72,72,.4)}
+.logout-row{text-align:center;margin:40px 0 0}
 
 .section-label{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.22em;text-transform:uppercase;margin:24px 0 14px;text-align:center}
-
-/* ── Tier banner — big, at-a-glance "you are PRO/LIFETIME/FREE" indicator
-   that lands directly under the page heading. The whole point of the
-   account page is to answer the user's first question on arrival —
-   "what tier am I?" — so we lead with that, not buried in the licence
-   list below. Tier color, expiry/forever badge, and a one-line
-   "what does this mean?" tooltip beneath. */
-.tier-banner{display:flex;align-items:center;gap:18px;padding:24px 28px;border-radius:4px;margin:28px 0 12px;border:1px solid;background:var(--card);position:relative;overflow:hidden}
-.tier-banner::before{content:'';position:absolute;inset:0;opacity:.04;pointer-events:none;background:radial-gradient(circle at 0% 50%,currentColor,transparent 60%)}
-.tier-banner.free{border-color:rgba(14,80,70,.25);color:#4f7d74}
-.tier-banner.pro{border-color:rgba(11,150,128,.5);color:var(--c);box-shadow:0 0 0 1px rgba(11,150,128,.1),0 12px 32px rgba(11,150,128,.06)}
-.tier-banner.lifetime{border-color:rgba(123,95,212,.5);color:var(--purple);box-shadow:0 0 0 1px rgba(123,95,212,.1),0 12px 32px rgba(123,95,212,.06)}
-.tier-banner.yearly{border-color:rgba(123,95,212,.5);color:var(--purple);box-shadow:0 0 0 1px rgba(123,95,212,.1),0 12px 32px rgba(123,95,212,.06)}
-.tier-banner-label{font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#6f9c93;margin-bottom:6px}
-.tier-banner-name{font:400 44px/.95 'Bebas Neue',sans-serif;letter-spacing:.06em;color:currentColor;margin-bottom:6px}
-.tier-banner-detail{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#44726a;letter-spacing:.04em;line-height:1.6}
-.tier-banner-detail b{color:#2e5d55;font-weight:400}
-.tier-banner-meta{margin-left:auto;text-align:right;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.04em;line-height:1.7;flex-shrink:0}
-.tier-banner-meta b{color:#44726a;font-weight:400;font-size:14px}
 
 /* ── Activate-in-extension callout — the missing UX bridge between
    "I have a license key" and "my extension knows I'm Pro". Without
@@ -124,6 +104,60 @@ main{padding-bottom:80px}
 .checkout-banner-instr{font:400 11px/1.5 'Bebas Neue',sans-serif;color:#4f7d74;margin-top:10px}
 .checkout-banner-instr a{color:var(--c)}
 
+/* ── Folded sections: Licenses · Pro on your devices · Your data ───────────
+   One quiet row per section, closed until clicked. The title and a short
+   summary on the row, a chevron that turns when open. */
+.acc-list{display:flex;flex-direction:column;gap:12px;margin:26px 0 0}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:4px;transition:border-color .2s,box-shadow .2s}
+.acc:hover,.acc[open]{border-color:rgba(11,150,128,.35)}
+.acc[open]{box-shadow:0 12px 32px rgba(8,80,70,.06)}
+.acc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:18px 22px;user-select:none;-webkit-user-select:none}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary:focus-visible{outline:2px solid #0b7d68;outline-offset:2px}
+/* Everything in the folded sections is GREY, nothing green: the titles are set like the page title ("Your account.", same face and glass
+   emboss), the text under them is a plain grey. Only the little pills (plan, Active) keep their colour: they carry a meaning. */
+.acc-title{font:400 clamp(30px,5vw,42px)/.95 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
+.acc-chev{flex:none;width:8px;height:8px;border-right:2px solid #7b8785;border-bottom:2px solid #7b8785;transform:rotate(45deg);transition:transform .2s;margin:-3px 3px 0 auto}
+.acc[open]>summary .acc-chev{transform:rotate(-135deg);margin-top:3px}
+.acc-body{padding:20px 22px 22px;border-top:1px solid var(--border)}
+.acc-body .activate-callout{margin:0;padding:0;border:none;background:none}
+.acc .acc-body h3{font:400 clamp(24px,4vw,32px)/1 'Bebas Neue',sans-serif;letter-spacing:.04em;text-transform:none;color:var(--c);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12);margin-bottom:14px}
+.acc .acc-body p,.acc .acc-body li,.acc .acc-body .activate-callout{color:#66726f}
+/* The steps of "Pro on your devices" (the intro line and 1, 2, 3) are set in the same grey glass as the titles, a little heavier and bigger so they stay readable. */
+.acc .acc-body .activate-callout,.acc .acc-body .activate-callout li,.acc .acc-body p{font:400 clamp(17px,2.6vw,20px)/1.55 'Bebas Neue',sans-serif;letter-spacing:.04em;color:rgba(14,66,58,.52);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.2)}
+.acc .acc-body b{color:rgba(14,66,58,.72)}
+.acc .acc-body .activate-callout b{color:rgba(14,66,58,.72)}
+.acc .acc-body p a{color:#4b5755;text-decoration:underline}
+.acc .acc-body .lic-meta{color:#7b8785}
+.acc .acc-body .lic-meta b{color:#4b5755}
+.acc .acc-body .lic-key{color:#3a4543}
+.acc .acc-body .data-confirm label{color:#66726f}
+.acc-body .lic-tabs{margin-top:0}
+.acc-body .empty{padding:6px 0;background:none;border:none}
+
+/* ── Your data / delete account (audit A-14b) ────────────────────────────
+   The privacy policy promises "Delete account" on this page. The card is
+   quiet until asked: one outlined button, then a password field, then a
+   solid red button. Nothing is sent before the password is typed. */
+.data-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:22px 26px}
+.data-card.flat{background:none;border:none;padding:0}
+.data-card h3{font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#6f9c93;margin-bottom:12px}
+.data-card p{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:15px;color:#44726a;line-height:1.7;margin-bottom:12px}
+.data-card p b{color:#2e5d55;font-weight:400}
+.data-card a{color:var(--c)}
+.danger-btn{background:none;border:1px solid rgba(214,72,72,.45);color:#c23b3b;padding:10px 18px;font:400 15px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s}
+.danger-btn:hover{background:rgba(214,72,72,.08);border-color:rgba(214,72,72,.7)}
+.danger-btn.solid{background:var(--red);border-color:var(--red);color:#fff}
+.danger-btn.solid:hover{background:#c23b3b;border-color:#c23b3b}
+.danger-btn:disabled,.logout-btn:disabled{opacity:.55;cursor:default}
+.data-confirm{margin-top:16px;padding-top:16px;border-top:1px dashed rgba(214,72,72,.35)}
+.data-confirm label{display:block;font:400 12px/1 'Bebas Neue',sans-serif;color:#4f7d74;letter-spacing:.18em;text-transform:uppercase;margin:0 0 6px}
+.data-confirm input{width:100%;max-width:340px;padding:11px 13px;background:#e7f7f0;color:#123b35;border:1px solid var(--border);border-radius:2px;font:400 15px/1.2 'IBM Plex Mono',monospace;letter-spacing:.04em}
+.data-confirm input:focus{border-color:var(--red);outline:none}
+.data-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.data-card.deleted{text-align:center;padding:34px 26px}
+.data-card.deleted a.home-link{display:inline-block;margin-top:6px;padding:11px 22px;background:var(--c);color:var(--bg);font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:2px}
+
 footer{text-align:center;padding:36px 32px;color:#8fb8ae;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:10px;border-top:1px solid var(--border);letter-spacing:.15em;text-transform:uppercase;max-width:1160px;margin:60px auto 0}
 footer .foot-links{margin-top:14px;font-size:9px;letter-spacing:.18em}
 footer .foot-links a{color:#82aaa1;text-decoration:none;margin:0 4px}
@@ -190,33 +224,79 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 <div id="account-view" style="display:none">
   <div class="head-row">
     <h1>Your <span>account</span>.</h1>
-    <div class="account-meta">
-      <span>Logged in as <b id="account-email">&mdash;</b></span>
-      <button class="logout-btn" id="logout-btn" type="button">Log out</button>
-    </div>
   </div>
 
-  <!-- Tier banner — populated by renderTier() below. The status / expiry
-       badge on the right answers "is this still active and until when".
-       Free is the default state until at least one license is found. -->
-  <div class="tier-banner free" id="tier-banner">
-    <div>
-      <div class="tier-banner-label">Current tier</div>
-      <div class="tier-banner-name" id="tier-name">Free</div>
-      <div class="tier-banner-detail" id="tier-detail">Unlimited scans &middot; no card on file</div>
-    </div>
-    <div class="tier-banner-meta" id="tier-meta">
-      <b>Live now</b><br>across the extension
-    </div>
-  </div>
-
-  <!-- Activate-in-extension callout — only rendered when there's at
-       least one unredeemed license. Wired up by renderActivateCallout(). -->
-  <div id="activate-wrap"></div>
-
-  <div class="section-label" id="results-label" style="display:none"><span>Your licenses</span></div>
-  <section id="licenses"></section>
+  <!-- A load error shows here, outside the folded sections, so it is never
+       hidden by a closed one. -->
   <div class="error-banner" id="error" style="display:none"></div>
+
+  <!-- The rest of the page is folded: one line per section, closed until
+       clicked. Native <details>: keyboard and screen-reader friendly with no
+       script. A link ending in #licenses, #devices or #data opens that section. -->
+  <div class="acc-list">
+
+    <!-- Activate-in-extension callout — only shown when there is at least
+         one license. Wired up by renderActivateCallout(). -->
+    <details class="acc" id="acc-devices" style="display:none">
+      <summary>
+        <span class="acc-title">Pro on your <span>devices</span>.</span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <div id="activate-wrap"></div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-licenses">
+      <summary>
+        <span class="acc-title">Your <span>licenses</span>.</span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <section id="licenses"></section>
+      </div>
+    </details>
+
+    <!-- Your data — "Delete account" (audit A-14b). Wired up at the bottom of
+         the script: the button opens a password field, the password goes to
+         POST /api/auth/delete-account, nothing is deleted without it. -->
+    <details class="acc" id="acc-data">
+      <summary>
+        <span class="acc-title">Your <span>data</span>.</span>
+        <span class="acc-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="acc-body">
+        <div class="data-card flat">
+          <h3>Delete account</h3>
+          <p>Erases your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices, and signs you out everywhere. <b>This cannot be undone.</b></p>
+          <p>The record of your purchases is kept, because the law requires us to keep accounting records. If you sign up again with the same e-mail address, your licences come back. Details in the <a href="./privacy">privacy policy</a>.</p>
+          <button type="button" class="danger-btn" id="delete-open-btn" aria-expanded="false" aria-controls="delete-confirm">Delete my account</button>
+          <div class="data-confirm" id="delete-confirm" style="display:none">
+            <label for="delete-password">Type your password to confirm</label>
+            <input type="password" id="delete-password" autocomplete="current-password" placeholder="********">
+            <div class="data-actions">
+              <button type="button" class="danger-btn solid" id="delete-confirm-btn">Delete permanently</button>
+              <button type="button" class="logout-btn" id="delete-cancel-btn">Cancel</button>
+            </div>
+            <div class="error-banner" id="delete-error" role="alert" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="logout-row"><button class="logout-btn" id="logout-btn" type="button">Log out</button></div>
+</div>
+
+<div id="deleted-view" style="display:none">
+  <div class="head-row"><h1>Account <span>deleted</span>.</h1></div>
+  <div class="data-card deleted" role="status">
+    <h3>All done</h3>
+    <p>Your account, the link between your devices and your e-mail, your scan history and the plan stored on your devices have been erased, and every session is closed.</p>
+    <p>The record of your purchases is kept, as the law requires (see the <a href="./privacy">privacy policy</a>). If you sign up again with the same e-mail address, your licences come back.</p>
+    <a class="home-link" href="./index.html">Back to home</a>
+  </div>
 </div>
 </main>
 
@@ -227,11 +307,20 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var API = 'https://antares-extension.vercel.app';
   var loadingEl = document.getElementById('loading');
   var viewEl = document.getElementById('account-view');
-  var emailEl = document.getElementById('account-email');
   var logoutBtn = document.getElementById('logout-btn');
-  var resultsLabel = document.getElementById('results-label');
+  var devicesAccEl = document.getElementById('acc-devices');
   var listEl = document.getElementById('licenses');
   var errorEl = document.getElementById('error');
+
+  // The folded sections stay closed unless a link asks for one: /account#licenses,
+  // /account#devices or /account#data (the privacy policy links to #data).
+  function openSectionFromHash() {
+    var ids = { '#licenses': 'acc-licenses', '#devices': 'acc-devices', '#data': 'acc-data' };
+    var el = document.getElementById(ids[window.location.hash] || '');
+    if (!el || el.style.display === 'none') return;
+    el.open = true;
+    el.scrollIntoView({ block: 'start' });
+  }
 
   // ── Post-checkout polling ────────────────────────────────────────────────
   // When NOWPayments redirects the buyer back here, the URL carries
@@ -400,63 +489,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     }
   }
 
-  // ── Tier resolution ──────────────────────────────────────────────────
-  // The extension reads tier from a different key (install_id), but the
-  // *license-of-record* — what the user actually paid for — lives on
-  // their email. Priority: Lifetime (grandfathered) > Yearly > Pro > Free.
-  // Pro / Yearly are "active" only if they have at least one unexpired
-  // license. Once we know the verdict we light up the banner.
-  function resolveTier(list) {
-    var now = Date.now();
-    var hasLifetime = false;
-    var activeYearlyExpiry = 0;
-    var activeProExpiry = 0;
-    list.forEach(function(l) {
-      if (l.tier === 'lifetime') hasLifetime = true;
-      else if (l.tier === 'yearly') {
-        var expY = Number(l.expiresAt) || 0;
-        if (expY > now && expY > activeYearlyExpiry) activeYearlyExpiry = expY;
-      } else if (l.tier === 'monthly' || l.tier === 'pro') {
-        var exp = Number(l.expiresAt) || 0;
-        if (exp > now && exp > activeProExpiry) activeProExpiry = exp;
-      }
-    });
-    if (hasLifetime) return { tier: 'lifetime', activeProExpiry: 0, activeYearlyExpiry: 0 };
-    if (activeYearlyExpiry > 0) return { tier: 'yearly', activeProExpiry: 0, activeYearlyExpiry: activeYearlyExpiry };
-    if (activeProExpiry > 0) return { tier: 'pro', activeProExpiry: activeProExpiry, activeYearlyExpiry: 0 };
-    return { tier: 'free', activeProExpiry: 0, activeYearlyExpiry: 0 };
-  }
-
-  function renderTier(verdict) {
-    var bannerEl = document.getElementById('tier-banner');
-    var nameEl = document.getElementById('tier-name');
-    var detailEl = document.getElementById('tier-detail');
-    var metaEl = document.getElementById('tier-meta');
-
-    bannerEl.classList.remove('free', 'pro', 'yearly', 'lifetime');
-    bannerEl.classList.add(verdict.tier);
-
-    if (verdict.tier === 'lifetime') {
-      // Grandfathered legacy customers — they paid before the 2026-05
-      // rename and keep their forever pass.
-      nameEl.textContent = 'Lifetime';
-      detailEl.innerHTML = '<b>Every Pro feature, forever.</b> Includes every release we ship from here on out. Paid once, valid for the life of the product.';
-      metaEl.innerHTML = '<b>Forever</b><br>no renewal needed';
-    } else if (verdict.tier === 'yearly') {
-      nameEl.textContent = 'Yearly';
-      detailEl.innerHTML = '<b>Every Pro feature, for 1 year.</b> AI Summary, Critical Flags, Full Analysis page, scan history, priority cache and exports across all 7 supported platforms.';
-      metaEl.innerHTML = '<b>Renews</b><br>' + fmtDate(verdict.activeYearlyExpiry);
-    } else if (verdict.tier === 'pro') {
-      nameEl.textContent = 'Pro';
-      detailEl.innerHTML = '<b>Unlimited scans &middot; full overlay.</b> AI Summary, Critical Flags, Full Analysis page, scan history, priority cache and exports across all 7 supported platforms.';
-      metaEl.innerHTML = '<b>Renews</b><br>' + fmtDate(verdict.activeProExpiry);
-    } else {
-      nameEl.textContent = 'Free';
-      detailEl.innerHTML = '<b>Unlimited scans &middot; no card on file.</b> The verdict, the score, the overlay across 7 platforms. Upgrade to unlock AI Summary, Critical Flags and Full Analysis.';
-      metaEl.innerHTML = '<b>Live now</b><br>across the extension';
-    }
-  }
-
   // ── Probe the extension via the content-script bridge ──────────────────
   // The extension drops <meta name="antares-extension-installed"> at
   // document_start AND replies to postMessage queries with the install_id
@@ -495,6 +527,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   // to copy or paste anything.
   function renderActivateCallout(list) {
     var wrap = document.getElementById('activate-wrap');
+    // The "Pro on your devices" section only exists once there is a licence.
+    devicesAccEl.style.display = list.length ? '' : 'none';
     if (!list.length) { wrap.innerHTML = ''; return; }
 
     // Default copy assumes no extension detected — surfaces an install
@@ -506,7 +540,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
         'Pro is now linked to your Antares account. To use it on a device:' +
         '<ol>' +
           '<li>Make sure the <b>Antares extension</b> is installed on that device.</li>' +
-          '<li>Sign in to your account on that device — open the extension Options page or visit <a href="./auth">antaresscan.com/auth</a>.</li>' +
+          '<li>Sign in to your account on that device.</li>' +
           '<li>The overlay flips to Pro automatically. No keys to paste, ever.</li>' +
         '</ol>' +
       '</div>';
@@ -564,17 +598,12 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   }
 
   function renderLicenses(list) {
-    // Resolve + paint the tier banner first — that's the answer the
-    // user came here for, even before they look at the licence rows.
-    var verdict = resolveTier(list);
-    renderTier(verdict);
     renderActivateCallout(list);
 
     if (!list.length) {
       listEl.innerHTML = '<div class="empty"><p>You don\'t have any subscriptions yet. Pick a tier and pay in any of 200+ supported cryptocurrencies &mdash; Pro activates automatically on every device where you sign in to your account.</p><a href="./pricing">View pricing</a></div>';
       return;
     }
-    resultsLabel.style.display = 'block';
     var now = Date.now();
     var activeList = list.filter(function(l) { return isLicenseActive(l, now); });
     var expiredList = list.filter(function(l) { return !isLicenseActive(l, now); });
@@ -689,9 +718,9 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
         loadingEl.textContent = 'Could not load account.';
         return;
       }
-      emailEl.textContent = body.email;
       loadingEl.style.display = 'none';
       viewEl.style.display = 'block';
+      openSectionFromHash();
 
       // Sync the session token to the extension (best-effort, runs in
       // parallel with license fetch — license rendering doesn't depend
@@ -712,6 +741,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
             return;
           }
           renderLicenses(r.body.licenses || []);
+          openSectionFromHash(); // "#devices" only exists once the licences are in
         });
     })
     .catch(function() {
@@ -772,6 +802,105 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     Promise.all([waitForBridgeAck(), logoutFetch]).then(function() {
       try { localStorage.removeItem('antares_buyer_email'); } catch(_) {}
       window.location.href = './auth.html';
+    });
+  });
+
+  // 4. Delete account (audit A-14b, GDPR article 17)
+  //
+  // POST /api/auth/delete-account with the password: the server checks the
+  // session AND the password, erases the account and what hangs on it (the
+  // purchase record stays) and ends every session. The install id of the
+  // extension, when there is one, goes along so the server also finds an
+  // install that was never linked to a licence. On success the bridge-stored
+  // session token is cleared in the extension (same wait as logout, for the
+  // same reason) and the page says it is done. On any failure NOTHING was
+  // deleted and the page says so.
+  var deleteOpenBtn = document.getElementById('delete-open-btn');
+  var deleteConfirmEl = document.getElementById('delete-confirm');
+  var deletePasswordEl = document.getElementById('delete-password');
+  var deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+  var deleteCancelBtn = document.getElementById('delete-cancel-btn');
+  var deleteErrorEl = document.getElementById('delete-error');
+  var deletedViewEl = document.getElementById('deleted-view');
+
+  function setDeleteError(msg) {
+    if (msg) {
+      deleteErrorEl.textContent = msg;
+      deleteErrorEl.style.display = 'block';
+    } else {
+      deleteErrorEl.style.display = 'none';
+      deleteErrorEl.textContent = '';
+    }
+  }
+  function setDeleteBusy(busy) {
+    deleteConfirmBtn.disabled = busy;
+    deleteCancelBtn.disabled = busy;
+    deletePasswordEl.disabled = busy;
+    deleteConfirmBtn.textContent = busy ? 'Deleting…' : 'Delete permanently';
+  }
+  function closeDeleteConfirm() {
+    deleteConfirmEl.style.display = 'none';
+    deleteOpenBtn.style.display = '';
+    deleteOpenBtn.setAttribute('aria-expanded', 'false');
+    deletePasswordEl.value = '';
+    setDeleteError('');
+  }
+
+  deleteOpenBtn.addEventListener('click', function() {
+    deleteOpenBtn.style.display = 'none';
+    deleteOpenBtn.setAttribute('aria-expanded', 'true');
+    deleteConfirmEl.style.display = 'block';
+    deletePasswordEl.focus();
+  });
+  deleteCancelBtn.addEventListener('click', closeDeleteConfirm);
+  deletePasswordEl.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); deleteConfirmBtn.click(); }
+    if (ev.key === 'Escape') closeDeleteConfirm();
+  });
+
+  deleteConfirmBtn.addEventListener('click', function() {
+    var password = deletePasswordEl.value;
+    if (!password) { setDeleteError('Type your password to confirm.'); deletePasswordEl.focus(); return; }
+    setDeleteError('');
+    setDeleteBusy(true);
+
+    probeExtensionInstallId().then(function(installId) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (installId) headers['X-Antares-Install'] = installId;
+      return fetch(API + '/api/auth/delete-account', {
+        method: 'POST',
+        credentials: 'include',
+        headers: headers,
+        body: JSON.stringify({ password: password })
+      }).then(function(r) {
+        return r.json().catch(function() { return {}; }).then(function(b) { return { status: r.status, body: b || {} }; });
+      });
+    }).then(function(r) {
+      if (r.status === 200 && r.body.ok) {
+        return waitForBridgeAck().then(function() {
+          try { localStorage.removeItem('antares_buyer_email'); } catch(_) {}
+          viewEl.style.display = 'none';
+          deletedViewEl.style.display = 'block';
+          window.scrollTo(0, 0);
+        });
+      }
+      setDeleteBusy(false);
+      deletePasswordEl.value = '';
+      if (r.status === 401 && r.body.reason === 'invalid_credentials') {
+        setDeleteError('That password is not right. Nothing was deleted.');
+        deletePasswordEl.focus();
+      } else if (r.status === 401) {
+        setDeleteError('Your session has ended. Log in again, then try again. Nothing was deleted.');
+      } else if (r.status === 429) {
+        setDeleteError((r.body.error || 'Too many failed attempts. Try again in a few minutes.') + ' Nothing was deleted.');
+      } else if (r.status === 503) {
+        setDeleteError('Could not finish deleting the account. Nothing was deleted: please try again in a few minutes.');
+      } else {
+        setDeleteError('Something went wrong. Nothing was deleted. Please try again.');
+      }
+    }).catch(function() {
+      setDeleteBusy(false);
+      setDeleteError('Network error. Nothing was deleted. Please try again.');
     });
   });
 })();
