@@ -175,8 +175,11 @@ const extraHTTPHeaders = bypassToken
   ? { 'x-vercel-protection-bypass': bypassToken, 'x-vercel-set-bypass-cookie': 'true' }
   : undefined;
 
-/* Console errors we tolerate (third-party noise, see PR #155). */
-const IGNORE_ERRORS = /CORS|Access to fetch|net::ERR_FAILED|preview-feedback|space-mono|401|403|Failed to fetch|Not signed in with the identity provider/i;
+/* Console errors we tolerate (third-party noise, see PR #155).
+   The last alternative: dexscreener.com now answers `X-Frame-Options: SAMEORIGIN`, so the live chart that /demo embeds is refused by the browser
+   ("Refused to display 'https://dexscreener.com/' in a frame ..."). That header is theirs, not ours; only THIS frame, from THIS host, is tolerated:
+   a refusal from any other site still fails the audit. */
+const IGNORE_ERRORS = /CORS|Access to fetch|net::ERR_FAILED|preview-feedback|space-mono|401|403|Failed to fetch|Not signed in with the identity provider|Refused to display 'https:\/\/dexscreener\.com\/[^']*' in a frame/i;
 
 /* ── assertion helpers ──────────────────────────────────────────── */
 
