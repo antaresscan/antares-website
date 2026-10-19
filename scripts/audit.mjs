@@ -372,7 +372,58 @@ async function auditDesktop(page, route) {
     if (!cta.threatDone) fails.push('B1-typewriter-threat-not-done');
   }
 
+  /* The row of the overlay card, in both copies of the overlay that this site draws (hero on / and live demo on /demo). */
+  if (route === '/' || route === '/demo') {
+    for (const p of await overlayRowContract(page)) fails.push('overlay-row-' + p);
+  }
   return { fails, probe };
+}
+
+/* ── The row of the overlay card (Sell / Mint / Freeze / LP / Liq) ──────────────────────────────
+   The overlay exists in three copies (the extension, the hero of / and the live demo on /demo). The row of its card is aligned by fractions of a
+   pixel: the check, the cross, the dash and the liquidity figure share one line, and the figure is set in Bebas Neue whatever its colour. The extension
+   proves it by MEASURING the ink in a real Chromium (npm run overlay:check in antares-extension). The two copies here are checked on the contract that
+   makes it true, read from the page's COMPUTED styles with one cell of every kind inserted next to the real row: a copy that drifts (the green figure was
+   pushed 1.5px and the others not, the figure was in the mono face, the cross was 1.5px low, the tick came out 1px taller because base.css resets
+   box-sizing on * and not on its pseudo-elements) fails here. */
+async function overlayRowContract(page) {
+  return page.evaluate(() => {
+    const roots = [document, ...[...document.querySelectorAll('*')].filter((e) => e.shadowRoot).map((e) => e.shadowRoot)];
+    const ss = roots.map((r) => r.querySelector('.ss')).find(Boolean);
+    if (!ss) return ['no-row-found'];
+    const probe = document.createElement('div');
+    probe.className = 'ss';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:absolute;left:-9999px;top:0;width:420px';
+    const cell = (label, html) => '<div class="si"><span>' + label + '</span>' + html + '</div>';
+    probe.innerHTML =
+      cell('a', '<b class="ok"></b>') + cell('b', '<b class="no"></b>') + cell('c', '<b class="dash">\u2014</b>') +
+      cell('d', '<b class="liq y">$1M</b>') + cell('e', '<b class="liq n">$1</b>') + cell('f', '<b class="liq">$1K</b>') +
+      cell('g', '<b class="y">x</b>') + cell('h', '<b class="n">x</b>') + cell('i', '<b class="w">x</b>');
+    ss.parentNode.appendChild(probe);
+    const problems = [];
+    const get = (sel) => probe.querySelector(sel);
+    const cs = (el, pseudo) => getComputedStyle(el, pseudo || null);
+    for (const sel of ['b.liq.y', 'b.liq.n', 'b.liq:not(.y):not(.n)']) {
+      const s = cs(get(sel));
+      if (!/Bebas Neue/.test(s.fontFamily)) problems.push(sel + '-font=' + s.fontFamily);
+      if (s.fontSize !== '11px') problems.push(sel + '-size=' + s.fontSize);
+      if (s.position !== 'relative' || s.top !== '1.3px') problems.push(sel + '-push=' + s.position + '/' + s.top);
+    }
+    for (const cls of ['y', 'n', 'w']) {
+      const s = cs(get('b.' + cls + ':not(.liq)'));
+      if (s.position !== 'static') problems.push('colour-' + cls + '-moves-the-figure=' + s.position + '/' + s.top);
+    }
+    const dash = cs(get('b.dash'));
+    if (dash.display !== 'inline-flex' || dash.width !== '12px' || dash.height !== '12px') problems.push('dash-box=' + dash.display + ' ' + dash.width + 'x' + dash.height);
+    const bar = cs(get('b.dash'), '::before');
+    if (bar.content === 'none' || bar.height !== '1px') problems.push('dash-bar=' + bar.content + ' ' + bar.height);
+    if (cs(get('b.no')).top !== '-0.1px') problems.push('cross-top=' + cs(get('b.no')).top);
+    if (cs(get('b.ok')).top !== '0px' && cs(get('b.ok')).top !== 'auto') problems.push('tick-top=' + cs(get('b.ok')).top);
+    for (const sel of ['b.ok', 'b.no']) if (cs(get(sel), '::before').boxSizing !== 'border-box') problems.push(sel + '-pseudo-box-sizing=' + cs(get(sel), '::before').boxSizing);
+    probe.remove();
+    return problems;
+  });
 }
 
 /* ── runner ─────────────────────────────────────────────────────── */

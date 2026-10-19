@@ -365,12 +365,15 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 .si + .si::before{content:'';position:absolute;left:0;top:25%;height:50%;width:1px;background:#1a1a1e}
 .si span{display:block;font-size:9px;color:#888;font-weight:400;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;font-family:'Bebas Neue',sans-serif}
 .si b{font-size:8.5px;letter-spacing:.06em;font-weight:400;line-height:1;font-family:'IBM Plex Mono',monospace;color:#f0f0f0;vertical-align:top}
-.si b.y{color:#00e5b0;position:relative;top:1.5px}
+.si b.y{color:#00e5b0}
 .si b.n{color:#ff5f5f}
 .si b.w{color:#f5d000}
+.si b.liq{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.06em;position:relative;top:1.3px}
+.si b.dash{display:inline-flex;width:12px;height:12px;position:relative;font-size:0;vertical-align:top}
+.si b.dash::before{content:'';position:absolute;left:50%;top:5.2px;width:6px;height:1px;margin-left:-3px;background:currentColor}
 .si b.ok{display:inline-flex;align-items:flex-start;justify-content:center;width:12px;height:12px;position:relative;font-size:0;vertical-align:top}
 .si b.ok::before{content:'';position:absolute;width:7px;height:4px;border-left:1.5px solid #00e5b0;border-bottom:1.5px solid #00e5b0;top:3px;left:50%;transform:translateX(-50%) rotate(-45deg)}
-.si b.no{display:inline-flex;align-items:flex-start;justify-content:center;width:12px;height:12px;position:relative;top:1.5px;font-size:0;vertical-align:top}
+.si b.no{display:inline-flex;align-items:flex-start;justify-content:center;width:12px;height:12px;position:relative;top:-.1px;font-size:0;vertical-align:top}
 .si b.no::before,.si b.no::after{content:'';position:absolute;width:9px;height:1.5px;background:#ff5f5f;border-radius:.75px;top:5px;left:50%}
 .si b.no::before{transform:translateX(-50%) rotate(45deg)}
 .si b.no::after{transform:translateX(-50%) rotate(-45deg)}
@@ -704,7 +707,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     return frag;
   }
   function buildSiBool(label,val,invert){
-    if(val==null)return el('div',{'class':'si'},el('span',null,label),el('b',{'style':'color:#333'},'—'));
+    if(val==null)return el('div',{'class':'si'},el('span',null,label),el('b',{'class':'dash','style':'color:#333'},'—'));
     var yes=invert?!val:!!val;
     return el('div',{'class':'si'},el('span',null,label),el('b',{'class':yes?'ok':'no'}));
   }
@@ -715,7 +718,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       var dur=d.lpLockDurationDays!=null?(' ('+d.lpLockDurationDays+'d)'):'';
       return el('div',{'class':'si'},el('span',null,'LP Locked'+pct+dur),el('b',{'class':'ok'}));
     }
-    if(d.lpBurned==null&&d.lpLocked==null)return el('div',{'class':'si'},el('span',null,'LP Lock'),el('b',{'style':'color:#555'},'—'));
+    if(d.lpBurned==null&&d.lpLocked==null)return el('div',{'class':'si'},el('span',null,'LP Lock'),el('b',{'class':'dash','style':'color:#555'},'—'));
     return el('div',{'class':'si'},el('span',null,'LP Lock'),el('b',{'class':'no'}));
   }
   function buildResultNode(d,ca){
@@ -762,7 +765,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       buildSiLp(d),
       el('div',{'class':'si'},
         el('span',null,'Liq'),
-        el('b',{'class':liqClass||undefined},liqDisplay)
+        el('b',{'class':liq!=null?('liq'+(liqClass?' '+liqClass:'')):'dash'},liqDisplay)
       )
     );
 
