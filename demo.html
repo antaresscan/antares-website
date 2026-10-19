@@ -369,6 +369,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 .si b.n{color:#ff5f5f}
 .si b.w{color:#f5d000}
 .si b.liq{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.06em;position:relative;top:1.3px}
+/* the figure is text: where a platform puts its glyphs depends on the ascent/descent it rounds (1px lower on Linux than on Windows with the push above); trimmed to its capitals it sits on the same line everywhere (same rule as the extension) */
+@supports (text-box:trim-both cap alphabetic){.si b.liq{display:inline-block;line-height:1;text-box:trim-both cap alphabetic;margin-top:2px;top:0;vertical-align:top}}
 .si b.dash{display:inline-flex;width:12px;height:12px;position:relative;font-size:0;vertical-align:top}
 .si b.dash::before{content:'';position:absolute;left:50%;top:5.2px;width:6px;height:1px;margin-left:-3px;background:currentColor}
 .si b.ok{display:inline-flex;align-items:flex-start;justify-content:center;width:12px;height:12px;position:relative;font-size:0;vertical-align:top}
