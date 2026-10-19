@@ -408,7 +408,10 @@ async function overlayRowContract(page) {
       const s = cs(get(sel));
       if (!/Bebas Neue/.test(s.fontFamily)) problems.push(sel + '-font=' + s.fontFamily);
       if (s.fontSize !== '11px') problems.push(sel + '-size=' + s.fontSize);
-      if (s.position !== 'relative' || s.top !== '1.3px') problems.push(sel + '-push=' + s.position + '/' + s.top);
+      const trimmed = CSS.supports('text-box', 'trim-both cap alphabetic');
+      if (trimmed) {
+        if (s.display !== 'inline-block' || s.marginTop !== '2px' || s.top !== '0px') problems.push(sel + '-trim=' + s.display + '/' + s.marginTop + '/' + s.top);
+      } else if (s.position !== 'relative' || s.top !== '1.3px') problems.push(sel + '-push=' + s.position + '/' + s.top);
     }
     for (const cls of ['y', 'n', 'w']) {
       const s = cs(get('b.' + cls + ':not(.liq)'));
