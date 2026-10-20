@@ -461,10 +461,10 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 .ai-panel-inner::-webkit-scrollbar-track{background:rgba(167,139,250,.04);border-radius:3px}
 .ai-panel-inner::-webkit-scrollbar-thumb{background:rgba(167,139,250,.5);border-radius:3px}
 .ai-panel-inner::-webkit-scrollbar-thumb:hover{background:rgba(167,139,250,.75)}
-.ai-panel-verdict{font-size:10px;font-weight:600;color:#c4b5fd;line-height:1.5;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em;padding-bottom:6px;border-bottom:1px solid rgba(167,139,250,.1)}
-.ai-panel-line{font-size:10px;color:#8a8aad;line-height:1.55;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em}
-.ai-panel-loading{padding:10px 12px;font-size:9px;color:#555;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;text-align:center;animation:ant-pulse 1.2s ease-in-out infinite}
-.ai-panel-empty{padding:10px 12px;font-size:9px;color:#444;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;text-align:center}
+.ai-panel-verdict{font-size:13px;font-weight:400;color:#c4b5fd;line-height:1.3;font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;word-spacing:.12em;padding-bottom:6px;border-bottom:1px solid rgba(167,139,250,.1)}
+.ai-panel-line{font-size:12px;font-weight:400;color:#8a8aad;line-height:1.35;font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;word-spacing:.12em}
+.ai-panel-loading{padding:10px 12px;font-size:12px;color:#555;font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;text-align:center;animation:ant-pulse 1.2s ease-in-out infinite}
+.ai-panel-empty{padding:10px 12px;font-size:12px;color:#444;font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;text-align:center}
 
 .ai-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:9px;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid #131316;color:#777}
 .ai-item:last-child{border-bottom:none}
@@ -496,17 +496,26 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
 .cf-flag{display:flex;align-items:flex-start;gap:8px;padding:4px 0}
 .cf-flag + .cf-flag{border-top:1px solid rgba(255,255,255,.04);padding-top:8px}
-.cf-flag-icon{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0;margin-top:1px}
-.cf-flag-icon-r{background:rgba(255,60,80,.15);color:#ff5f5f}
-.cf-flag-icon-y{background:rgba(245,208,0,.12);color:#f5d000}
-.cf-flag-icon-g{background:rgba(136,136,136,.1);color:#888}
+/* The round marks (cross, !, i) are one small drawing each, circle and symbol together (drawMark below): a 16px circle is a whole number of device pixels at 100, 125,
+   150, 175 and 200 % (a 14px one was 17.5 at 125 % and came out 17 or 18 from one row to the next, with the symbol off centre). The character stays in the element
+   (font-size 0) for screen readers. Same as the extension. */
+.cf-flag-icon{width:16px;height:16px;flex-shrink:0;font-size:0;line-height:0}
+.cf-flag-icon svg{display:block;overflow:visible}
+.cf-flag-icon-r{color:#ff5f5f}
+.cf-flag-icon-y{color:#f5d000}
+.cf-flag-icon-g{color:#888}
+.cf-flag-icon-r .cf-mark-bg{fill:rgba(255,60,80,.15)}
+.cf-flag-icon-y .cf-mark-bg{fill:rgba(245,208,0,.12)}
+.cf-flag-icon-g .cf-mark-bg{fill:rgba(136,136,136,.1)}
+.cf-mark-ink{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.cf-mark-dot{fill:currentColor}
 .cf-flag-body{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
-.cf-flag-label{font-size:10px;font-weight:600;line-height:1.4;font-family:'IBM Plex Mono',monospace;letter-spacing:.01em}
+.cf-flag-label{font-size:13px;font-weight:400;line-height:1.3;font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;word-spacing:.12em}
 .cf-flag-cr .cf-flag-label{color:#cc7070}
 .cf-flag-wr .cf-flag-label{color:#c8a840}
 .cf-flag-in .cf-flag-label{color:#888}
-.cf-flag-desc{font-size:9px;color:#777;line-height:1.5;font-style:italic;letter-spacing:.01em;font-family:'IBM Plex Mono',monospace}
-.cf-panel-empty{padding:10px 12px;font-size:9px;color:#444;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;text-align:center}
+.cf-flag-desc{font-size:11.5px;font-weight:400;color:#777;line-height:1.35;letter-spacing:.06em;word-spacing:.12em;font-family:'Bebas Neue',sans-serif}
+.cf-panel-empty{padding:10px 12px;font-size:12px;color:#444;font-family:'Bebas Neue',sans-serif;letter-spacing:.08em;text-align:center}
 `;
 
   // ─── EXACT FLAG_DESCRIPTIONS from critical-flags.ts ──────────────────────
@@ -862,6 +871,23 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     }
     panel.classList.add('open');
   }
+  // ─── ROUND MARKS — port of contents/modules/round-marks.ts of the extension ─────────────────────────────────────────────────────────────────────
+  // One 16 x 16 drawing per mark: the circle and the symbol are painted from the same origin, and every symbol is laid out around (8, 8), so that the circle is the
+  // same size on every row and the symbol is on its centre at any screen scaling. Built with the DOM API (no innerHTML). Keys are the icon classes of this file:
+  // r = cross (critical), y = ! (warning), g = i (info).
+  var SVG_NS='http://www.w3.org/2000/svg';
+  function svgEl(tag,attrs){var e=document.createElementNS(SVG_NS,tag);for(var k in attrs){if(Object.prototype.hasOwnProperty.call(attrs,k))e.setAttribute(k,attrs[k]);}return e;}
+  var MARK_SYMBOLS={
+    r:function(){return [svgEl('path',{'class':'cf-mark-ink',d:'M5.2 5.2L10.8 10.8M10.8 5.2L5.2 10.8'})];},
+    y:function(){return [svgEl('path',{'class':'cf-mark-ink',d:'M8 4.65L8 8.45'}),svgEl('circle',{'class':'cf-mark-dot',cx:'8',cy:'11.2',r:'0.95'})];},
+    g:function(){return [svgEl('circle',{'class':'cf-mark-dot',cx:'8',cy:'4.75',r:'0.95'}),svgEl('path',{'class':'cf-mark-ink',d:'M8 7.35L8 11.45'})];}
+  };
+  function drawMark(host,key){
+    var root=svgEl('svg',{viewBox:'0 0 16 16',width:'16',height:'16','aria-hidden':'true',focusable:'false'});
+    root.appendChild(svgEl('circle',{'class':'cf-mark-bg',cx:'8',cy:'8',r:'8'}));
+    var parts=MARK_SYMBOLS[key]();for(var i=0;i<parts.length;i++)root.appendChild(parts[i]);
+    host.appendChild(root);
+  }
   var SEV_ORDER={critical:0,warning:1,info:2};
   function toggleCriticalFlags(flags){
     var panel=shadow.getElementById('ant-critical-flags');if(!panel)return;
@@ -894,7 +920,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
           var iconClass=sev==='critical'?'r':sev==='warning'?'y':'g';
           var iconChar=sev==='critical'?'✕':sev==='warning'?'!':'i';
           var row=document.createElement('div');row.className='cf-flag cf-flag-'+sevClass;
-          var icon=document.createElement('div');icon.className='cf-flag-icon cf-flag-icon-'+iconClass;icon.textContent=iconChar;
+          var icon=document.createElement('div');icon.className='cf-flag-icon cf-flag-icon-'+iconClass;icon.textContent=iconChar;drawMark(icon,iconClass);
           var body=document.createElement('div');body.className='cf-flag-body';
           var label=document.createElement('div');label.className='cf-flag-label';label.textContent=flag.label;
           body.appendChild(label);
