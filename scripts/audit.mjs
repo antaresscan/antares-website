@@ -437,8 +437,9 @@ async function overlayRowContract(page) {
    The live overlay of /demo is a copy of the extension's. Its panels were set in IBM Plex Mono (bold labels, italic explanations) while the rest of the card is
    Bebas Neue, and their round marks were a 14px CSS circle with a font character on it: on a screen scaled to 125 % that circle is 17.5 device pixels and came
    out 17 or 18 from one row to the next, with the symbol off centre. The extension proves its marks by MEASURING them in a real Chromium (npm run overlay:check in
-   antares-extension, "panels"). This copy is checked on the contract that makes them right, with the real buttons: every text of the panels is Bebas Neue at weight
-   400 and not italic (Bebas Neue has neither: the browser would fake them), and every mark is ONE 16 x 16 drawing, a circle of radius 8 at the centre with its symbol
+   antares-extension, "panels"). This copy is checked on the contract that makes them right, with the real buttons: the titles of the panels (the name of each flag) are
+   Bebas Neue at weight 400 and not italic (Bebas Neue has neither: the browser would fake them), the sentences (what a flag means, the AI summary, the empty states) are
+   Oswald at weight 300 or 400 in lower case (Bebas Neue has capitals only; the owner's choice, 2026-10-21), and both faces are loaded; and every mark is ONE 16 x 16 drawing, a circle of radius 8 at the centre with its symbol
    laid out around the middle of that circle (the ink of the symbol is as far from the left as from the right, as far from the top as from the bottom). */
 async function overlayPanelsContract(page) {
   return page.evaluate(async () => {
@@ -465,6 +466,19 @@ async function overlayPanelsContract(page) {
         if (s.fontStyle !== 'normal') problems.push(label + sel + '-style=' + s.fontStyle);
       }
     };
+    // the sentences: Oswald 300 or 400, not italic, lower case kept (no text-transform)
+    const sentenceOf = (panel, label, sels) => {
+      let found = 0;
+      for (const sel of sels) for (const el of panel.querySelectorAll(sel)) {
+        found++;
+        const s = getComputedStyle(el);
+        if (!/Oswald/.test(s.fontFamily)) problems.push(label + sel + '-font=' + s.fontFamily);
+        if (s.fontWeight !== '300' && s.fontWeight !== '400') problems.push(label + sel + '-weight=' + s.fontWeight);
+        if (s.fontStyle !== 'normal') problems.push(label + sel + '-style=' + s.fontStyle);
+        if (s.textTransform !== 'none') problems.push(label + sel + '-transform=' + s.textTransform);
+      }
+      if (found === 0) problems.push(label + 'no-sentence-to-check');
+    };
     const numbers = (d) => (d.match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
 
     press('ant-critical-flags-btn');
@@ -472,7 +486,8 @@ async function overlayPanelsContract(page) {
     if (!cf || !cf.classList.contains('open')) problems.push('critical-flags-did-not-open');
     else {
       if (cf.querySelectorAll('.cf-flag-icon').length < 2) problems.push('no-flag-marks-to-check');
-      fontOf(cf, 'cf', ['.cf-flag-label', '.cf-flag-desc', '.cf-panel-empty']);
+      fontOf(cf, 'cf', ['.cf-flag-label']);
+      sentenceOf(cf, 'cf', ['.cf-flag-desc']);
       const icons = [...cf.querySelectorAll('.cf-flag-icon')];
       for (const icon of icons) {
         const svg = icon.querySelector('svg');
@@ -496,7 +511,10 @@ async function overlayPanelsContract(page) {
     press('ant-ai-summary-btn');
     const ai = sr.getElementById('ant-ai-summary');
     if (!ai || !ai.classList.contains('open')) problems.push('ai-summary-did-not-open');
-    else fontOf(ai, 'ai', ['.ai-panel-verdict', '.ai-panel-line', '.ai-panel-empty']);
+    else sentenceOf(ai, 'ai', ['.ai-panel-verdict', '.ai-panel-line']);
+    await document.fonts.ready;
+    const loaded = [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family.replace(/["']/g, '') + ' ' + f.weight);
+    for (const face of ['Bebas Neue 400', 'Oswald 300', 'Oswald 400']) if (!loaded.includes(face)) problems.push('font-not-loaded=' + face);
     if (open()) open().classList.remove('open', 'closing'); // the page is left as it was found
     return problems;
   });
