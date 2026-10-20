@@ -376,6 +376,10 @@ async function auditDesktop(page, route) {
   if (route === '/' || route === '/demo') {
     for (const p of await overlayRowContract(page)) fails.push('overlay-row-' + p);
   }
+  /* The two panels under the card, in the live overlay of /demo (the copy of the extension's panels). */
+  if (route === '/demo') {
+    for (const p of await overlayPanelsContract(page)) fails.push('overlay-panels-' + p);
+  }
   return { fails, probe };
 }
 
@@ -425,6 +429,75 @@ async function overlayRowContract(page) {
     if (cs(get('b.ok')).top !== '0px' && cs(get('b.ok')).top !== 'auto') problems.push('tick-top=' + cs(get('b.ok')).top);
     for (const sel of ['b.ok', 'b.no']) if (cs(get(sel), '::before').boxSizing !== 'border-box') problems.push(sel + '-pseudo-box-sizing=' + cs(get(sel), '::before').boxSizing);
     probe.remove();
+    return problems;
+  });
+}
+
+/* ── The two panels under the overlay card (Critical Flags, AI Summary) ─────────────────────────
+   The live overlay of /demo is a copy of the extension's. Its panels were set in IBM Plex Mono (bold labels, italic explanations) while the rest of the card is
+   Bebas Neue, and their round marks were a 14px CSS circle with a font character on it: on a screen scaled to 125 % that circle is 17.5 device pixels and came
+   out 17 or 18 from one row to the next, with the symbol off centre. The extension proves its marks by MEASURING them in a real Chromium (npm run overlay:check in
+   antares-extension, "panels"). This copy is checked on the contract that makes them right, with the real buttons: every text of the panels is Bebas Neue at weight
+   400 and not italic (Bebas Neue has neither: the browser would fake them), and every mark is ONE 16 x 16 drawing, a circle of radius 8 at the centre with its symbol
+   laid out around the middle of that circle (the ink of the symbol is as far from the left as from the right, as far from the top as from the bottom). */
+async function overlayPanelsContract(page) {
+  return page.evaluate(async () => {
+    const roots = [...document.querySelectorAll('*')].filter((e) => e.shadowRoot).map((e) => e.shadowRoot);
+    const sr = roots.find((r) => r.getElementById('ant-critical-flags-btn'));
+    if (!sr) return ['no-overlay-found'];
+    const problems = [];
+    // A token with flags (PIPPIN is a DANGER card with critical and warning flags): the marks and the explanations are only there when there is something to flag.
+    const tokenButton = [...document.querySelectorAll('.try-row button')].find((x) => x.textContent.trim() === 'PIPPIN');
+    let picked = false;
+    if (tokenButton) {
+      tokenButton.click();
+      for (let i = 0; i < 100 && !picked; i++) { await new Promise((r) => setTimeout(r, 100)); picked = /DANGER/.test((sr.querySelector('.vb h1') || {}).textContent || '') && !!sr.querySelector('#ant-critical-flags-btn'); }
+    }
+    if (!picked) return ['could-not-show-a-token-with-flags'];
+    const press = (id) => sr.getElementById(id).click();
+    const open = () => sr.querySelector('.cf-panel.open, .ai-panel.open');
+    if (open()) open().classList.remove('open', 'closing');
+    const fontOf = (panel, label, sels) => {
+      for (const sel of sels) for (const el of panel.querySelectorAll(sel)) {
+        const s = getComputedStyle(el);
+        if (!/Bebas Neue/.test(s.fontFamily)) problems.push(label + sel + '-font=' + s.fontFamily);
+        if (s.fontWeight !== '400') problems.push(label + sel + '-weight=' + s.fontWeight);
+        if (s.fontStyle !== 'normal') problems.push(label + sel + '-style=' + s.fontStyle);
+      }
+    };
+    const numbers = (d) => (d.match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+
+    press('ant-critical-flags-btn');
+    const cf = sr.getElementById('ant-critical-flags');
+    if (!cf || !cf.classList.contains('open')) problems.push('critical-flags-did-not-open');
+    else {
+      if (cf.querySelectorAll('.cf-flag-icon').length < 2) problems.push('no-flag-marks-to-check');
+      fontOf(cf, 'cf', ['.cf-flag-label', '.cf-flag-desc', '.cf-panel-empty']);
+      const icons = [...cf.querySelectorAll('.cf-flag-icon')];
+      for (const icon of icons) {
+        const svg = icon.querySelector('svg');
+        if (!svg) { problems.push('mark-not-drawn'); continue; }
+        if (svg.getAttribute('viewBox') !== '0 0 16 16') problems.push('mark-viewBox=' + svg.getAttribute('viewBox'));
+        const box = icon.getBoundingClientRect();
+        if (Math.abs(box.width - 16) > 0.05 || Math.abs(box.height - 16) > 0.05) problems.push('mark-box=' + box.width + 'x' + box.height);
+        const bg = svg.querySelector('circle.cf-mark-bg');
+        if (!bg || bg.getAttribute('cx') !== '8' || bg.getAttribute('cy') !== '8' || bg.getAttribute('r') !== '8') problems.push('mark-circle-not-16px-centred');
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+        const grow = (x, y, r) => { x0 = Math.min(x0, x - r); x1 = Math.max(x1, x + r); y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r); };
+        for (const dot of svg.querySelectorAll('circle.cf-mark-dot')) grow(+dot.getAttribute('cx'), +dot.getAttribute('cy'), +dot.getAttribute('r'));
+        for (const path of svg.querySelectorAll('path.cf-mark-ink')) {
+          const n = numbers(path.getAttribute('d') || '');
+          for (let i = 0; i + 1 < n.length; i += 2) grow(n[i], n[i + 1], 0.75);
+        }
+        if (!(x1 > x0)) problems.push('mark-has-no-symbol');
+        else if (Math.abs((x0 + x1) / 2 - 8) > 0.1 || Math.abs((y0 + y1) / 2 - 8) > 0.1) problems.push('mark-symbol-off-centre=' + ((x0 + x1) / 2).toFixed(2) + ',' + ((y0 + y1) / 2).toFixed(2));
+      }
+    }
+    press('ant-ai-summary-btn');
+    const ai = sr.getElementById('ant-ai-summary');
+    if (!ai || !ai.classList.contains('open')) problems.push('ai-summary-did-not-open');
+    else fontOf(ai, 'ai', ['.ai-panel-verdict', '.ai-panel-line', '.ai-panel-empty']);
+    if (open()) open().classList.remove('open', 'closing'); // the page is left as it was found
     return problems;
   });
 }
