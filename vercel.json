@@ -57,6 +57,10 @@
       "destination": "/auth.html"
     },
     {
+      "source": "/help",
+      "destination": "/help.html"
+    },
+    {
       "source": "/account",
       "destination": "/account.html"
     },

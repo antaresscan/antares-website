@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/js/error-monitor.js" defer></script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0ca88c">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Help and info for Antares: Q&amp;A, install, support, privacy and about, in one place.">
+<link rel="canonical" href="https://antaresscan.com/help">
+<title>Help — Antares</title>
+<link rel="stylesheet" href="/css/base.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#0ca88c;--bg:#bce8d8;--card:rgba(255,255,255,.34);--border:rgba(14,80,70,.16);--dim:#4d7a72;--txt:#1d4a43;--red:#d64848}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Mono',monospace;min-height:100vh;display:flex;flex-direction:column}
+.stripe{position:fixed;top:0;left:0;right:0;height:3px;z-index:999;background:linear-gradient(90deg,#c0007a,var(--c),#c8c000,#c0002a,var(--c),#c0007a);background-size:400% 100%;animation:stripe 6s linear infinite;opacity:.7}
+@keyframes stripe{0%{background-position:0% 0}100%{background-position:400% 0}}
+.shell{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:0 32px;flex:1;width:100%;display:flex;flex-direction:column;justify-content:center}
+/* nav + .skip-link live in css/base.css */
+h1{text-align:center}
+h1 span{color:var(--c)}
+main{padding:120px 0 96px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.lead{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:17px;color:#57837b;line-height:1.7;text-align:center;margin-bottom:34px}
+</style>
+<link rel="stylesheet" href="/css/mobile-fixes.css">
+<script src="/js/a11y.js" defer></script>
+<script src="/js/mobile-cta-rewrite.js" defer></script>
+<script src="/js/burger.js" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://antaresscan.com/"},{"@type":"ListItem","position":2,"name":"Help","item":"https://antaresscan.com/help"}]}</script>
+<style id="mint-demo-overrides">
+/* glass mint, same as the other pages */
+body{background:linear-gradient(118deg,#cfefe1 0%,#a8e3ce 32%,#84d7c9 65%,#6fcdd0 100%) fixed}
+h1{color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
+nav .brand{color:#8fb8ae;text-shadow:none}
+nav .brand-icon{background-color:#8fb8ae;filter:none}
+nav .links a{color:rgba(14,66,58,.5);text-shadow:0 1px 1px rgba(255,255,255,.6),0 -1px 1px rgba(8,60,52,.22);font-size:16px}
+nav .links a:hover,nav .links a.active{color:rgba(10,140,118,.8)}
+.cta,.nav-cta,.skip-link,button{text-shadow:none}
+img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) saturate(2.4) hue-rotate(125deg) brightness(.75)}
+:focus-visible{outline-color:#0b7d68}
+</style>
+<style id="help-page">
+/* Help & info: one page that gathers what used to be five links at the bottom of every page. Glass cards that rise in one after the other,
+   lift under the pointer, and take a ring for the keyboard. One easing curve; nothing moves for a visitor who asks for reduced motion. */
+body.help-page{--ease:cubic-bezier(.22,1,.36,1);--glass-edge:rgba(255,255,255,.55)}
+body.help-page::before,body.help-page::after{content:"";position:fixed;z-index:0;width:52vmax;height:52vmax;border-radius:50%;pointer-events:none;filter:blur(70px);opacity:.5;will-change:transform}
+body.help-page::before{top:-22vmax;left:-16vmax;background:radial-gradient(circle,rgba(255,255,255,.75),rgba(255,255,255,0) 65%);animation:help-drift-a 26s ease-in-out infinite alternate}
+body.help-page::after{right:-20vmax;bottom:-26vmax;background:radial-gradient(circle,rgba(12,168,140,.38),rgba(12,168,140,0) 65%);animation:help-drift-b 32s ease-in-out infinite alternate}
+@keyframes help-drift-a{to{transform:translate3d(9vmax,7vmax,0) scale(1.08)}}
+@keyframes help-drift-b{to{transform:translate3d(-8vmax,-6vmax,0) scale(1.1)}}
+@keyframes help-rise{from{opacity:0;transform:translate3d(0,16px,0)}to{opacity:1;transform:none}}
+body.help-page h1,body.help-page .lead,body.help-page .hub-card,body.help-page .back{animation:help-rise .8s var(--ease) both}
+body.help-page h1{animation-delay:.04s}
+body.help-page .lead{animation-delay:.12s}
+.hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.hub-card{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:16px;padding:22px 22px 22px 20px;border:1px solid var(--glass-edge);border-radius:18px;text-decoration:none;color:var(--txt);background:linear-gradient(180deg,rgba(255,255,255,.44),rgba(255,255,255,.26));-webkit-backdrop-filter:blur(16px) saturate(1.25);backdrop-filter:blur(16px) saturate(1.25);box-shadow:0 18px 44px rgba(8,80,70,.11),inset 0 1px 0 rgba(255,255,255,.65);transition:transform .45s var(--ease),box-shadow .45s var(--ease),background-color .3s var(--ease)}
+.hub-card:nth-child(1){grid-column:1 / -1;animation-delay:.2s}
+.hub-card:nth-child(2){animation-delay:.28s}
+.hub-card:nth-child(3){animation-delay:.34s}
+.hub-card:nth-child(4){animation-delay:.4s}
+.hub-card:nth-child(5){animation-delay:.46s}
+.hub-card:hover{transform:translateY(-4px);box-shadow:0 28px 58px rgba(8,80,70,.16),inset 0 1px 0 rgba(255,255,255,.7)}
+.hub-card:active{transform:translateY(-1px) scale(.994)}
+.hub-card:focus-visible{outline:3px solid rgba(10,140,118,.5);outline-offset:3px}
+.hub-card .ico{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;color:#fff;background:linear-gradient(180deg,#14b99c,var(--c));box-shadow:0 8px 18px rgba(11,150,128,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+.hub-card .ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hub-card .t{display:block;font:400 22px/1.1 'Bebas Neue',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#1d4a43}
+.hub-card .d{display:block;margin-top:4px;font:400 15px/1.45 'Bebas Neue',sans-serif;letter-spacing:.04em;color:#57837b}
+.hub-card .go{font:400 22px/1 'Bebas Neue',sans-serif;color:#4f7d74;transition:transform .45s var(--ease),color .3s var(--ease)}
+.hub-card:hover .go{transform:translateX(5px);color:var(--c)}
+.back{margin-top:30px;text-align:center;font:400 14px/1 'Bebas Neue',sans-serif;letter-spacing:.14em;text-transform:uppercase;animation-delay:.56s}
+.back a{color:#4f7d74;text-decoration:none;transition:color .3s var(--ease)}
+.back a:hover{color:var(--c)}
+@media(max-width:640px){
+  .shell{padding:0 20px}
+  .hub{grid-template-columns:1fr}
+  .hub-card:nth-child(1){grid-column:auto}
+  .hub-card{padding:18px 18px 18px 16px;border-radius:16px}
+  body.help-page::before,body.help-page::after{filter:blur(50px);opacity:.42}
+}
+@media(prefers-reduced-motion:reduce){
+  body.help-page::before,body.help-page::after,body.help-page h1,body.help-page .lead,body.help-page .hub-card,body.help-page .back{animation:none}
+  .hub-card,.hub-card .go,.back a{transition:none}
+}
+</style>
+</head>
+<body class="help-page">
+<a href="#main-content" class="skip-link">Skip to content</a>
+<div class="stripe" role="presentation" aria-hidden="true"></div>
+
+<nav aria-label="Main navigation">
+  <a href="./index.html" class="brand"><span class="brand-icon" aria-hidden="true"></span>ANTARES</a>
+  <div class="links"><a href="./pricing">Pricing</a><a href="./install" target="_blank" rel="noopener">Install</a></div>
+</nav>
+
+<div class="shell">
+<main id="main-content">
+<h1>Help &amp; <span>info</span>.</h1>
+<p class="lead">Questions, install, support, privacy and who we are, in one place.</p>
+
+<div class="hub">
+  <a class="hub-card" href="./faq">
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20.5l1.4-4.6A8 8 0 1 1 21 12Z"/><path d="M9.5 9.6a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.8-1.1 1.6"/><path d="M12 16.2h.01"/></svg></span>
+    <span><span class="t">Q&amp;A</span><span class="d">Pricing, how the verdict works, false positives, privacy, accuracy and install help.</span></span>
+    <span class="go" aria-hidden="true">&rarr;</span>
+  </a>
+  <a class="hub-card" href="./install" target="_blank" rel="noopener">
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></span>
+    <span><span class="t">Install</span><span class="d">Add Antares to Chrome from the Web Store.</span></span>
+    <span class="go" aria-hidden="true">&rarr;</span>
+  </a>
+  <a class="hub-card" href="./support">
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.6 5.6 3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg></span>
+    <span><span class="t">Support</span><span class="d">Contact us, report a bug, ask for a feature or disclose a security issue.</span></span>
+    <span class="go" aria-hidden="true">&rarr;</span>
+  </a>
+  <a class="hub-card" href="./privacy">
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 2.9 8.2 7 9.5 4.1-1.3 7-5.1 7-9.5V6l-7-3Z"/><path d="m9 12 2.2 2.2L15.2 10"/></svg></span>
+    <span><span class="t">Privacy</span><span class="d">What we process, who our processors are and your GDPR rights.</span></span>
+    <span class="go" aria-hidden="true">&rarr;</span>
+  </a>
+  <a class="hub-card" href="./about">
+    <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.8h.01"/></svg></span>
+    <span><span class="t">About</span><span class="d">Who builds Antares: no VC, no token, and a free tier with unlimited scans.</span></span>
+    <span class="go" aria-hidden="true">&rarr;</span>
+  </a>
+</div>
+
+<p class="back"><a href="./auth">&larr; Back to your account</a></p>
+</main>
+</div>
+</body>
+</html>

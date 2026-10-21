@@ -1,0 +1,256 @@
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   auth-smooth.css — the sign-in / sign-up page (auth.html), made smooth.
+   Linked by auth.html ONLY, after the page's own styles, and scoped to body.auth-page: nothing here can reach another page.
+   What it does: the page rises in, one piece after the other; the Log in / Sign up switch is a pill with a thumb that slides;
+   the card is frosted glass with a soft edge; the fields glow when focused; the button lifts and presses; the spinner is a
+   ring that turns; an error slides in, and a wrong field shakes once. Everything moves on one easing curve, and nothing moves
+   for somebody who asks for reduced motion.
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+body.auth-page {
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --mint: #0ca88c;
+  --mint-deep: #0a8c76;
+  --glass-edge: rgba(255, 255, 255, .55);
+  --ink-soft: rgba(14, 80, 70, .14);
+}
+
+/* a very slow breath behind the card: two soft lights that drift (transform only, so it costs nothing) */
+body.auth-page::before,
+body.auth-page::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  width: 52vmax;
+  height: 52vmax;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+  opacity: .5;
+  will-change: transform;
+}
+body.auth-page::before {
+  top: -22vmax;
+  left: -16vmax;
+  background: radial-gradient(circle, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0) 65%);
+  animation: auth-drift-a 26s ease-in-out infinite alternate;
+}
+body.auth-page::after {
+  right: -20vmax;
+  bottom: -26vmax;
+  background: radial-gradient(circle, rgba(12, 168, 140, .38), rgba(12, 168, 140, 0) 65%);
+  animation: auth-drift-b 32s ease-in-out infinite alternate;
+}
+@keyframes auth-drift-a { to { transform: translate3d(9vmax, 7vmax, 0) scale(1.08); } }
+@keyframes auth-drift-b { to { transform: translate3d(-8vmax, -6vmax, 0) scale(1.1); } }
+
+/* the page rises in, one piece after the other */
+@keyframes auth-rise {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+body.auth-page h1,
+body.auth-page .lead,
+body.auth-page .tabs,
+body.auth-page .card {
+  animation: auth-rise .8s var(--ease) both;
+}
+body.auth-page h1 { animation-delay: .04s; }
+body.auth-page .lead { animation-delay: .12s; }
+body.auth-page .tabs { animation-delay: .2s; }
+body.auth-page .card { animation-delay: .28s; }
+body.auth-page .check-card { animation-delay: 0s; }
+
+/* Log in / Sign up: a pill whose thumb slides from one side to the other */
+body.auth-page .tabs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  overflow: visible;
+  background: rgba(255, 255, 255, .34);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: inset 0 1px 2px rgba(8, 80, 70, .08), 0 10px 28px rgba(8, 80, 70, .08);
+}
+body.auth-page .tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #14b99c, var(--mint));
+  box-shadow: 0 8px 18px rgba(11, 150, 128, .3), inset 0 1px 0 rgba(255, 255, 255, .35);
+  transition: transform .5s var(--ease);
+}
+body.auth-page .tabs:has(#tab-signup.active)::before { transform: translateX(100%); }
+body.auth-page .tabs button {
+  border-radius: 999px;
+  background: transparent;
+  color: #5f8c83;
+  transition: color .35s var(--ease), letter-spacing .35s var(--ease);
+}
+body.auth-page .tabs button.active { background: transparent; color: #fff; }
+body.auth-page .tabs button:not(.active):hover { color: #2e5d55; }
+body.auth-page .tabs button:focus-visible { outline: 2px solid var(--mint-deep); outline-offset: 2px; }
+
+/* the card: frosted glass with a soft light edge */
+body.auth-page .card {
+  position: relative;
+  padding: 30px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .44), rgba(255, 255, 255, .26));
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  backdrop-filter: blur(16px) saturate(1.25);
+  box-shadow: 0 26px 64px rgba(8, 80, 70, .13), inset 0 1px 0 rgba(255, 255, 255, .65);
+}
+
+/* the fields glow when focused */
+body.auth-page .card label { transition: color .25s var(--ease); }
+body.auth-page .card input {
+  padding: 13px 15px;
+  border: 1px solid var(--ink-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .66);
+  transition: border-color .25s var(--ease), box-shadow .3s var(--ease), background-color .25s var(--ease);
+}
+body.auth-page .card input::placeholder { color: rgba(79, 125, 116, .55); }
+body.auth-page .card input:hover { background: rgba(255, 255, 255, .8); }
+body.auth-page .card input:focus {
+  border-color: var(--mint);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(12, 168, 140, .17);
+}
+body.auth-page .card input.invalid {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(214, 72, 72, .12);
+  animation: auth-shake .38s var(--ease);
+}
+@keyframes auth-shake {
+  20% { transform: translateX(-5px); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+  100% { transform: none; }
+}
+
+/* the button lifts under the pointer and presses under the finger */
+body.auth-page .submit {
+  margin-top: 24px;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #14b99c, var(--mint));
+  box-shadow: 0 12px 26px rgba(11, 150, 128, .28), inset 0 1px 0 rgba(255, 255, 255, .35);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), opacity .25s var(--ease), filter .25s var(--ease);
+}
+body.auth-page .submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(11, 150, 128, .34), inset 0 1px 0 rgba(255, 255, 255, .35);
+  filter: saturate(1.06);
+}
+body.auth-page .submit:active:not(:disabled) { transform: translateY(0) scale(.985); box-shadow: 0 8px 18px rgba(11, 150, 128, .26); }
+body.auth-page .submit:focus-visible { outline: 3px solid rgba(10, 140, 118, .45); outline-offset: 3px; }
+body.auth-page .submit:disabled { opacity: .7; }
+
+/* the spinner is a ring that turns (it was a dot that pulsed) */
+body.auth-page .spinner {
+  width: 13px;
+  height: 13px;
+  margin-right: 10px;
+  border: 2px solid rgba(255, 255, 255, .38);
+  border-top-color: #fff;
+  background: none;
+  animation: auth-spin .7s linear infinite;
+}
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+
+/* an error slides in, it does not blink in */
+body.auth-page .error {
+  border-radius: 12px;
+  animation: auth-pop .4s var(--ease) both;
+}
+@keyframes auth-pop {
+  from { opacity: 0; transform: translate3d(0, -6px, 0) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* switching between Log in and Sign up: the lines that change fade in again (auth.html adds .swap for a moment) */
+body.auth-page .card.swap .hint,
+body.auth-page .card.swap .submit,
+body.auth-page .card.swap .foot { animation: auth-fade .35s var(--ease) both; }
+@keyframes auth-fade {
+  from { opacity: 0; transform: translate3d(0, 4px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+body.auth-page .foot a {
+  text-decoration: underline;
+  text-decoration-color: rgba(79, 125, 116, .35);
+  text-underline-offset: 3px;
+  transition: color .25s var(--ease), text-decoration-color .25s var(--ease);
+}
+body.auth-page .foot a:hover { text-decoration-color: currentColor; }
+
+/* the foot of the page: ONE button, where five links used to be. A quiet frosted pill that lifts; it leads to the page that gathers
+   Q&A, Install, Support, Privacy and About (help.html) */
+body.auth-page .auth-foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding: 4px 20px 56px;
+  animation: auth-rise .8s var(--ease) .4s both;
+}
+body.auth-page .help-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 13px 28px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .44), rgba(255, 255, 255, .26));
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 12px 30px rgba(8, 80, 70, .1), inset 0 1px 0 rgba(255, 255, 255, .6);
+  color: #3a665d;
+  font: 400 15px/1 'Bebas Neue', sans-serif;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), color .3s var(--ease);
+}
+body.auth-page .help-btn:hover { transform: translateY(-2px); color: var(--mint-deep); box-shadow: 0 20px 38px rgba(8, 80, 70, .15), inset 0 1px 0 rgba(255, 255, 255, .7); }
+body.auth-page .help-btn:active { transform: translateY(0) scale(.985); }
+body.auth-page .help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .45); outline-offset: 3px; }
+
+@media (max-width: 640px) {
+  body.auth-page .card { padding: 24px 20px; border-radius: 18px; }
+  body.auth-page::before,
+  body.auth-page::after { filter: blur(50px); opacity: .42; }
+}
+
+/* a visitor who asks for less motion gets none: the page is simply there */
+@media (prefers-reduced-motion: reduce) {
+  body.auth-page::before,
+  body.auth-page::after,
+  body.auth-page h1,
+  body.auth-page .lead,
+  body.auth-page .tabs,
+  body.auth-page .card,
+  body.auth-page .error,
+  body.auth-page .card.swap .hint,
+  body.auth-page .card.swap .submit,
+  body.auth-page .card.swap .foot,
+  body.auth-page .auth-foot,
+  body.auth-page .card input.invalid { animation: none; }
+  body.auth-page .tabs::before,
+  body.auth-page .tabs button,
+  body.auth-page .card input,
+  body.auth-page .submit,
+  body.auth-page .help-btn,
+  body.auth-page .foot a { transition: none; }
+  body.auth-page .spinner { animation-duration: 1.6s; }
+}
