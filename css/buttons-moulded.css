@@ -1,0 +1,98 @@
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   buttons-moulded.css — every button of the site moulded like the titles. Linked by every page, after the page's own
+   styles. (The "Help & info" link at the foot of the pages is not one of them: it is only a moulded label, see css/help-button.css.)
+   Three families, one language (a pill carved into the glass, a label with a light edge under it and a dark edge over it):
+     - the quiet ones  (Log in / Account, "Install free"): carved neutral glass, label in the translucent green of the titles
+     - the main ones   (Install, Get Pro, the CTAs, Log in on the sign-in page, the contact link): carved glass tinted MINT, label in a deep mint
+     - the purple one  (Claim a Yearly spot): the same, tinted purple
+   Under the pointer a button comes up out of the glass a little; under the finger it sinks. No motion for a visitor who asks for less.
+   (!important is used on purpose: the pages style their buttons inline with their own weights; this file is a skin laid over them.)
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit {
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --tone-ink: 14, 66, 58;        /* the green of the titles */
+  --tone-fill-a: 8, 80, 70;      /* the dark end of the carved fill */
+  --tone-fill-b: 255, 255, 255;  /* the light end */
+  --tone-fill-alpha-a: .07;
+  --tone-fill-alpha-b: .24;
+  --tone-label: rgba(14, 66, 58, .58);
+  --tone-label-hover: rgba(10, 140, 118, .85);
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, .5) !important;
+  background: linear-gradient(180deg, rgba(var(--tone-fill-a), var(--tone-fill-alpha-a)), rgba(var(--tone-fill-b), var(--tone-fill-alpha-b))) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow:
+    inset 0 2px 5px rgba(8, 60, 52, .2),
+    inset 0 -1px 1px rgba(255, 255, 255, .7),
+    0 1px 0 rgba(255, 255, 255, .75),
+    0 -1px 0 rgba(8, 60, 52, .1),
+    0 14px 28px rgba(8, 80, 70, .1) !important;
+  color: var(--tone-label) !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .75), 0 -1px 1px rgba(8, 60, 52, .3) !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), color .35s var(--ease), text-shadow .35s var(--ease) !important;
+}
+
+/* the main ones: carved glass tinted mint, the label in a deep mint (still moulded) */
+nav .nav-cta, a.cta, .cta, .tier-cta.primary, .audit-cta, button.submit {
+  --tone-fill-a: 6, 120, 100;
+  --tone-fill-b: 20, 185, 156;
+  --tone-fill-alpha-a: .2;
+  --tone-fill-alpha-b: .38;
+  --tone-label: rgba(5, 88, 74, .92);
+  --tone-label-hover: #046454;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .7), 0 -1px 1px rgba(4, 70, 58, .38) !important;
+}
+/* the purple one */
+.tier-cta.purple {
+  --tone-fill-a: 100, 70, 200;
+  --tone-fill-b: 150, 120, 235;
+  --tone-fill-alpha-a: .2;
+  --tone-fill-alpha-b: .36;
+  --tone-label: rgba(62, 38, 150, .92);
+  --tone-label-hover: #46239a;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .7), 0 -1px 1px rgba(50, 28, 120, .38) !important;
+}
+/* the quiet ones are the defaults above: nav .nav-account, .tier-cta.secondary (the "Help & info" link at the foot of the pages is only a moulded label: css/help-button.css) */
+
+/* sizes: the labels of the big CTAs were 11 px on a solid fill; moulded text needs a little more body to read */
+a.cta, .cta { padding: 16px 36px !important; font-size: 14px !important; letter-spacing: .18em !important; }
+.tier-cta { padding: 15px 24px !important; font-size: 15px !important; letter-spacing: .16em !important; }
+.audit-cta { padding: 13px 26px !important; font-size: 14px !important; letter-spacing: .18em !important; }
+button.submit { font-size: 15px !important; letter-spacing: .2em !important; }
+nav .nav-cta, nav .nav-account { font-size: 15px !important; letter-spacing: .14em !important; }
+
+/* under the pointer: it comes up out of the glass a little, the label deepens */
+nav .nav-cta:hover, nav .nav-account:hover, a.cta:hover, .cta:hover, .tier-cta:hover, .audit-cta:hover, button.submit:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  color: var(--tone-label-hover) !important;
+  border-color: rgba(255, 255, 255, .6) !important;
+  box-shadow:
+    inset 0 1px 3px rgba(8, 60, 52, .14),
+    inset 0 -1px 1px rgba(255, 255, 255, .8),
+    0 1px 0 rgba(255, 255, 255, .8),
+    0 -1px 0 rgba(8, 60, 52, .1),
+    0 22px 38px rgba(8, 80, 70, .16) !important;
+}
+/* under the finger: it sinks back into the glass */
+nav .nav-cta:active, nav .nav-account:active, a.cta:active, .cta:active, .tier-cta:active, .audit-cta:active, button.submit:active:not(:disabled) {
+  transform: translateY(1px) !important;
+  box-shadow:
+    inset 0 3px 7px rgba(8, 60, 52, .28),
+    inset 0 -1px 1px rgba(255, 255, 255, .7),
+    0 1px 0 rgba(255, 255, 255, .75),
+    0 8px 16px rgba(8, 80, 70, .08) !important;
+}
+nav .nav-cta:focus-visible, nav .nav-account:focus-visible, a.cta:focus-visible, .cta:focus-visible, .tier-cta:focus-visible, .audit-cta:focus-visible, button.submit:focus-visible {
+  outline: 3px solid rgba(10, 140, 118, .45);
+  outline-offset: 3px;
+}
+.tier-cta:disabled, button.submit:disabled { opacity: .6; }
+
+@media (prefers-reduced-motion: reduce) {
+  nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit { transition: none !important; }
+}
