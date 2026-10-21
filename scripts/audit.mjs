@@ -78,7 +78,7 @@ if (!['mobile', 'desktop', 'both'].includes(viewportArg)) {
 const ROUTES = [
   '/', '/demo', '/features', '/engine', '/compare', '/pricing',
   '/sources', '/proof', '/faq', '/changelog', '/about',
-  '/security', '/support', '/auth', '/account', '/privacy', '/terms',
+  '/security', '/support', '/auth', '/help', '/account', '/privacy', '/terms',
 ];
 
 /* Per-viewport browser context settings. */

@@ -57,9 +57,6 @@ main{padding:120px 0 60px;flex:1;display:flex;flex-direction:column;justify-cont
 .foot a{color:#4f7d74}
 .foot a:hover{color:var(--c)}
 
-footer{text-align:center;padding:24px 32px;color:#8fb8ae;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:9px;border-top:1px solid var(--border);letter-spacing:.18em;text-transform:uppercase}
-footer .foot-links a{color:#82aaa1;text-decoration:none;margin:0 4px}
-footer .foot-links a:hover{color:var(--c)}
 </style>
 <link rel="stylesheet" href="/css/mobile-fixes.css">
 <script src="/js/a11y.js" defer></script>
@@ -88,8 +85,10 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 /* boutons arrondis comme les cartes */
 .cta,a.cta,.nav-cta,.nav-account,.tier-cta,button{border-radius:10px}
 :focus-visible{outline-color:#0b7d68}
-</style></head>
-<body>
+</style>
+<link rel="stylesheet" href="/css/auth-smooth.css">
+</head>
+<body class="auth-page">
 <a href="#main-content" class="skip-link">Skip to content</a>
 <div class="stripe" role="presentation" aria-hidden="true"></div>
 
@@ -135,7 +134,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 </main>
 </div>
 
-<footer>Antares <div class="foot-links"><a href="./install" target="_blank" rel="noopener">Install</a> &middot; <a href="./support">Support</a> &middot; <a href="./privacy">Privacy</a> &middot; <a href="./about">About</a> &middot; <a href="./faq">Q&amp;A</a></div></footer>
+<footer class="auth-foot"><a class="help-btn" href="./help">Help &amp; info</a></footer>
 
 <script>
 (function() {
@@ -153,6 +152,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var footLink = document.getElementById('foot-link');
 
   var mode = 'login';
+  var cardEl = document.querySelector('section.card:not(.check-card)');
+  var modeSet = false; // the first call (page load) does not animate
 
   // Auto-redirect to /account if a valid session cookie is already
   // present. We delay this fetch by 50ms so it doesn't compete with the
@@ -188,6 +189,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     footText.textContent = isLogin ? 'Don\'t have an account?' : 'Already have one?';
     footLink.textContent = isLogin ? 'Sign up' : 'Log in';
     setError('');
+    if (modeSet && cardEl) { cardEl.classList.remove('swap'); void cardEl.offsetWidth; cardEl.classList.add('swap'); } // replays css/auth-smooth.css .swap
+    modeSet = true;
   }
   setMode(window.location.hash === '#signup' ? 'signup' : 'login');
 
