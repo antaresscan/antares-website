@@ -758,10 +758,14 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
       return true;
     });
     var critCount=fAll.filter(function(f){return f.severity==='critical';}).length;
+    var warnCount=fAll.length-critCount;
+    // The line says what the flags are (same rules as flagSummaryLine in the extension's components.ts): only warnings "4 warnings — no critical",
+    // only critical flags "1 critical flag" / "3 critical flags", a mix "3 flags — 2 critical".
     var summary='';
     if(fAll.length===0)summary='No issues found';
-    else if(critCount>0)summary=fAll.length+' flags — '+critCount+' critical';
-    else summary=fAll.length+' flags detected';
+    else if(critCount===0)summary=warnCount+(warnCount===1?' warning':' warnings')+' — no critical';
+    else if(warnCount===0)summary=critCount+(critCount===1?' critical flag':' critical flags');
+    else summary=fAll.length+' flags — '+critCount+' critical';
 
     var liqDisplay=liq!=null?formatMcap(liq):'—';
     var liqClass=liq!=null&&liq<5000?'n':(liq!=null&&liq>50000?'y':null);

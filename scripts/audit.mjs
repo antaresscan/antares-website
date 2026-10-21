@@ -376,11 +376,76 @@ async function auditDesktop(page, route) {
   if (route === '/' || route === '/demo') {
     for (const p of await overlayRowContract(page)) fails.push('overlay-row-' + p);
   }
+  /* The line under the score: the hero cards of / (read from the source) and, on /demo, the live card (see overlayPanelsContract). */
+  if (route === '/') {
+    for (const p of await summaryLineSource()) fails.push('summary-line-' + p);
+  }
   /* The two panels under the card, in the live overlay of /demo (the copy of the extension's panels). */
   if (route === '/demo') {
     for (const p of await overlayPanelsContract(page)) fails.push('overlay-panels-' + p);
+    for (const p of await summaryLineLive(page)) fails.push('summary-line-live-' + p);
   }
   return { fails, probe };
+}
+
+/* ── The line under the score, in both copies of the card ─────────────────────────────────────────────────────────────────────────
+   The overlay card says what its flags are in one short line (flagSummaryLine in the extension's components.ts): "4 warnings — no critical" when none is
+   critical, "1 critical flag" / "3 critical flags" when all are, "3 flags — 2 critical" for a mix. "4 flags detected" under a CAUTION read as an alarm. The hero
+   cards of / are written in index.html: read here, every one must be one of those lines. The live demo of /demo is checked in the browser (overlayPanelsContract). */
+const SUMMARY_LINE = /^(No issues found|\d+ warnings? — no critical|\d+ critical flags?|\d+ flags — \d+ critical|Limited data|Risk detected)$/;
+async function summaryLineSource() {
+  const problems = [];
+  for (const file of ['index.html', 'demo.html']) {
+    const html = (await readFile(resolve(cwd(), file), 'utf8')).replace(/^\uFEFF/, '');
+    if (/flags? detected/.test(html.replace(/\/\/.*$/gm, ''))) problems.push(file + '-says-flags-detected');
+  }
+  const home = await readFile(resolve(cwd(), 'index.html'), 'utf8');
+  const cards = [...home.matchAll(/card\('(\w+)',\s*'[^']*',\s*\d+,\s*\d+,\s*'([^']*)'/g)];
+  if (cards.length !== 4) problems.push('hero-cards-found=' + cards.length);
+  for (const [, risk, line] of cards) if (!SUMMARY_LINE.test(line)) problems.push('hero-' + risk + '-line="' + line + '"');
+  return problems;
+}
+
+/* The live card of /demo for EVERY sample token of the try row (FARTCOIN, MEW, PIPPIN, HAWK...): the line under the score must say what the flags of its own Critical Flags
+   panel are. The verdict of a live scan can vary from one day to the next, so the line is compared with the rows of the panel, not with a fixed text; a token that does not load
+   in 12 s is skipped, and at least two must have been checked. */
+async function summaryLineLive(page) {
+  return page.evaluate(async () => {
+    const roots = [...document.querySelectorAll('*')].filter((e) => e.shadowRoot).map((e) => e.shadowRoot);
+    const sr = roots.find((r) => r.getElementById('ant-critical-flags-btn'));
+    if (!sr) return ['no-overlay-found'];
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const names = [...document.querySelectorAll('.try-row button')].map((b) => b.textContent.trim()).filter(Boolean);
+    const problems = [];
+    let checked = 0;
+    for (const name of names) {
+      const button = [...document.querySelectorAll('.try-row button')].find((x) => x.textContent.trim() === name);
+      const open = sr.querySelector('.cf-panel.open, .ai-panel.open');
+      if (open) open.classList.remove('open', 'closing');
+      button.click();
+      let shown = false;
+      for (let i = 0; i < 120 && !shown; i++) {
+        await sleep(100);
+        const tk = ((sr.querySelector('.tk') || {}).textContent || '').toUpperCase();
+        shown = tk.includes(name.toUpperCase()) && /SAFE|CAUTION|DANGER|RUG/.test((sr.querySelector('.vb h1') || {}).textContent || '') && !!sr.querySelector('#ant-critical-flags-btn');
+      }
+      if (!shown) continue;
+      await sleep(300);
+      sr.getElementById('ant-critical-flags-btn').click();
+      await sleep(250);
+      const cf = sr.getElementById('ant-critical-flags');
+      const crit = cf ? cf.querySelectorAll('.cf-flag-cr').length : 0, warn = cf ? cf.querySelectorAll('.cf-flag-wr').length : 0, n = crit + warn;
+      const wanted = n === 0 ? 'No issues found' : crit === 0 ? warn + (warn === 1 ? ' warning' : ' warnings') + ' — no critical' : warn === 0 ? crit + (crit === 1 ? ' critical flag' : ' critical flags') : n + ' flags — ' + crit + ' critical';
+      const said = ((sr.querySelector('.sum') || {}).textContent || '').trim();
+      checked++;
+      if (said !== wanted) problems.push(name + '-says-"' + said + '"-wanted-"' + wanted + '"');
+      if (/detected/.test(said)) problems.push(name + '-says-detected');
+    }
+    const open = sr.querySelector('.cf-panel.open, .ai-panel.open');
+    if (open) open.classList.remove('open', 'closing');
+    if (checked < 2) problems.push('only-' + checked + '-token-checked');
+    return problems;
+  });
 }
 
 /* ── The row of the overlay card (Sell / Mint / Freeze / LP / Liq) ──────────────────────────────
@@ -486,6 +551,11 @@ async function overlayPanelsContract(page) {
     if (!cf || !cf.classList.contains('open')) problems.push('critical-flags-did-not-open');
     else {
       if (cf.querySelectorAll('.cf-flag-icon').length < 2) problems.push('no-flag-marks-to-check');
+      // the line under the score says what the flags of the panel are
+      const crit = cf.querySelectorAll('.cf-flag-cr').length, warn = cf.querySelectorAll('.cf-flag-wr').length, n = crit + warn;
+      const wanted = n === 0 ? 'No issues found' : crit === 0 ? warn + (warn === 1 ? ' warning' : ' warnings') + ' — no critical' : warn === 0 ? crit + (crit === 1 ? ' critical flag' : ' critical flags') : n + ' flags — ' + crit + ' critical';
+      const said = ((sr.querySelector('.sum') || {}).textContent || '').trim();
+      if (n > 0 && said !== wanted) problems.push('summary-line="' + said + '"-wanted="' + wanted + '"');
       fontOf(cf, 'cf', ['.cf-flag-label']);
       sentenceOf(cf, 'cf', ['.cf-flag-desc']);
       const icons = [...cf.querySelectorAll('.cf-flag-icon')];
