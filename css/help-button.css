@@ -1,0 +1,70 @@
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   help-button.css — the foot of the pages: ONE button, "Help & info", where five links (Install, Support, Privacy,
+   About, Q&A) used to be. The button leads to /help, the page that gathers them.
+   Linked by every page that had the five links; everything here is under footer.help-foot or .help-btn, so nothing
+   else on a page can be reached.
+   The button is MOULDED like the titles of the site: the label is a translucent green with a light edge under it
+   and a dark edge over it (the same two shadows as the h1), and the pill is carved into the glass (a shadow inside
+   along the top, a light line along the bottom edge, a light line under the outline). Under the pointer it comes
+   up out of the glass a little and the label takes the mint of the accent titles; under the finger it sinks.
+   Nothing moves for a visitor who asks for reduced motion.
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+footer.help-foot {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px 56px;
+  border-top: 0;
+  text-align: center;
+}
+.help-btn {
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 30px;
+  border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(8, 80, 70, .07), rgba(255, 255, 255, .24));
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  /* carved into the glass: shadow inside along the top, light inside along the bottom, light line under the outline, a faint dark line over it */
+  box-shadow:
+    inset 0 2px 5px rgba(8, 60, 52, .2),
+    inset 0 -1px 1px rgba(255, 255, 255, .7),
+    0 1px 0 rgba(255, 255, 255, .75),
+    0 -1px 0 rgba(8, 60, 52, .1),
+    0 14px 28px rgba(8, 80, 70, .1);
+  /* the label, moulded like the h1: translucent green, light edge under it, dark edge over it */
+  color: rgba(14, 66, 58, .58);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .75), 0 -1px 1px rgba(8, 60, 52, .3);
+  font: 400 16px/1 'Bebas Neue', sans-serif;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), color .35s var(--ease), text-shadow .35s var(--ease);
+}
+/* under the pointer: it comes up out of the glass a little, the label takes the mint of the accent titles */
+.help-btn:hover {
+  transform: translateY(-2px);
+  color: rgba(10, 140, 118, .85);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .8), 0 -1px 1px rgba(8, 80, 64, .32), 0 0 24px rgba(11, 150, 128, .25);
+  box-shadow:
+    inset 0 1px 3px rgba(8, 60, 52, .14),
+    inset 0 -1px 1px rgba(255, 255, 255, .8),
+    0 1px 0 rgba(255, 255, 255, .8),
+    0 -1px 0 rgba(8, 60, 52, .1),
+    0 22px 38px rgba(8, 80, 70, .16);
+}
+/* under the finger: it sinks back into the glass */
+.help-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 3px 7px rgba(8, 60, 52, .28),
+    inset 0 -1px 1px rgba(255, 255, 255, .7),
+    0 1px 0 rgba(255, 255, 255, .75),
+    0 8px 16px rgba(8, 80, 70, .08);
+}
+.help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .45); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .help-btn { transition: none; }
+}

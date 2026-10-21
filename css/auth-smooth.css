@@ -195,36 +195,13 @@ body.auth-page .foot a {
 }
 body.auth-page .foot a:hover { text-decoration-color: currentColor; }
 
-/* the foot of the page: ONE button, where five links used to be. A quiet frosted pill that lifts; it leads to the page that gathers
-   Q&A, Install, Support, Privacy and About (help.html) */
-body.auth-page .auth-foot {
+/* the foot of the page: the shared Help & info button (css/help-button.css); here it only rises in with the rest, and sits close under the card */
+body.auth-page .help-foot {
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: center;
-  padding: 4px 20px 56px;
+  padding-top: 4px;
   animation: auth-rise .8s var(--ease) .4s both;
 }
-body.auth-page .help-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 13px 28px;
-  border: 1px solid var(--glass-edge);
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .44), rgba(255, 255, 255, .26));
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  backdrop-filter: blur(14px) saturate(1.2);
-  box-shadow: 0 12px 30px rgba(8, 80, 70, .1), inset 0 1px 0 rgba(255, 255, 255, .6);
-  color: #3a665d;
-  font: 400 15px/1 'Bebas Neue', sans-serif;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: transform .4s var(--ease), box-shadow .4s var(--ease), color .3s var(--ease);
-}
-body.auth-page .help-btn:hover { transform: translateY(-2px); color: var(--mint-deep); box-shadow: 0 20px 38px rgba(8, 80, 70, .15), inset 0 1px 0 rgba(255, 255, 255, .7); }
-body.auth-page .help-btn:active { transform: translateY(0) scale(.985); }
-body.auth-page .help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .45); outline-offset: 3px; }
 
 @media (max-width: 640px) {
   body.auth-page .card { padding: 24px 20px; border-radius: 18px; }
@@ -244,13 +221,12 @@ body.auth-page .help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .
   body.auth-page .card.swap .hint,
   body.auth-page .card.swap .submit,
   body.auth-page .card.swap .foot,
-  body.auth-page .auth-foot,
+  body.auth-page .help-foot,
   body.auth-page .card input.invalid { animation: none; }
   body.auth-page .tabs::before,
   body.auth-page .tabs button,
   body.auth-page .card input,
   body.auth-page .submit,
-  body.auth-page .help-btn,
   body.auth-page .foot a { transition: none; }
   body.auth-page .spinner { animation-duration: 1.6s; }
 }
