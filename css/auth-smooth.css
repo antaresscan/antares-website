@@ -195,7 +195,7 @@ body.auth-page .foot a {
 }
 body.auth-page .foot a:hover { text-decoration-color: currentColor; }
 
-/* the foot of the page: ONE button, where five links used to be. A quiet frosted pill that lifts and whose arrow moves; it leads to the page that gathers
+/* the foot of the page: ONE button, where five links used to be. A quiet frosted pill that lifts; it leads to the page that gathers
    Q&A, Install, Support, Privacy and About (help.html) */
 body.auth-page .auth-foot {
   position: relative;
@@ -208,8 +208,7 @@ body.auth-page .auth-foot {
 body.auth-page .help-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 26px;
+  padding: 13px 28px;
   border: 1px solid var(--glass-edge);
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 255, 255, .44), rgba(255, 255, 255, .26));
@@ -223,9 +222,7 @@ body.auth-page .help-btn {
   text-decoration: none;
   transition: transform .4s var(--ease), box-shadow .4s var(--ease), color .3s var(--ease);
 }
-body.auth-page .help-btn::after { content: "\2192"; font-size: 17px; transition: transform .4s var(--ease); }
 body.auth-page .help-btn:hover { transform: translateY(-2px); color: var(--mint-deep); box-shadow: 0 20px 38px rgba(8, 80, 70, .15), inset 0 1px 0 rgba(255, 255, 255, .7); }
-body.auth-page .help-btn:hover::after { transform: translateX(4px); }
 body.auth-page .help-btn:active { transform: translateY(0) scale(.985); }
 body.auth-page .help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .45); outline-offset: 3px; }
 
@@ -254,7 +251,6 @@ body.auth-page .help-btn:focus-visible { outline: 3px solid rgba(10, 140, 118, .
   body.auth-page .card input,
   body.auth-page .submit,
   body.auth-page .help-btn,
-  body.auth-page .help-btn::after,
   body.auth-page .foot a { transition: none; }
   body.auth-page .spinner { animation-duration: 1.6s; }
 }
