@@ -49,15 +49,13 @@ body.auth-page::after {
   to   { opacity: 1; transform: none; }
 }
 body.auth-page h1,
-body.auth-page .lead,
 body.auth-page .tabs,
 body.auth-page .card {
   animation: auth-rise .8s var(--ease) both;
 }
 body.auth-page h1 { animation-delay: .04s; }
-body.auth-page .lead { animation-delay: .12s; }
-body.auth-page .tabs { animation-delay: .2s; }
-body.auth-page .card { animation-delay: .28s; }
+body.auth-page .tabs { animation-delay: .12s; }
+body.auth-page .card { animation-delay: .2s; }
 body.auth-page .check-card { animation-delay: 0s; }
 
 /* Log in / Sign up: a pill whose thumb slides from one side to the other */
@@ -181,27 +179,14 @@ body.auth-page .error {
 
 /* switching between Log in and Sign up: the lines that change fade in again (auth.html adds .swap for a moment) */
 body.auth-page .card.swap .hint,
-body.auth-page .card.swap .submit,
-body.auth-page .card.swap .foot { animation: auth-fade .35s var(--ease) both; }
+body.auth-page .card.swap .submit { animation: auth-fade .35s var(--ease) both; }
 @keyframes auth-fade {
   from { opacity: 0; transform: translate3d(0, 4px, 0); }
   to   { opacity: 1; transform: none; }
 }
-body.auth-page .foot a {
-  text-decoration: underline;
-  text-decoration-color: rgba(79, 125, 116, .35);
-  text-underline-offset: 3px;
-  transition: color .25s var(--ease), text-decoration-color .25s var(--ease);
-}
-body.auth-page .foot a:hover { text-decoration-color: currentColor; }
 
-/* the foot of the page: the shared Help & info button (css/help-button.css); here it only rises in with the rest, and sits close under the card */
-body.auth-page .help-foot {
-  position: relative;
-  z-index: 2;
-  padding-top: 4px;
-  animation: auth-rise .8s var(--ease) .4s both;
-}
+/* the header: Pricing and Install are two moulded buttons side by side at the right (css/buttons-moulded.css); the bar has only these two entries, so Pricing is not left in the middle */
+body.auth-page nav .links { margin-left: auto; margin-right: 10px; }
 
 @media (max-width: 640px) {
   body.auth-page .card { padding: 24px 20px; border-radius: 18px; }
@@ -214,19 +199,15 @@ body.auth-page .help-foot {
   body.auth-page::before,
   body.auth-page::after,
   body.auth-page h1,
-  body.auth-page .lead,
   body.auth-page .tabs,
   body.auth-page .card,
   body.auth-page .error,
   body.auth-page .card.swap .hint,
   body.auth-page .card.swap .submit,
-  body.auth-page .card.swap .foot,
-  body.auth-page .help-foot,
   body.auth-page .card input.invalid { animation: none; }
   body.auth-page .tabs::before,
   body.auth-page .tabs button,
   body.auth-page .card input,
-  body.auth-page .submit,
-  body.auth-page .foot a { transition: none; }
+  body.auth-page .submit { transition: none; }
   body.auth-page .spinner { animation-duration: 1.6s; }
 }
