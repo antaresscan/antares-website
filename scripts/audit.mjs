@@ -179,7 +179,10 @@ const extraHTTPHeaders = bypassToken
    The last alternative: dexscreener.com now answers `X-Frame-Options: SAMEORIGIN`, so the live chart that /demo embeds is refused by the browser
    ("Refused to display 'https://dexscreener.com/' in a frame ..."). That header is theirs, not ours; only THIS frame, from THIS host, is tolerated:
    a refusal from any other site still fails the audit. */
-const IGNORE_ERRORS = /CORS|Access to fetch|net::ERR_FAILED|preview-feedback|space-mono|401|403|Failed to fetch|Not signed in with the identity provider|Refused to display 'https:\/\/dexscreener\.com\/[^']*' in a frame/i;
+/* The Firebase SDK logs "Could not reach Cloud Firestore backend" with console.error when the machine that runs the audit cannot reach Firestore for about ten seconds
+   (a CI runner, an offline laptop): a statement about the network of that machine, not a defect of the page. The live demo of /demo stays open that long, since the audit
+   checks every sample token of the try row (summaryLineLive). */
+const IGNORE_ERRORS = /CORS|Access to fetch|net::ERR_FAILED|preview-feedback|space-mono|401|403|Failed to fetch|Not signed in with the identity provider|Refused to display 'https:\/\/dexscreener\.com\/[^']*' in a frame|Could not reach Cloud Firestore backend/i;
 
 /* ── assertion helpers ──────────────────────────────────────────── */
 
