@@ -587,10 +587,10 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var HEADER = '<div class="topbar"></div><div class="hd"><span class="brand pro">ANTARES</span><div class="hd-right"><span class="drag-icon">'+SVG_MOVE+'</span><span class="x">'+SVG_CLOSE+'</span></div></div>';
   var FOOTER = '<div class="fo"><span class="cf-btn">Critical Flags</span><a href="#">Full Analysis</a><span class="ai-btn ai-btn--active">AI Summary</span></div>';
 
-  // Sum line uses the same format as the live overlay's flagCount
-  // logic in components.ts: "No issues found" / "N flags detected" /
-  // "N flags — M critical". No token names — the home demo is
-  // illustrative, not a fake scan of a specific token.
+  // Sum line uses the same format as the live overlay's flagSummaryLine
+  // in components.ts: "No issues found" / "N warnings — no critical" /
+  // "N critical flags" / "N flags — M critical". No token names — the
+  // home demo is illustrative, not a fake scan of a specific token.
   function card(risk, verdict, score, dotsOn, sum, sis) {
     var dots = '';
     var dotsQ = Math.round((score/1000)*4);
@@ -616,7 +616,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     card('safe',    'SAFE',    1000, 5, 'No issues found', [
       {k:'Sell',cls:'ok',v:''},{k:'Mint',cls:'ok',v:''},{k:'Freeze',cls:'ok',v:''},{k:'LP Burned',cls:'ok',v:''},{k:'Liq',cls:'liq y',v:'$9.0M'}
     ]),
-    card('caution', 'CAUTION',  750, 4, '1 flags detected', [
+    card('caution', 'CAUTION',  750, 4, '1 warning — no critical', [
       {k:'Sell',cls:'ok',v:''},{k:'Mint',cls:'ok',v:''},{k:'Freeze',cls:'ok',v:''},{k:'LP Burned',cls:'ok',v:''},{k:'Liq',cls:'liq',v:'$32K'}
     ]),
     card('danger',  'DANGER',   500, 3, '3 flags — 1 critical', [
