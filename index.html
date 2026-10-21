@@ -432,8 +432,8 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
 <!-- ═══════ PROOF / BACKTEST ═══════ -->
 <!-- What the regression corpus can honestly say. No accuracy claim: the
-     corpus is a set of stored real scans checked against labels, plus a
-     weekly re-scan of a sample (see proof.html). -->
+     corpus is a set of recorded real scans, replayed through the engine on
+     every change in CI, plus a nightly canary on production. -->
 <section class="proof-section">
   <div class="section-label reveal"><span>How we test</span></div>
   <div class="proof-grid">
@@ -457,8 +457,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     </div>
   </div>
   <div class="proof-blurb reveal delay-4">
-    Real Solana tokens, re-scanned every week (a rotating sample). Same <code>/api/scan</code> endpoint you hit &mdash; no mocks, no synthetic data.
-    <a href="./proof">See the proof &rarr;</a>
+    Real Solana tokens, recorded from the live data sources. Every change to the engine is replayed on all of them in CI, and a nightly check scans well-known tokens on production.
   </div>
 </section>
 
