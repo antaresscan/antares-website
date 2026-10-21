@@ -388,6 +388,10 @@ async function auditDesktop(page, route) {
     for (const p of await overlayPanelsContract(page)) fails.push('overlay-panels-' + p);
     for (const p of await summaryLineLive(page)) fails.push('summary-line-live-' + p);
   }
+  /* The drawn marks of the feature matrix: every sign in the exact middle of its disc. */
+  if (route === '/compare') {
+    for (const p of await compareMarksContract(page)) fails.push('compare-marks-' + p);
+  }
   return { fails, probe };
 }
 
@@ -447,6 +451,35 @@ async function summaryLineLive(page) {
     const open = sr.querySelector('.cf-panel.open, .ai-panel.open');
     if (open) open.classList.remove('open', 'closing');
     if (checked < 2) problems.push('only-' + checked + '-token-checked');
+    return problems;
+  });
+}
+
+/* ── The marks of the feature matrix of /compare ────────────────────────────────────────────────────────────────────────────────────
+   Each mark is a disc with a sign drawn in it (a tick or a cross: css/compare-smooth.css). The sign was 3.25 px too high in a 30 px disc, because the hidden character of the
+   mark was a second item of the inline grid and shared the spare height; it is now placed on its own (absolute, inset 0, margin auto). This checks, on every mark of the page, that the sign
+   is a square centred in a square disc: the same distance from the left as from the right, from the top as from the bottom. (The sign itself is drawn around the middle of its box: the
+   extension proves the pixels, here the geometry that makes them right.) */
+async function compareMarksContract(page) {
+  return page.evaluate(() => {
+    const problems = [];
+    const marks = [...document.querySelectorAll('.cmp-table tbody .yes, .cmp-table tbody .no, .cmp-table tbody .partial')];
+    if (marks.length < 40) problems.push('only-' + marks.length + '-marks-found');
+    const seen = new Set();
+    for (const m of marks) {
+      const disc = getComputedStyle(m), sign = getComputedStyle(m, '::before');
+      const dw = parseFloat(disc.width), dh = parseFloat(disc.height), w = parseFloat(sign.width), h = parseFloat(sign.height);
+      // the sign is centred by inset:0 + margin:auto: the used margins are what puts it in the middle
+      const left = parseFloat(sign.left) + parseFloat(sign.marginLeft), top = parseFloat(sign.top) + parseFloat(sign.marginTop);
+      const right = parseFloat(sign.marginRight), bottom = parseFloat(sign.marginBottom);
+      const key = [m.className, disc.display, sign.position, dw, dh, w, h, left, top, right, bottom].join('|');
+      if (seen.has(key)) continue; seen.add(key);
+      const label = m.className;
+      if (disc.display === 'inline-grid' || disc.display === 'grid') problems.push(label + '-disc-is-a-grid (its hidden character takes part in the layout)');
+      if (sign.position !== 'absolute') problems.push(label + '-sign-not-absolute=' + sign.position);
+      if (Math.abs(dw - dh) > 0.01 || Math.abs(w - h) > 0.01) problems.push(label + '-not-square=' + dw + 'x' + dh + ' / ' + w + 'x' + h);
+      if (Math.abs(left - (dw - w) / 2) > 0.01 || Math.abs(top - (dh - h) / 2) > 0.01 || Math.abs(left - right) > 0.01 || Math.abs(top - bottom) > 0.01) problems.push(label + '-sign-off-centre from left=' + left + ' top=' + top + ', right=' + right + ' bottom=' + bottom + ' (middle is ' + (dw - w) / 2 + ')');
+    }
     return problems;
   });
 }
