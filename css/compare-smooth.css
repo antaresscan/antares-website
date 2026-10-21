@@ -118,8 +118,7 @@
 .cmp-wrap .yes { color: #0a8c76; background: rgba(12, 168, 140, .17); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5); --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.8 8.3l2.7 2.7 5.7-6' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 /* a "partly" is shown as a cross too, the same as a "no" (the owner, 2026-10-21): the table still says which is which, for screen readers */
 .cmp-wrap .no, .cmp-wrap .partial { color: rgba(79, 125, 116, .7); background: rgba(14, 80, 70, .07); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45); --mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.6 4.6l6.8 6.8M11.4 4.6l-6.8 6.8' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"); }
-/* Antares's own marks are the ones that count: a little brighter */
-.cmp-wrap td.cell.us .yes { background: rgba(12, 168, 140, .24); box-shadow: 0 0 0 4px rgba(12, 168, 140, .1), 0 8px 18px rgba(11, 150, 128, .22), inset 0 1px 0 rgba(255, 255, 255, .55); }
+/* every circle of the matrix is the same, the Antares column included: one disc, no ring around it */
 .cmp-wrap tr:hover .yes { transform: scale(1.08); }
 
 /* the notes under a mark ("via GoPlus", "single source"...) are not shown; they stay in the page, visually hidden, for screen readers */

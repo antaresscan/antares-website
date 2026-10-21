@@ -64,6 +64,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .demo-notice{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:14px;color:rgba(210,51,79,.8);line-height:1.7;margin-bottom:16px;padding:12px 18px;background:rgba(210,51,79,.07);border-left:2px solid #d2334f;letter-spacing:.02em}
 .demo-notice b{color:#d2334f;font-weight:400;text-transform:uppercase;letter-spacing:.16em;font-size:12px;display:block;margin-bottom:4px}
+/* le titre de l'encadré (pas le « Real verdicts evolve… » en ligne) : moulé comme les titres, en rouge d'avertissement, avec les deux ombres fines */
+.demo-notice>b:first-child{color:rgba(210,51,79,.8);text-shadow:0 1px 1px rgba(255,255,255,.7),0 -1px 1px rgba(120,24,44,.3)}
 .cta-final{margin:80px 0 60px;padding:64px 32px;border:1px solid var(--border);border-radius:10px;background:var(--card);text-align:center;position:relative;overflow:hidden}
 .cta-final::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(11,150,128,.04) 0%,transparent 70%);pointer-events:none}
 .cta-final h2{font:400 48px/1 'Bebas Neue',sans-serif;letter-spacing:.06em;margin-bottom:12px;color:#123b35;position:relative}
@@ -91,6 +93,8 @@ body{background:linear-gradient(118deg,#cfefe1 0%,#a8e3ce 32%,#84d7c9 65%,#6fcdd
 /* titres en verre (emboss) */
 h1,.hero h1,.cta-final h2,.try-row button{color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 12px 26px rgba(8,80,70,.12)}
 h1 .accent,.hero h1 .accent,.page-hero h1 .accent,.cta-final h2 span{color:rgba(10,140,118,.5);text-shadow:0 1px 1px rgba(255,255,255,.7),0 -1px 1px rgba(8,80,64,.32),0 0 34px rgba(11,150,128,.22)}
+/* la phrase sous le titre du bloc d'appel garde son aspect d'origine ; seules ses lignes sont équilibrées (pas de mot seul sur la dernière ligne) */
+.cta-final p{text-wrap:balance}
 /* header : wordmark + logo couleur "SCAMMED." + liens en verre */
 nav .brand{color:#8fb8ae;text-shadow:none}
 nav .brand-icon{background-color:#8fb8ae;filter:none}
@@ -171,7 +175,7 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
 <div class="cta-final">
   <h2>Get this on every Solana page.</h2>
-  <p>Install the extension and the overlay appears automatically &mdash; on DexScreener, pump.fun, Birdeye, Photon, Axiom, GMGN, GeckoTerminal and Telemetry. You drag it where you like, it remembers the position.</p>
+  <p>Install the extension and the overlay appears automatically &mdash; on DexScreener, pump.fun, Birdeye, Photon, Axiom, GMGN, GeckoTerminal and Telemetry.<br>You drag it where you like, it remembers the position.</p>
   <a class="cta" href="./install" target="_blank" rel="noopener">Install</a>
 </div>
 
