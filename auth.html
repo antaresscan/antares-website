@@ -25,7 +25,6 @@ body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Mono',monospace
 h1{text-align:center}
 h1 span{color:var(--c)}
 main{padding:120px 0 60px;flex:1;display:flex;flex-direction:column;justify-content:center}
-.lead{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:17px;color:#57837b;line-height:1.7;text-align:center;margin-bottom:28px}
 
 .tabs{display:flex;gap:0;justify-content:center;margin:0 0 22px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e7f7f0}
 .tabs button{flex:1;padding:11px 0;background:transparent;border:none;color:#6a958c;font:400 13px/1 'Bebas Neue',sans-serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:.2s}
@@ -53,9 +52,6 @@ main{padding:120px 0 60px;flex:1;display:flex;flex-direction:column;justify-cont
 .error{margin-top:14px;padding:11px 13px;background:rgba(214,72,72,.06);border:1px solid rgba(214,72,72,.4);border-radius:2px;color:#ff7070;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:12px;letter-spacing:.04em;line-height:1.55}
 .spinner{display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.6);margin-right:8px;animation:pulse 1.2s ease-in-out infinite;vertical-align:middle}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-.foot{margin-top:18px;text-align:center;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:13px;color:#6f9c93;letter-spacing:.04em}
-.foot a{color:#4f7d74}
-.foot a:hover{color:var(--c)}
 
 </style>
 <link rel="stylesheet" href="/css/mobile-fixes.css">
@@ -72,8 +68,6 @@ h1 .accent,.hero h1 .accent,.page-hero h1 .accent,.cta-final h2 span{color:rgba(
 /* header : wordmark + logo couleur "SCAMMED." + liens en verre */
 nav .brand{color:#8fb8ae;text-shadow:none}
 nav .brand-icon{background-color:#8fb8ae;filter:none}
-nav .links a{color:rgba(14,66,58,.5);text-shadow:0 1px 1px rgba(255,255,255,.6),0 -1px 1px rgba(8,60,52,.22);font-size:16px}
-nav .links a:hover,nav .links a.active{color:rgba(10,140,118,.8)}
 /* protections : overlays produit, boutons pleins, glitch */
 #pv-wrap,#antares-host{text-shadow:none}
 .cta,.nav-cta,.skip-link,button{text-shadow:none}
@@ -87,7 +81,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 :focus-visible{outline-color:#0b7d68}
 </style>
 <link rel="stylesheet" href="/css/auth-smooth.css">
-<link rel="stylesheet" href="/css/help-button.css">
 <link rel="stylesheet" href="/css/buttons-moulded.css">
 </head>
 <body class="auth-page">
@@ -96,13 +89,13 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
 <nav aria-label="Main navigation">
   <a href="./index.html" class="brand"><span class="brand-icon" aria-hidden="true"></span>ANTARES</a>
-  <div class="links"><a href="./pricing">Pricing</a><a href="./install" target="_blank" rel="noopener">Install</a></div>
+  <div class="links"><a href="./pricing" class="nav-account">Pricing</a></div>
+  <div class="nav-actions"><a href="./install" target="_blank" rel="noopener" class="nav-cta">Install</a></div>
 </nav>
 
 <div class="shell">
 <main id="main-content">
 <h1>Your <span>account</span>.</h1>
-<p class="lead">One email + password. Manage your Pro / Yearly licenses, see your tier, and pay without re-typing email every time.</p>
 
 <div class="tabs" role="tablist">
   <button type="button" id="tab-login" class="active" role="tab" aria-selected="true">Log in</button>
@@ -119,10 +112,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
   <button class="submit" id="auth-submit" type="button">Log in</button>
   <div class="error" id="auth-error" style="display:none"></div>
-  <div class="foot" id="auth-foot">
-    <span id="foot-text">Don't have an account?</span>
-    <a href="#" id="foot-link">Sign up</a>
-  </div>
 </section>
 
 <section class="card check-card" id="check-email" aria-live="polite">
@@ -136,8 +125,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 </main>
 </div>
 
-<footer class="help-foot"><a class="help-btn" href="./help">Help &amp; info</a></footer>
-
 <script>
 (function() {
   var API = 'https://antares-extension.vercel.app';
@@ -150,8 +137,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
   var errorEl = document.getElementById('auth-error');
   var tabLogin = document.getElementById('tab-login');
   var tabSignup = document.getElementById('tab-signup');
-  var footText = document.getElementById('foot-text');
-  var footLink = document.getElementById('foot-link');
 
   var mode = 'login';
   var cardEl = document.querySelector('section.card:not(.check-card)');
@@ -188,8 +173,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
     passwordEl.setAttribute('autocomplete', isLogin ? 'current-password' : 'new-password');
     submitBtn.textContent = isLogin ? 'Log in' : 'Create account';
     hintEl.textContent = isLogin ? 'Use the password from when you signed up.' : '8 characters minimum. No password recovery yet — pick one you\'ll remember.';
-    footText.textContent = isLogin ? 'Don\'t have an account?' : 'Already have one?';
-    footLink.textContent = isLogin ? 'Sign up' : 'Log in';
     setError('');
     if (modeSet && cardEl) { cardEl.classList.remove('swap'); void cardEl.offsetWidth; cardEl.classList.add('swap'); } // replays css/auth-smooth.css .swap
     modeSet = true;
@@ -198,10 +181,6 @@ img[src*="icon.png"],img[src*="favicon.png"]{filter:invert(.72) sepia(.35) satur
 
   tabLogin.addEventListener('click', function() { setMode('login'); });
   tabSignup.addEventListener('click', function() { setMode('signup'); });
-  footLink.addEventListener('click', function(e) {
-    e.preventDefault();
-    setMode(mode === 'login' ? 'signup' : 'login');
-  });
 
   function setError(msg) {
     if (msg) {
