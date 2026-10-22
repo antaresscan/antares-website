@@ -6,7 +6,7 @@
    - the marks are DRAWN (a disc with a tick or a cross; a "partly" is a cross too) instead of font characters; the characters stay in the
      page, hidden, for screen readers; the notes that were written under them are not shown (kept for screen readers)
    - the rows light up under the pointer (there is no reveal effect: the table is simply there)
-   - on a narrow screen the table scrolls sideways and the name of the capability stays in place
+   - on a narrow screen the table scrolls sideways; the name of the capability and the Antares column are frozen on the left
    One easing curve for everything. No motion for a visitor who asks for less.
    ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
 .cmp-wrap {
@@ -31,7 +31,15 @@
   border-spacing: 0;
   background: transparent;
   font-size: 13px;
+  /* css/mobile-fixes.css turns every table of <main> into a block that scrolls by itself (display:block; overflow-x:auto) on a phone. Here the wrapper
+     is what scrolls, and a table that scrolls too leaves the frozen columns nothing to stick to: they would move with the rest. */
+  display: table;
+  max-width: none;
+  overflow: visible;
 }
+.cmp-wrap .cmp-table thead,
+.cmp-wrap .cmp-table tbody,
+.cmp-wrap .cmp-table tr { width: auto; min-width: 0; }
 
 /* the header: no flat band, just the names, with a soft line under them */
 .cmp-wrap .cmp-table thead th {
@@ -54,15 +62,12 @@
 .cmp-wrap .cmp-table thead th.tool.us,
 .cmp-wrap .cmp-table td.cell.us {
   background: linear-gradient(180deg, rgba(255, 255, 255, .46), rgba(255, 255, 255, .3));
-  box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7), inset 0 -1px 0 rgba(14, 80, 70, .07);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7); /* its two edges only: no line between the rows of this column, it is one piece */
 }
 .cmp-wrap .cmp-table thead th.tool.us {
   color: #0a8c76;
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7), inset 0 -1px 0 rgba(14, 80, 70, .1);
   text-shadow: 0 1px 1px rgba(255, 255, 255, .7), 0 0 26px rgba(11, 150, 128, .28);
-}
-.cmp-wrap .cmp-table tbody tr:last-child td.cell.us {
-  box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7);
 }
 
 /* the rows: a hairline between them, a light that follows the pointer */
@@ -135,15 +140,41 @@
   border: 0;
 }
 
-/* narrow screens: the table scrolls sideways, the capability stays in place */
+/* narrow screens: the table scrolls sideways; the capability AND the Antares column are frozen on the left and stay in place (they need an opaque ground,
+   or the columns that scroll under them would show through) */
 @media (max-width: 980px) {
-  .cmp-wrap { border-radius: 18px; }
+  .cmp-wrap { --feat-w: 190px; --us-w: 104px; --frozen: rgb(214, 245, 233); border-radius: 18px; }
   .cmp-wrap .cmp-table { min-width: 780px; font-size: 13px; }
   .cmp-wrap .cmp-table thead th { padding: 16px 10px 12px; font-size: 12px; }
   .cmp-wrap .cmp-table tbody td { padding: 12px 10px; }
   .cmp-wrap .cmp-table .cell { font-size: 17px; }
-  .cmp-wrap .cmp-table .feature { min-width: 190px; font-size: 16px; position: sticky; left: 0; z-index: 2; background: rgba(214, 245, 233, .92); box-shadow: inset 0 -1px 0 rgba(14, 80, 70, .07), 8px 0 14px -10px rgba(8, 80, 70, .25); }
-  .cmp-wrap .cmp-table thead th.feature { z-index: 3; }
+  .cmp-wrap .cmp-table .feature { width: var(--feat-w); min-width: var(--feat-w); max-width: var(--feat-w); font-size: 16px; position: sticky; left: 0; z-index: 2; background: var(--frozen); box-shadow: inset 0 -1px 0 rgba(14, 80, 70, .07); }
+  .cmp-wrap .cmp-table thead th.feature { z-index: 3; background: var(--frozen); } /* the header cell has its own transparent ground above: it needs the opaque one too */
+  .cmp-wrap .cmp-table tbody tr:hover td.feature { background-color: var(--frozen); }
+  .cmp-wrap .cmp-table thead th.tool.us,
+  .cmp-wrap .cmp-table td.cell.us {
+    position: sticky;
+    left: var(--feat-w);
+    z-index: 2;
+    width: var(--us-w);
+    min-width: var(--us-w);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .46), rgba(255, 255, 255, .3)), var(--frozen);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7), 8px 0 14px -10px rgba(8, 80, 70, .25); /* the soft edge on the right of the frozen pair */
+  }
+  .cmp-wrap .cmp-table thead th.tool.us {
+    z-index: 3;
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, .7), inset -1px 0 0 rgba(255, 255, 255, .7), inset 0 -1px 0 rgba(14, 80, 70, .1), 8px 0 14px -10px rgba(8, 80, 70, .25);
+  }
+  .cmp-wrap .cmp-table tbody tr:hover td.cell.us { background: linear-gradient(180deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, .46)), var(--frozen); }
+}
+/* a phone: the two frozen columns must leave room for the others, so they are narrower and their text is smaller */
+@media (max-width: 760px) {
+  .cmp-wrap { --feat-w: 124px; --us-w: 86px; }
+  .cmp-wrap .cmp-table { min-width: 730px; }
+  .cmp-wrap .cmp-table thead th { padding: 14px 6px 10px; font-size: 11px; letter-spacing: .12em; }
+  .cmp-wrap .cmp-table tbody td { padding: 10px 6px; }
+  .cmp-wrap .cmp-table .feature { font-size: 14px; letter-spacing: .02em; }
+  .cmp-wrap .cmp-table .feature small { font-size: 11.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cmp-wrap .yes, .cmp-wrap .no, .cmp-wrap .partial, .cmp-wrap .cmp-table tbody td { transition: none; }

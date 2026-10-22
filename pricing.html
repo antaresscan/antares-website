@@ -44,6 +44,9 @@
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:32px 0 16px}
 .tier{background:var(--card);border:1px solid var(--border);padding:36px 28px 32px;position:relative;display:flex;flex-direction:column;transition:transform .3s,border-color .3s}
 .tier:hover{transform:translateY(-4px);border-color:rgba(14,80,70,.25)}
+/* the three cards share the rows of the grid (name, price, period, tagline, features, quote, button, status), so the same part of each card sits at the same height
+   whatever the length of its list or of its quote (the Free quote has 3 lines, the others 4): quote, button and status line up across the cards */
+@supports (grid-template-rows: subgrid){.tier{display:grid;grid-template-rows:subgrid;grid-row:span 8;row-gap:0}}
 .tier.featured{border:1px solid var(--c);box-shadow:0 0 0 1px var(--c),0 24px 48px rgba(11,150,128,.08)}
 .tier.featured::before{content:'MOST POPULAR';position:absolute;top:-1px;left:50%;transform:translateX(-50%) translateY(-50%);background:var(--c);color:var(--bg);font:400 9px/1 'Bebas Neue',sans-serif;padding:7px 14px;letter-spacing:.22em;white-space:nowrap}
 /* Free tier deliberately dimmed — the verdict + score + overlay are
