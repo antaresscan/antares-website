@@ -90,11 +90,12 @@ body.auth-page .tabs:has(#tab-signup.active)::before { transform: translateX(100
 body.auth-page .tabs button {
   border-radius: 999px;
   background: transparent;
-  color: #5f8c83;
-  transition: color .35s var(--ease), letter-spacing .35s var(--ease);
+  color: rgba(14, 66, 58, .58);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .75), 0 -1px 1px rgba(8, 60, 52, .3); /* the labels are moulded like the titles: light edge under, dark edge over */
+  transition: color .35s var(--ease), text-shadow .35s var(--ease), letter-spacing .35s var(--ease);
 }
-body.auth-page .tabs button.active { background: transparent; color: #fff; }
-body.auth-page .tabs button:not(.active):hover { color: #2e5d55; }
+body.auth-page .tabs button.active { background: transparent; color: rgba(255, 255, 255, .9); text-shadow: 0 -1px 1px rgba(4, 70, 58, .5), 0 1px 1px rgba(255, 255, 255, .35); } /* on the mint thumb: engraved, dark edge over the label, light edge under it */
+body.auth-page .tabs button:not(.active):hover { color: rgba(10, 140, 118, .85); text-shadow: 0 1px 1px rgba(255, 255, 255, .8), 0 -1px 1px rgba(8, 80, 64, .32), 0 0 24px rgba(11, 150, 128, .25); }
 body.auth-page .tabs button:focus-visible { outline: 2px solid var(--mint-deep); outline-offset: 2px; }
 
 /* the card: frosted glass with a soft light edge */

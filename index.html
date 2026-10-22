@@ -215,8 +215,9 @@ footer span{color:#8fbfb4}
 footer .foot-links{margin-top:14px;font-size:12px;letter-spacing:.18em}
 footer .foot-links a{color:#8fbfb4;text-decoration:none;margin:0 4px;transition:color .25s}
 footer .foot-links a:hover{color:#6f9c93}
-.foot-twitter{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 6px 16px rgba(8,80,70,.1);font-size:22px;letter-spacing:.14em}
-.foot-twitter svg{width:22px;height:22px;fill:rgba(14,66,58,.36);filter:drop-shadow(0 1px 1px rgba(255,255,255,.55)) drop-shadow(0 -1px 0px rgba(8,60,52,.22));flex-shrink:0}
+.foot-twitter{display:inline-flex;align-items:center;justify-content:center;position:relative;isolation:isolate;padding:22px 30px;text-decoration:none;color:rgba(14,66,58,.36);text-shadow:0 1px 1px rgba(255,255,255,.65),0 -1px 1px rgba(8,60,52,.28),0 6px 16px rgba(8,80,70,.1);font-size:22px;letter-spacing:.14em}
+/* the X is a watermark behind the handle, centred on the INK of the text (measured in a real Chromium at 6x, not on the box): the letter-spacing leaves .14em after the last letter (half of it, .07em, is taken back), and the capitals sit 1.5px above the middle of the line, hence the two small px corrections */
+.foot-twitter svg{position:absolute;left:calc(50% - .07em - 1.58px);top:calc(50% - 1.5px);width:64px;height:64px;transform:translate(-50%,-50%);z-index:-1;fill:rgba(14,66,58,.13);filter:drop-shadow(0 1px 1px rgba(255,255,255,.55)) drop-shadow(0 -1px 0px rgba(8,60,52,.18));pointer-events:none}
 
 /* ── GLITCH ── */
 .glitch{position:relative;display:inline-block;cursor:default;user-select:none}
