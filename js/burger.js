@@ -1,9 +1,10 @@
 /* ──────────────────────────────────────────────────────────────────
    burger.js
    ──────────────────────────────────────────────────────────────────
-   Drop-in mobile burger menu. Reads the desktop <nav> .links and
-   .nav-actions of the host page (no matter the surrounding wrapper
-   — <header><nav>, plain <nav>, .nav-inner...) and injects:
+   Drop-in mobile burger menu. Finds the desktop <nav> of the host page
+   (no matter the surrounding wrapper — <header><nav>, plain <nav>,
+   .nav-inner...) and injects (the pages listed in the drawer are the
+   same on every page, see SITE_PAGES):
      1. A burger button (hamburger / X icon) into the <nav>.
      2. A fullscreen drawer (<div class="mobile-menu">) into <body>.
 
@@ -18,6 +19,16 @@
    ────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
+
+  // The drawer lists the same pages on every page of the site. It used to be copied from the header of the host page, and the pages with a short
+  // header (sign-in, account, help: just Pricing and Install) got a drawer with Pricing only. (css/mobile-fixes.css still hides Demo on a phone.)
+  var SITE_PAGES = [
+    ['Demo', './demo'],
+    ['Features', './features'],
+    ['Engine', './engine'],
+    ['Compare', './compare'],
+    ['Pricing', './pricing']
+  ];
 
   function init() {
     // Four states to handle:
@@ -92,10 +103,10 @@
     var mobileLinks = document.createElement('nav');
     mobileLinks.className = 'mobile-links';
     mobileLinks.setAttribute('aria-label', 'Mobile navigation');
-    sourceLinks.forEach(function (src) {
+    SITE_PAGES.forEach(function (page) {
       var a = document.createElement('a');
-      a.href = src.getAttribute('href') || '#';
-      a.textContent = (src.textContent || '').trim();
+      a.href = page[1];
+      a.textContent = page[0];
       mobileLinks.appendChild(a);
     });
 

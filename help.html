@@ -65,6 +65,8 @@ body.help-page .lead{animation-delay:.12s}
 .hub-card:hover{transform:translateY(-4px);box-shadow:0 28px 58px rgba(8,80,70,.16),inset 0 1px 0 rgba(255,255,255,.7)}
 .hub-card:active{transform:translateY(-1px) scale(.994)}
 .hub-card:focus-visible{outline:3px solid rgba(10,140,118,.5);outline-offset:3px}
+/* on a phone the extension cannot be installed, and js/mobile-cta-rewrite.js (below 761px) would reduce this card to the single line "Full content available on PC": it is not shown there */
+@media (max-width:760px){.hub-card[href*="install"]{display:none!important}} /* !important: css/mobile-fixes.css forces display:inline !important on every rewritten link */
 .hub-card .ico{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;color:#fff;background:linear-gradient(180deg,#14b99c,var(--c));box-shadow:0 8px 18px rgba(11,150,128,.28),inset 0 1px 0 rgba(255,255,255,.35)}
 .hub-card .ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hub-card .t{display:block;font:400 22px/1.1 'Bebas Neue',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#1d4a43}
