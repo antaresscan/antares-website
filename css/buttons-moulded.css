@@ -2,13 +2,13 @@
    buttons-moulded.css — every button of the site moulded like the titles. Linked by every page, after the page's own
    styles. (The "Help & info" link at the foot of the pages is not one of them: it is only a moulded label, see css/help-button.css.)
    Three families, one language (a pill carved into the glass, a label with a light edge under it and a dark edge over it):
-     - the quiet ones  (Log in / Account, "Install free"): carved neutral glass, label in the translucent green of the titles
+     - the quiet ones  (Log in / Account, "Install free", Log out): carved neutral glass, label in the translucent green of the titles
      - the main ones   (Install, Get Pro, the CTAs, Log in on the sign-in page, the contact link): carved glass tinted MINT, label in a deep mint
      - the purple one  (Claim a Yearly spot): the same, tinted purple
    Under the pointer a button comes up out of the glass a little; under the finger it sinks. No motion for a visitor who asks for less.
    (!important is used on purpose: the pages style their buttons inline with their own weights; this file is a skin laid over them.)
    ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit {
+nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit, .logout-row .logout-btn {
   --ease: cubic-bezier(.22, 1, .36, 1);
   --tone-ink: 14, 66, 58;        /* the green of the titles */
   --tone-fill-a: 8, 80, 70;      /* the dark end of the carved fill */
@@ -57,7 +57,7 @@ nav .nav-cta, a.cta, .cta, .tier-cta.primary, .audit-cta, button.submit {
   --tone-label-hover: #46239a;
   text-shadow: 0 1px 1px rgba(255, 255, 255, .7), 0 -1px 1px rgba(50, 28, 120, .38) !important;
 }
-/* the quiet ones are the defaults above: nav .nav-account, .tier-cta.secondary (the "Help & info" link at the foot of the pages is only a moulded label: css/help-button.css) */
+/* the quiet ones are the defaults above: nav .nav-account, .tier-cta.secondary, the Log out button of the account page (the "Help & info" link at the foot of the pages is only a moulded label: css/help-button.css) */
 
 /* sizes: the labels of the big CTAs were 11 px on a solid fill; moulded text needs a little more body to read */
 a.cta, .cta { padding: 16px 36px !important; font-size: 14px !important; letter-spacing: .18em !important; }
@@ -65,9 +65,10 @@ a.cta, .cta { padding: 16px 36px !important; font-size: 14px !important; letter-
 .audit-cta { padding: 13px 26px !important; font-size: 14px !important; letter-spacing: .18em !important; }
 button.submit { font-size: 15px !important; letter-spacing: .2em !important; }
 nav .nav-cta, nav .nav-account { font-size: 15px !important; letter-spacing: .14em !important; }
+.logout-row .logout-btn { padding: 12px 28px !important; font-size: 15px !important; letter-spacing: .2em !important; }
 
 /* under the pointer: it comes up out of the glass a little, the label deepens */
-nav .nav-cta:hover, nav .nav-account:hover, a.cta:hover, .cta:hover, .tier-cta:hover, .audit-cta:hover, button.submit:hover:not(:disabled) {
+nav .nav-cta:hover, nav .nav-account:hover, a.cta:hover, .cta:hover, .tier-cta:hover, .audit-cta:hover, button.submit:hover:not(:disabled), .logout-row .logout-btn:hover {
   transform: translateY(-2px) !important;
   color: var(--tone-label-hover) !important;
   border-color: rgba(255, 255, 255, .6) !important;
@@ -79,7 +80,7 @@ nav .nav-cta:hover, nav .nav-account:hover, a.cta:hover, .cta:hover, .tier-cta:h
     0 22px 38px rgba(8, 80, 70, .16) !important;
 }
 /* under the finger: it sinks back into the glass */
-nav .nav-cta:active, nav .nav-account:active, a.cta:active, .cta:active, .tier-cta:active, .audit-cta:active, button.submit:active:not(:disabled) {
+nav .nav-cta:active, nav .nav-account:active, a.cta:active, .cta:active, .tier-cta:active, .audit-cta:active, button.submit:active:not(:disabled), .logout-row .logout-btn:active {
   transform: translateY(1px) !important;
   box-shadow:
     inset 0 3px 7px rgba(8, 60, 52, .28),
@@ -87,12 +88,12 @@ nav .nav-cta:active, nav .nav-account:active, a.cta:active, .cta:active, .tier-c
     0 1px 0 rgba(255, 255, 255, .75),
     0 8px 16px rgba(8, 80, 70, .08) !important;
 }
-nav .nav-cta:focus-visible, nav .nav-account:focus-visible, a.cta:focus-visible, .cta:focus-visible, .tier-cta:focus-visible, .audit-cta:focus-visible, button.submit:focus-visible {
+nav .nav-cta:focus-visible, nav .nav-account:focus-visible, a.cta:focus-visible, .cta:focus-visible, .tier-cta:focus-visible, .audit-cta:focus-visible, button.submit:focus-visible, .logout-row .logout-btn:focus-visible {
   outline: 3px solid rgba(10, 140, 118, .45);
   outline-offset: 3px;
 }
 .tier-cta:disabled, button.submit:disabled { opacity: .6; }
 
 @media (prefers-reduced-motion: reduce) {
-  nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit { transition: none !important; }
+  nav .nav-cta, nav .nav-account, a.cta, .cta, .tier-cta, .audit-cta, button.submit, .logout-row .logout-btn { transition: none !important; }
 }

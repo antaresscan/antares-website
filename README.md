@@ -45,7 +45,7 @@ Each is served via Vercel `cleanUrls` from the matching `*.html`:
 ```
 /                /demo         /features       /engine
 /compare         /pricing      /sources
-/proof           /faq          /changelog      /about
+/faq             /changelog    /about
 /api             /security     /support        /auth
 /account         /privacy      /terms
 ```
