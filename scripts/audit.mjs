@@ -77,7 +77,7 @@ if (!['mobile', 'desktop', 'both'].includes(viewportArg)) {
    redirect-only or build-only artifacts. */
 const ROUTES = [
   '/', '/demo', '/features', '/engine', '/compare', '/pricing',
-  '/sources', '/proof', '/faq', '/changelog', '/about',
+  '/sources', '/faq', '/changelog', '/about',
   '/security', '/support', '/auth', '/help', '/account', '/privacy', '/terms',
 ];
 

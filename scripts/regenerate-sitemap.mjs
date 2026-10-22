@@ -33,7 +33,6 @@ const ROUTES = [
   ['/pricing',   'pricing.html',   '0.9'],
   ['/install',   'install.html',   '0.8'],
   ['/engine',    'engine.html',    '0.8'],
-  ['/proof',     'proof.html',     '0.8'],
   ['/sources',   'sources.html',   '0.7'],
   ['/faq',       'faq.html',       '0.7'],
   ['/changelog', 'changelog.html', '0.6'],
